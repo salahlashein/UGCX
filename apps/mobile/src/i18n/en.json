@@ -1,0 +1,243 @@
+{
+  "common": {
+    "appName": "UGCX",
+    "loading": "Loading",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "next": "Next",
+    "back": "Back",
+    "done": "Done",
+    "close": "Close",
+    "logout": "Log out",
+    "language": "Language",
+    "error": { "title": "Something went wrong", "generic": "Something went wrong. Please try again." },
+    "empty": { "title": "Nothing here yet", "generic": "Nothing here yet." },
+    "required": "This field is required",
+    "continue": "Continue"
+  },
+  "auth": {
+    "roleSelect": {
+      "title": "Who are you on UGCX?",
+      "subtitle": "You can't switch roles later in Phase 1 — pick the one that fits.",
+      "brand": "I'm a brand",
+      "brandSubtitle": "Post briefs, buy video content",
+      "creator": "I'm a creator",
+      "creatorSubtitle": "Apply to briefs, film, get paid",
+      "haveAccount": "Already have an account? Log in"
+    },
+    "register": {
+      "title": "Create your account",
+      "email": "Email",
+      "phone": "Phone number",
+      "password": "Password",
+      "locale": "Preferred language",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "login": "Log in"
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "register": "Create one",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
+  "nav": {
+    "campaigns": "Campaigns",
+    "products": "Products",
+    "profile": "Profile",
+    "browse": "Browse",
+    "myApplications": "My Applications",
+    "myCollaborations": "My Collaborations"
+  },
+  "brand": {
+    "campaigns": {
+      "title": "Campaigns",
+      "empty": "You have not created a campaign yet.",
+      "createNew": "New campaign",
+      "status": { "draft": "Draft", "live": "Live" }
+    },
+    "wizard": {
+      "title": "Create campaign",
+      "stepProduct": "Product",
+      "stepDetails": "Details",
+      "stepScript": "Script",
+      "stepShipping": "Shipping",
+      "stepReview": "Review",
+      "selectProduct": "Select a product",
+      "createProduct": "Create a new product",
+      "niche": "Niche",
+      "language": "Video language",
+      "videoType": "Video type",
+      "durationSeconds": "Duration (seconds)",
+      "scriptMode": "Who writes the script?",
+      "scriptModeBrand": "The brand writes it",
+      "scriptModeCreator": "The creator writes it",
+      "script": "Script",
+      "talkingPoints": "Talking points",
+      "doNotSay": "Do not say",
+      "needsShipping": "This campaign requires shipping a product",
+      "slots": "Number of creator slots",
+      "publish": "Publish campaign",
+      "publishSuccess": "Campaign published",
+      "saveDraft": "Save draft"
+    },
+    "proposals": {
+      "title": "Proposals",
+      "empty": "No proposals yet for this campaign.",
+      "shortlist": "Shortlist",
+      "decline": "Decline",
+      "accept": "Accept",
+      "status": {
+        "applied": "Applied",
+        "shortlisted": "Shortlisted",
+        "declined": "Declined",
+        "accepted": "Accepted"
+      }
+    },
+    "acceptProposal": {
+      "title": "Complete payment",
+      "waiting": "Confirming payment…",
+      "timeout": "Payment still processing — check back shortly.",
+      "funded": "Funded",
+      "failed": "Payment failed. No funds were held in escrow.",
+      "openPaymentHint": "Open the payment page in a new tab to complete checkout, then come back here.",
+      "openPayment": "Open payment page"
+    },
+    "products": {
+      "title": "Products",
+      "empty": "You have not added a product yet.",
+      "addNew": "New product",
+      "name": "Product name",
+      "description": "Description",
+      "valueProps": "Value propositions"
+    },
+    "collaboration": {
+      "title": "Collaboration",
+      "status": "Status",
+      "confirmShipment": "Confirm shipment",
+      "carrier": "Carrier",
+      "trackingNumber": "Tracking number",
+      "reviewDeliverable": "Review deliverable",
+      "approve": "Approve",
+      "requestRevision": "Request revision",
+      "decline": "Decline",
+      "feedback": "Feedback",
+      "openChat": "Chat with creator"
+    },
+    "profile": {
+      "title": "Brand profile",
+      "companyName": "Company name",
+      "country": "Country"
+    }
+  },
+  "creator": {
+    "browse": {
+      "title": "Browse campaigns",
+      "empty": "No campaigns match your niches right now.",
+      "filters": "Filters",
+      "clearFilters": "Clear filters"
+    },
+    "campaignDetail": {
+      "title": "Campaign details",
+      "apply": "Apply",
+      "price": "Your price",
+      "deliveryDays": "Delivery days",
+      "pitch": "Your pitch",
+      "applySuccess": "Application sent",
+      "alreadyApplied": "You already applied to this campaign"
+    },
+    "applications": {
+      "title": "My Applications",
+      "empty": "You have not applied to any campaign yet."
+    },
+    "collaborations": {
+      "title": "My Collaborations",
+      "empty": "No collaborations yet.",
+      "openChat": "Chat with brand"
+    },
+    "upload": {
+      "title": "Upload deliverable",
+      "selectFile": "Select a video or photo",
+      "type": "Deliverable type",
+      "uploading": "Uploading…",
+      "registering": "Registering…",
+      "success": "Deliverable submitted",
+      "fileTooLarge": "This file is larger than the allowed size",
+      "unsupportedType": "This file type is not supported"
+    },
+    "profile": {
+      "title": "Creator profile",
+      "displayName": "Display name",
+      "city": "City",
+      "niches": "Niches",
+      "basePrice": "Base price",
+      "portfolio": "Portfolio",
+      "addPortfolioItem": "Add portfolio item",
+      "mediaUrl": "Media URL",
+      "mediaType": "Media type"
+    },
+    "payout": {
+      "title": "Payout details",
+      "method": "Payout method",
+      "accountIdentifier": "Account identifier",
+      "holderName": "Account holder name",
+      "saved": "Payout details saved"
+    }
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Type a message",
+    "send": "Send",
+    "empty": "No messages yet. Say hello!",
+    "notEligible": "Chat opens once this collaboration is funded."
+  },
+  "niche": {
+    "beauty_personal_care": "Beauty & personal care",
+    "fashion": "Fashion",
+    "mom_baby": "Mom & baby",
+    "food_fmcg": "Food & FMCG",
+    "home_lifestyle": "Home & lifestyle",
+    "other": "Other"
+  },
+  "errors": {
+    "network": "Cannot reach the server. Check your connection.",
+    "unauthorized": "Your session expired. Please log in again.",
+    "duplicateProposal": "You already applied to this campaign."
+  },
+  "status": {
+    "campaign": {
+      "draft": "Draft",
+      "live": "Live",
+      "closed": "Closed",
+      "archived": "Archived"
+    },
+    "proposal": {
+      "applied": "Applied",
+      "shortlisted": "Shortlisted",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
+    "collaboration": {
+      "pending_payment": "Pending payment",
+      "funded": "Funded",
+      "shipped": "Shipped",
+      "in_progress": "In progress",
+      "delivered": "Delivered",
+      "approved": "Approved",
+      "payment_failed": "Payment failed",
+      "cancelled": "Cancelled"
+    },
+    "deliverable": {
+      "submitted": "Submitted",
+      "revision_requested": "Revision requested",
+      "approved": "Approved",
+      "declined": "Declined"
+    }
+  }
+}

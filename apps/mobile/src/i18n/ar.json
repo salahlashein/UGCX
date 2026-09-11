@@ -1,0 +1,240 @@
+{
+  "common": {
+    "appName": "يو جي سي إكس",
+    "loading": "جارٍ التحميل",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "submit": "إرسال",
+    "next": "التالي",
+    "back": "رجوع",
+    "done": "تم",
+    "close": "إغلاق",
+    "logout": "تسجيل الخروج",
+    "language": "اللغة",
+    "error": { "title": "حدث خطأ ما", "generic": "حدث خطأ ما. حاول مرة أخرى." },
+    "empty": { "title": "لا يوجد شيء هنا بعد", "generic": "لا يوجد شيء هنا بعد." },
+    "required": "هذا الحقل مطلوب"
+  },
+  "auth": {
+    "roleSelect": {
+      "title": "مرحبًا بك في يو جي سي إكس",
+      "subtitle": "اختر طريقة استخدامك للتطبيق",
+      "brand": "أنا علامة تجارية",
+      "creator": "أنا صانع محتوى",
+      "haveAccount": "لديك حساب بالفعل؟ سجّل الدخول"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "password": "كلمة المرور",
+      "locale": "اللغة المفضلة",
+      "submit": "إنشاء الحساب",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "أنشئ حسابًا",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    }
+  },
+  "nav": {
+    "campaigns": "الحملات",
+    "products": "المنتجات",
+    "profile": "الملف الشخصي",
+    "browse": "تصفح",
+    "myApplications": "طلباتي",
+    "myCollaborations": "تعاوناتي"
+  },
+  "brand": {
+    "campaigns": {
+      "title": "الحملات",
+      "empty": "لم تنشئ أي حملة بعد.",
+      "createNew": "حملة جديدة",
+      "status": { "draft": "مسودة", "live": "منشورة" }
+    },
+    "wizard": {
+      "title": "إنشاء حملة",
+      "stepProduct": "المنتج",
+      "stepDetails": "التفاصيل",
+      "stepScript": "النص",
+      "stepShipping": "الشحن",
+      "stepReview": "المراجعة",
+      "selectProduct": "اختر منتجًا",
+      "createProduct": "إنشاء منتج جديد",
+      "niche": "المجال",
+      "language": "لغة الفيديو",
+      "videoType": "نوع الفيديو",
+      "durationSeconds": "المدة (بالثواني)",
+      "scriptMode": "من يكتب النص؟",
+      "scriptModeBrand": "العلامة التجارية تكتبه",
+      "scriptModeCreator": "صانع المحتوى يكتبه",
+      "script": "النص",
+      "talkingPoints": "النقاط الرئيسية",
+      "doNotSay": "عبارات ممنوعة",
+      "needsShipping": "تتطلب هذه الحملة شحن منتج",
+      "slots": "عدد أماكن صانعي المحتوى",
+      "publish": "نشر الحملة",
+      "publishSuccess": "تم نشر الحملة",
+      "saveDraft": "حفظ كمسودة"
+    },
+    "proposals": {
+      "title": "العروض",
+      "empty": "لا توجد عروض لهذه الحملة بعد.",
+      "shortlist": "إضافة للقائمة المختصرة",
+      "decline": "رفض",
+      "accept": "قبول",
+      "status": {
+        "applied": "مُقدَّم",
+        "shortlisted": "في القائمة المختصرة",
+        "declined": "مرفوض",
+        "accepted": "مقبول"
+      }
+    },
+    "acceptProposal": {
+      "title": "إتمام الدفع",
+      "waiting": "جارٍ تأكيد الدفع…",
+      "timeout": "الدفع لا يزال قيد المعالجة، تحقق مرة أخرى بعد قليل.",
+      "funded": "تم التمويل",
+      "failed": "فشل الدفع. لم يتم حجز أي مبلغ في الضمان.",
+      "openPaymentHint": "افتح صفحة الدفع في تبويب جديد لإتمام العملية، ثم عد إلى هنا.",
+      "openPayment": "فتح صفحة الدفع"
+    },
+    "products": {
+      "title": "المنتجات",
+      "empty": "لم تضف أي منتج بعد.",
+      "addNew": "منتج جديد",
+      "name": "اسم المنتج",
+      "description": "الوصف",
+      "valueProps": "مميزات المنتج"
+    },
+    "collaboration": {
+      "title": "التعاون",
+      "status": "الحالة",
+      "confirmShipment": "تأكيد الشحن",
+      "carrier": "شركة الشحن",
+      "trackingNumber": "رقم التتبع",
+      "reviewDeliverable": "مراجعة التسليم",
+      "approve": "الموافقة",
+      "requestRevision": "طلب تعديل",
+      "decline": "رفض",
+      "feedback": "ملاحظات",
+      "openChat": "محادثة صانع المحتوى"
+    },
+    "profile": {
+      "title": "ملف العلامة التجارية",
+      "companyName": "اسم الشركة",
+      "country": "الدولة"
+    }
+  },
+  "creator": {
+    "browse": {
+      "title": "تصفح الحملات",
+      "empty": "لا توجد حملات تطابق مجالاتك حاليًا.",
+      "filters": "التصفية",
+      "clearFilters": "مسح التصفية"
+    },
+    "campaignDetail": {
+      "title": "تفاصيل الحملة",
+      "apply": "تقديم طلب",
+      "price": "سعرك",
+      "deliveryDays": "أيام التسليم",
+      "pitch": "عرضك",
+      "applySuccess": "تم إرسال الطلب",
+      "alreadyApplied": "لقد تقدمت لهذه الحملة من قبل"
+    },
+    "applications": {
+      "title": "طلباتي",
+      "empty": "لم تتقدم لأي حملة بعد."
+    },
+    "collaborations": {
+      "title": "تعاوناتي",
+      "empty": "لا توجد تعاونات بعد.",
+      "openChat": "محادثة العلامة التجارية"
+    },
+    "upload": {
+      "title": "رفع التسليم",
+      "selectFile": "اختر فيديو أو صورة",
+      "type": "نوع التسليم",
+      "uploading": "جارٍ الرفع…",
+      "registering": "جارٍ التسجيل…",
+      "success": "تم تسليم الملف",
+      "fileTooLarge": "هذا الملف أكبر من الحجم المسموح به",
+      "unsupportedType": "هذا النوع من الملفات غير مدعوم"
+    },
+    "profile": {
+      "title": "ملف صانع المحتوى",
+      "displayName": "الاسم المعروض",
+      "city": "المدينة",
+      "niches": "المجالات",
+      "basePrice": "السعر الأساسي",
+      "portfolio": "معرض الأعمال",
+      "addPortfolioItem": "إضافة عمل",
+      "mediaUrl": "رابط الملف",
+      "mediaType": "نوع الملف"
+    },
+    "payout": {
+      "title": "بيانات الدفع",
+      "method": "طريقة الدفع",
+      "accountIdentifier": "معرّف الحساب",
+      "holderName": "اسم صاحب الحساب",
+      "saved": "تم حفظ بيانات الدفع"
+    }
+  },
+  "chat": {
+    "title": "المحادثة",
+    "placeholder": "اكتب رسالة",
+    "send": "إرسال",
+    "empty": "لا توجد رسائل بعد. ابدأ المحادثة!",
+    "notEligible": "تُفتح المحادثة بعد تمويل هذا التعاون."
+  },
+  "niche": {
+    "beauty_personal_care": "الجمال والعناية الشخصية",
+    "fashion": "الأزياء",
+    "mom_baby": "الأمومة والطفولة",
+    "food_fmcg": "الأغذية والمنتجات الاستهلاكية",
+    "home_lifestyle": "المنزل ونمط الحياة",
+    "other": "أخرى"
+  },
+  "errors": {
+    "network": "تعذر الوصول إلى الخادم. تحقق من اتصالك.",
+    "unauthorized": "انتهت صلاحية جلستك. سجّل الدخول مرة أخرى.",
+    "duplicateProposal": "لقد تقدمت لهذه الحملة من قبل."
+  },
+  "status": {
+    "campaign": {
+      "draft": "مسودة",
+      "live": "منشورة",
+      "closed": "مغلقة",
+      "archived": "مؤرشفة"
+    },
+    "proposal": {
+      "applied": "مُقدَّم",
+      "shortlisted": "في القائمة المختصرة",
+      "accepted": "مقبول",
+      "declined": "مرفوض"
+    },
+    "collaboration": {
+      "pending_payment": "بانتظار الدفع",
+      "funded": "تم التمويل",
+      "shipped": "تم الشحن",
+      "in_progress": "قيد التنفيذ",
+      "delivered": "تم التسليم",
+      "approved": "تمت الموافقة",
+      "payment_failed": "فشل الدفع",
+      "cancelled": "ملغاة"
+    },
+    "deliverable": {
+      "submitted": "تم التسليم",
+      "revision_requested": "طلب تعديل",
+      "approved": "تمت الموافقة",
+      "declined": "مرفوض"
+    }
+  }
+}

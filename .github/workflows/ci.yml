@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      # H3: a real Postgres so the e2e suite (escrow.e2e-spec.ts,
+      # gherkin.e2e-spec.ts) runs against a real database, not just mocks.
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ugcx
+          POSTGRES_USER: ugcx
+          POSTGRES_PASSWORD: ugcx
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ugcx -d ugcx"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Dummy values only. CI does not use developer or production secrets (EDGE-P1-003).
+      DATABASE_URL: postgres://ugcx:ugcx@localhost:5432/ugcx
+      JWT_SECRET: ci-dummy-secret
+      PORT: 3000
+      NODE_ENV: test
+      # feature_backend_escrow_payments: dummy values so the app boots and
+      # the mocked-provider e2e suite can compute a matching webhook HMAC
+      # (RISK-001/ASM-P1-001, no real Paymob/Ably/R2 account in CI).
+      PAYMOB_API_KEY: ci-dummy-paymob-api-key
+      PAYMOB_INTEGRATION_ID: '1'
+      PAYMOB_IFRAME_ID: '1'
+      PAYMOB_HMAC_SECRET: ci-dummy-hmac-secret
+      PLATFORM_FEE_RATE: '0.10'
+      ABLY_API_KEY: ci-dummy-ably-key
+      R2_ACCOUNT_ID: ci-dummy-account
+      R2_ACCESS_KEY_ID: ci-dummy-access-key
+      R2_SECRET_ACCESS_KEY: ci-dummy-secret-key
+      R2_BUCKET_NAME: ci-dummy-bucket
+      R2_PUBLIC_BASE_URL: https://ci-dummy-cdn.example.com
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm -r --if-present lint
+
+      - name: Type-check
+        run: pnpm -r --if-present typecheck
+
+      - name: Build
+        run: pnpm -r --if-present build
+
+      - name: Run database migrations
+        run: pnpm --filter api migration:run
+
+      - name: Unit tests
+        run: pnpm --filter api test
+
+      - name: E2E tests
+        run: pnpm --filter api test:e2e

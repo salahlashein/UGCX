@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "data": {
+    "urgentTasks": [
+      {
+        "id": "task-1",
+        "title": "Action Required",
+        "description": "Brand requested a revision on \"Summer Vibe Video\".",
+        "actionText": "Review Feedback",
+        "actionUrl": "CollaborationStatus",
+        "collaborationId": "collab-1",
+        "theme": "coral"
+      },
+      {
+        "id": "task-2",
+        "title": "Upload Pending",
+        "description": "Zara Haul video is due tomorrow.",
+        "actionText": "Upload Deliverable",
+        "actionUrl": "DeliverableUpload",
+        "collaborationId": "collab-2",
+        "theme": "forest"
+      }
+    ],
+    "upcomingTasks": [
+      {
+        "id": "task-3",
+        "title": "Brief Approved",
+        "description": "Nike Unboxing script approved. You can start shooting.",
+        "actionText": "View Brief",
+        "actionUrl": "CollaborationStatus",
+        "collaborationId": "collab-3",
+        "theme": "dark"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "mobile",
+    "slug": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "ugcx",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ugcx.mobile"
+    },
+    "android": {
+      "package": "com.ugcx.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow UGCX to access your photos to attach a deliverable."
+        }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "http://localhost:3000/api/v1"
+    }
+  }
+}

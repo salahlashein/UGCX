@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#f8fafc;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1b61c9;text-decoration:none}a:hover{color:#1a3866}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(24,29,38,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:500 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#181d26;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:500 13px/1.2 Inter,system-ui,sans-serif;color:#181d26}
+.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:500 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(24,29,38,.08);color:#181d26;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.35 Inter,system-ui,sans-serif;color:#41454d;max-width:430px}
+.dv-opt:target .dv-oid{background:#1b61c9;color:#fff}
+.dv-next{margin:26px 0 0;font:400 12px/1.6 Inter,system-ui,sans-serif;color:#41454d}
+.dv-pair{display:flex;gap:20px}
+</style></helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Missing flows: onboarding, notifications, proposal history, settings, empty/error states.</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Onboarding — role → OTP → required basics → optional portfolio/price (skippable, resumable from the pending-vetting screen <a class="dv-oid" href="#1i">1i</a>).</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840;padding:96px 24px 40px;box-sizing:border-box">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="width:44px;height:44px;border-radius:12px;background:#181d26;margin-bottom:28px"></div>
+    <div style="font:400 32px/40px Inter,sans-serif;color:#181d26;margin-bottom:10px">Who are you on UGCX?</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:32px">You can't switch roles later in Phase 1 — pick the one that fits.</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="border:2px solid #181d26;border-radius:12px;padding:20px;display:flex;gap:14px;align-items:center">
+        <div style="width:44px;height:44px;border-radius:9999px;background:#a8d8c4;flex:none"></div>
+        <div style="flex:1"><div style="font:500 17px/24px Inter,sans-serif;color:#181d26">I'm a creator</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Apply to briefs, film, get paid</div></div>
+        <span style="width:20px;height:20px;border-radius:9999px;border:6px solid #181d26;box-sizing:border-box"></span>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:12px;padding:20px;display:flex;gap:14px;align-items:center">
+        <div style="width:44px;height:44px;border-radius:9999px;background:#f5e9d4;flex:none"></div>
+        <div style="flex:1"><div style="font:500 17px/24px Inter,sans-serif;color:#181d26">I'm a brand</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Post briefs, buy video content</div></div>
+        <span style="width:20px;height:20px;border-radius:9999px;border:1px solid #8a8f99;box-sizing:border-box"></span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Continue</div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840;padding:96px 24px 40px;box-sizing:border-box">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="font:400 32px/40px Inter,sans-serif;color:#181d26;margin-bottom:10px">Enter the code</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:32px">Sent to +20 100 •••• 471</div>
+    <div style="display:flex;gap:10px;margin-bottom:24px">
+      <span style="flex:1;height:56px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;justify-content:center;font:500 22px Inter,sans-serif;color:#181d26">4</span>
+      <span style="flex:1;height:56px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;justify-content:center;font:500 22px Inter,sans-serif;color:#181d26">8</span>
+      <span style="flex:1;height:56px;border:2px solid #181d26;border-radius:6px;display:flex;align-items:center;justify-content:center;font:500 22px Inter,sans-serif;color:#181d26">2</span>
+      <span style="flex:1;height:56px;border:1px solid #dddddd;border-radius:6px"></span>
+    </div>
+    <div style="font:400 13px/18px Inter,sans-serif;color:#1b61c9">Resend code in 0:42</div>
+  </div>
+  <div style="background:#e0e2e6;color:#9297a0;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Continue</div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 8px">
+    <div style="font:400 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.5px;color:#41454d;margin-bottom:10px">STEP 1 OF 2 · REQUIRED</div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:6px">The basics</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d">This is all we need to start reviewing you.</div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:16px 20px 0">
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">Full name</div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;margin-bottom:20px;font:400 15px/22px Inter,sans-serif;color:#181d26">Nour Hassan</div>
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">City</div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-bottom:20px"><span style="font:400 15px/22px Inter,sans-serif;color:#181d26">Cairo</span><span style="font:400 15px/1 Inter,sans-serif;color:#41454d">⌄</span></div>
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">Your niches <span style="color:#41454d;font-weight:400">— pick up to 3</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:9px 14px;font:500 13px/1.3 Inter,sans-serif">Beauty ✓</span>
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:9px 14px;font:500 13px/1.3 Inter,sans-serif">Skincare ✓</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840">Mom &amp; baby</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840">Food</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840">Fashion</span>
+    </div>
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">One video of yourself talking</div>
+    <div style="border:1px dashed #8a8f99;border-radius:10px;padding:20px;text-align:center;font:400 15px/22px Inter,sans-serif;color:#41454d">+ Record or upload a 15s clip</div>
+    <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-top:8px">Required so an admin can verify it's really you.</div>
+  </div>
+  <div style="flex:none;padding:16px 20px 30px">
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Continue</div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 8px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
+      <div style="font:400 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.5px;color:#41454d">STEP 2 OF 2 · OPTIONAL</div>
+      <span style="font:500 13px/18px Inter,sans-serif;color:#1b61c9">Skip for now</span>
+    </div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:6px">Build your portfolio</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d">Adding samples now speeds up vetting — you can also do this after you're approved.</div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:16px 20px 0">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+      <div style="height:150px;border:1px dashed #8a8f99;border-radius:10px;display:flex;align-items:center;justify-content:center;font:400 13px/18px Inter,sans-serif;color:#41454d">+ Add video</div>
+      <div style="height:150px;border-radius:10px;background:repeating-linear-gradient(135deg,#fcab79 0 10px,#fdbc92 10px 20px)"></div>
+    </div>
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">Base price <span style="color:#41454d;font-weight:400">— optional, editable anytime</span></div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;gap:10px;margin-bottom:20px">
+      <span style="font:400 15px/22px Inter,sans-serif;color:#41454d">EGP</span>
+      <span style="flex:1;font:400 15px/22px Inter,sans-serif;color:#9297a0">e.g. 2,500</span>
+    </div>
+    <div style="font:500 14px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:8px">Instagram or TikTok <span style="color:#41454d;font-weight:400">— optional</span></div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;font:400 15px/22px Inter,sans-serif;color:#9297a0">@yourhandle</div>
+  </div>
+  <div style="flex:none;padding:16px 20px 30px">
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Submit for review</div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Notifications. Grouped by day, unread carries a left dot not a badge-on-badge, deep-links to the same collaboration/chat screens.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 12px;display:flex;align-items:center;gap:14px">
+    <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+    <div style="flex:1;font:400 28px/34px Inter,sans-serif;color:#181d26">Notifications</div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 20px">
+    <div style="font:500 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.4px;color:#41454d;margin:12px 0 10px">TODAY</div>
+    <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid #dddddd">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #dddddd">
+        <span style="width:8px;height:8px;border-radius:9999px;background:#aa2d00;flex:none;margin-top:6px"></span>
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Kanz Modest sent a message</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">"Any update on the reshoot?" · 2h ago</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #dddddd">
+        <span style="width:8px;height:8px;border-radius:9999px;background:#aa2d00;flex:none;margin-top:6px"></span>
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Glow Lab requested a revision</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Collaboration #1042 · 5h ago</div></div>
+      </div>
+    </div>
+    <div style="font:500 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.4px;color:#41454d;margin:16px 0 10px">YESTERDAY</div>
+    <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid #dddddd">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #dddddd">
+        <span style="width:8px;height:8px;border-radius:9999px;background:transparent;flex:none;margin-top:6px"></span>
+        <div style="flex:1"><div style="font:400 15px/22px Inter,sans-serif;color:#181d26">EGP 2,800 released — Nefer Skin</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Now ready to withdraw</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #dddddd">
+        <span style="width:8px;height:8px;border-radius:9999px;background:transparent;flex:none;margin-top:6px"></span>
+        <div style="flex:1"><div style="font:400 15px/22px Inter,sans-serif;color:#181d26">Your payout was sent</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 5,100 via InstaPay · ref PO-2291</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #dddddd">
+        <span style="width:8px;height:8px;border-radius:9999px;background:transparent;flex:none;margin-top:6px"></span>
+        <div style="flex:1"><div style="font:400 15px/22px Inter,sans-serif;color:#181d26">You're vetted — welcome!</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">You can now apply to any open brief</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>My proposals — application history across all statuses (sent, accepted, declined). What "Applied" links to from every home variant.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 16px">
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:14px">My proposals</div>
+    <div style="display:flex;gap:8px;overflow:hidden">
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:9px 14px;font:500 13px/1.3 Inter,sans-serif;white-space:nowrap">All 6</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;white-space:nowrap">Pending 3</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;white-space:nowrap">Accepted 2</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;white-space:nowrap">Declined 1</span>
+    </div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column;gap:12px">
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+      <div style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,#a8d8c4 0 8px,#b6e0cf 8px 16px);flex:none"></div>
+      <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Tarek Coffee · unboxing</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">You offered EGP 2,600 · sent 1d ago</div></div>
+      <span style="background:#e0e2e6;color:#333840;border-radius:9999px;padding:5px 11px;font:500 12px/1.4 Inter,sans-serif">Pending</span>
+    </div>
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+      <div style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,#f4d35e 0 8px,#f7dd83 8px 16px);flex:none"></div>
+      <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Nefer Skin · testimonial</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">You offered EGP 2,800 · sent 3d ago</div></div>
+      <span style="background:#a8d8c4;color:#0a2e0e;border-radius:9999px;padding:5px 11px;font:500 12px/1.4 Inter,sans-serif">Accepted</span>
+    </div>
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center;opacity:.6">
+      <div style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,#e0e2e6 0 8px,#eceef1 8px 16px);flex:none"></div>
+      <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Hawwa Hair · routine</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">You offered EGP 3,500 · sent 6d ago</div></div>
+      <span style="background:#fdecea;color:#b3261e;border-radius:9999px;padding:5px 11px;font:500 12px/1.4 Inter,sans-serif">Declined</span>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;color:#181d26">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="2d">
+<div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Settings — language switcher (the RTL toggle), payout details, account. Plain hairline list, no decoration.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 16px;display:flex;align-items:center;gap:14px">
+    <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+    <div style="flex:1;font:400 28px/34px Inter,sans-serif;color:#181d26">Settings</div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 20px">
+    <div style="font:500 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.4px;color:#41454d;margin-bottom:8px">LANGUAGE</div>
+    <div style="display:flex;border:1px solid #8a8f99;border-radius:6px;overflow:hidden;margin-bottom:24px">
+      <span style="flex:1;text-align:center;padding:13px 0;font:500 15px/22px Inter,sans-serif;background:#181d26;color:#fff">English</span>
+      <span style="flex:1;text-align:center;padding:13px 0;font:400 15px/22px 'IBM Plex Sans Arabic',sans-serif;color:#333840;border-left:1px solid #8a8f99">العربية</span>
+    </div>
+    <div style="font:500 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.4px;color:#41454d;margin-bottom:4px">ACCOUNT</div>
+    <div style="border-top:1px solid #dddddd">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#181d26">Payout details</span><span style="font:400 13px/18px Inter,sans-serif;color:#41454d">InstaPay ›</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#181d26">Phone number</span><span style="font:400 13px/18px Inter,sans-serif;color:#41454d">+20 100 •••• 471</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#181d26">Notifications</span><span style="font:400 13px/18px Inter,sans-serif;color:#41454d">On ›</span></div>
+    </div>
+    <div style="font:500 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.4px;color:#41454d;margin:20px 0 4px">SUPPORT</div>
+    <div style="border-top:1px solid #dddddd">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#181d26">Help center</span><span style="font:400 13px/18px Inter,sans-serif;color:#41454d">›</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#b3261e">Log out</span></div>
+    </div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="2e">
+<div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>Empty and error states — no open briefs, and an upload failure. Same square line-drawn placeholder motif as the rest of the deck, not an illustration.</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;padding:4px 20px 0;display:flex;flex-direction:column">
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:20px">Discover</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px">
+      <div style="width:64px;height:64px;border-radius:10px;border:1px solid #dddddd;margin-bottom:20px"></div>
+      <div style="font:500 17px/24px Inter,sans-serif;color:#181d26;margin-bottom:8px">No open briefs in Beauty right now</div>
+      <div style="font:400 14px/20px Inter,sans-serif;color:#41454d;margin-bottom:20px">New briefs get posted daily. We'll notify you the moment one matches.</div>
+      <div style="border:1px solid #dddddd;border-radius:12px;padding:12px 20px;font:500 15px/1.4 Inter,sans-serif;color:#181d26">Browse other niches</div>
+    </div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840;padding:0 20px">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+      <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+      <div style="flex:1;font:500 15px/20px Inter,sans-serif;color:#181d26">Upload deliverable</div>
+    </div>
+    <div style="background:#fdecea;border-radius:10px;padding:16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:20px">
+      <span style="width:16px;height:16px;border-radius:9999px;background:#b3261e;flex:none;margin-top:3px"></span>
+      <div style="font:400 15px/22px Inter,sans-serif;color:#181d26">Upload failed — the connection dropped at 42%. Your file wasn't lost; tap retry to pick up where it left off.</div>
+    </div>
+    <div style="display:flex;gap:14px;margin-bottom:20px">
+      <div style="width:96px;height:150px;border-radius:10px;background:repeating-linear-gradient(135deg,#e0e2e6 0 8px,#eceef1 8px 16px);flex:none"></div>
+      <div style="flex:1">
+        <div style="font:500 15px/22px Inter,sans-serif;color:#181d26">glowlab-review-v2.mp4</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:14px">62s · 184 MB</div>
+        <div style="height:6px;border-radius:9999px;background:#e0e2e6;overflow:hidden;margin-bottom:8px"><div style="width:42%;height:6px;background:#b3261e"></div></div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#b3261e">Failed at 42%</div>
+      </div>
+    </div>
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Retry upload</div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “wire onboarding (<a class="dv-oid" href="#2a">2a</a>) into <a class="dv-oid" href="#1a">1a</a> as the entry flow” · “Arabic pair for <a class="dv-oid" href="#2c">2c</a>” · “now brand mode”</p>
+</section>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">UGCX creator mode — Phase 1, Egypt. Three home directions plus the full loop.</span></div>
+
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Home — work queue. Deadlines first; the single most urgent job wears the coral signature card. Everything else is a hairline row.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:0 20px">
+    <div style="display:flex;align-items:center;gap:12px;padding:4px 0 20px">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#a8d8c4;flex:none;display:flex;align-items:center;justify-content:center;font:500 15px Inter,sans-serif;color:#0a2e0e">NH</div>
+      <div style="flex:1">
+        <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Nour Hassan</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Cairo · Beauty &amp; personal care</div>
+      </div>
+      <div style="width:40px;height:40px;border-radius:9999px;border:1px solid #dddddd;display:flex;align-items:center;justify-content:center;position:relative"><span style="font:400 13px ui-monospace,Menlo,monospace;color:#41454d">3</span><span style="position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:9999px;background:#aa2d00"></span></div>
+    </div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;letter-spacing:-.2px;margin-bottom:6px">Three things need you</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:24px">Two deliveries and one shipment to confirm.</div>
+
+    <div style="background:#aa2d00;border-radius:12px;padding:24px;color:#fff;margin-bottom:16px">
+      <div style="font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.6px;opacity:.85;margin-bottom:10px">DUE IN 2 DAYS</div>
+      <div style="font:400 20px/28px Inter,sans-serif;margin-bottom:8px">Upload your video for Glow Lab Vitamin C Serum</div>
+      <div style="font:400 15px/22px Inter,sans-serif;opacity:.9;margin-bottom:20px">EGP 3,200 is held in escrow and releases when the brand approves.</div>
+      <div style="display:flex;gap:10px">
+        <div style="background:#fff;color:#181d26;border-radius:12px;padding:14px 20px;font:500 16px/1.4 Inter,sans-serif">Upload deliverable</div>
+        <div style="border:1px solid rgba(255,255,255,.4);border-radius:12px;padding:14px 18px;font:500 16px/1.4 Inter,sans-serif;color:#fff">Brief</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:40px;height:40px;border-radius:10px;background:#f4d35e;flex:none"></div>
+        <div style="flex:1">
+          <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Confirm you received the shipment</div>
+          <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Bebe Care · AWB 8842 191 003</div>
+        </div>
+        <div style="font:400 20px/1 Inter,sans-serif;color:#41454d">›</div>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:40px;height:40px;border-radius:10px;background:#fcab79;flex:none"></div>
+        <div style="flex:1">
+          <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Reply to Kanz Modest</div>
+          <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">2 unread messages · asked about lighting</div>
+        </div>
+        <span style="background:#181d26;color:#fff;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">2</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px">
+      <div style="font:400 22px/30px Inter,sans-serif;color:#181d26">Open briefs for you</div>
+      <span style="font:400 13px/18px Inter,sans-serif;color:#1b61c9">See all 12</span>
+    </div>
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+      <div style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,#a8d8c4 0 8px,#b6e0cf 8px 16px);flex:none"></div>
+      <div style="flex:1">
+        <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Tarek Coffee · 30s unboxing</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 2,000–3,000 · ships to you</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Home — discovery feed. Briefs are the product; work-in-progress collapses to one thin strip. Uneven card heights, pastel demo surfaces.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;padding:4px 20px 12px">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+      <div style="flex:1;height:44px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;font:400 15px/22px Inter,sans-serif;color:#41454d">Search briefs, brands, niches</div>
+      <div style="width:44px;height:44px;border:1px solid #dddddd;border-radius:6px;display:flex;align-items:center;justify-content:center;font:400 12px ui-monospace,Menlo,monospace;color:#41454d">AR</div>
+    </div>
+    <div style="display:flex;gap:8px;overflow:hidden">
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:9px 14px;font:500 13px/1.3 Inter,sans-serif;white-space:nowrap">Beauty</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840;white-space:nowrap">Cairo</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840;white-space:nowrap">No shipping</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840;white-space:nowrap">2,000+</span>
+    </div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:8px 20px 0">
+    <div style="background:#f5e9d4;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="flex:1;font:400 15px/22px Inter,sans-serif;color:#181d26">1 upload due in 2 days · EGP 3,200 held</div>
+      <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">›</span>
+    </div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+      <div style="font:400 22px/30px Inter,sans-serif;color:#181d26">12 open briefs</div>
+      <span style="font:400 13px/18px Inter,sans-serif;color:#41454d">Newest</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <div style="height:132px;border-radius:10px;background:repeating-linear-gradient(135deg,#fcab79 0 10px,#fdbc92 10px 20px);display:flex;align-items:flex-end;padding:12px;margin-bottom:14px">
+          <span style="font:400 11px/1.3 ui-monospace,Menlo,monospace;color:#181d26;background:rgba(255,255,255,.8);padding:4px 7px;border-radius:4px">product shot — serum bottle</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font:400 13px/18px Inter,sans-serif;color:#41454d">Glow Lab</span>
+          <span style="width:3px;height:3px;border-radius:9999px;background:#9297a0"></span>
+          <span style="background:#a8d8c4;color:#0a2e0e;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Open · 4 proposals</span>
+        </div>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin-bottom:10px">Honest 60s review of our Vitamin C serum</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:14px">60s · talking head · Egyptian Arabic · ships to you</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font:500 16px/1.4 Inter,sans-serif;color:#181d26">EGP 2,500–4,000</div>
+          <span style="font:400 13px/18px Inter,sans-serif;color:#41454d">Posted 3h ago</span>
+        </div>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px">
+        <div style="width:64px;height:64px;border-radius:10px;background:repeating-linear-gradient(135deg,#f4d35e 0 8px,#f7dd83 8px 16px);flex:none"></div>
+        <div style="flex:1">
+          <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:4px">Bebe Care</div>
+          <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin-bottom:8px">Baby wash routine, no face needed</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font:500 16px/1.4 Inter,sans-serif;color:#181d26">EGP 1,800</span>
+            <span style="font:400 13px/18px Inter,sans-serif;color:#41454d">· 45s · fixed price</span>
+          </div>
+        </div>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <div style="height:96px;border-radius:10px;background:repeating-linear-gradient(135deg,#a8d8c4 0 10px,#b8e2d2 10px 20px);margin-bottom:14px"></div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:4px">Kanz Modest</div>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26">Try-on haul, 3 pieces</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Home — status board. Every collaboration grouped by stage in horizontal rails, money state on top. Best once a creator juggles 5+ jobs.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden">
+    <div style="padding:4px 20px 0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div style="font:400 28px/34px Inter,sans-serif;color:#181d26">My board</div>
+        <div style="width:40px;height:40px;border-radius:9999px;background:#a8d8c4;display:flex;align-items:center;justify-content:center;font:500 15px Inter,sans-serif;color:#0a2e0e">NH</div>
+      </div>
+      <div style="background:#181d26;border-radius:12px;padding:24px;color:#fff;margin-bottom:26px">
+        <div style="font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.6px;opacity:.7;margin-bottom:12px">ESCROW</div>
+        <div style="display:flex;gap:28px">
+          <div>
+            <div style="font:400 28px/34px Inter,sans-serif">EGP 6,400</div>
+            <div style="font:400 13px/18px Inter,sans-serif;opacity:.75">held for you</div>
+          </div>
+          <div>
+            <div style="font:400 28px/34px Inter,sans-serif">EGP 3,200</div>
+            <div style="font:400 13px/18px Inter,sans-serif;opacity:.75">ready to withdraw</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:0 20px 8px;display:flex;align-items:baseline;gap:8px"><span style="font:400 22px/30px Inter,sans-serif;color:#181d26">Needs filming</span><span style="font:400 13px ui-monospace,Menlo,monospace;color:#41454d">2</span></div>
+    <div style="display:flex;gap:12px;padding:6px 20px 22px;overflow:hidden">
+      <div style="width:212px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <span style="background:#fcab79;color:#181d26;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Due in 2 days</span>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin:12px 0 8px">Glow Lab serum</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 3,200 held</div>
+      </div>
+      <div style="width:212px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <span style="background:#f4d35e;color:#181d26;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Shipment sent</span>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin:12px 0 8px">Bebe Care wash</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 1,800 held</div>
+      </div>
+    </div>
+
+    <div style="padding:0 20px 8px;display:flex;align-items:baseline;gap:8px"><span style="font:400 22px/30px Inter,sans-serif;color:#181d26">In review</span><span style="font:400 13px ui-monospace,Menlo,monospace;color:#41454d">1</span></div>
+    <div style="display:flex;gap:12px;padding:6px 20px 22px;overflow:hidden">
+      <div style="width:212px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <span style="background:#fdecea;color:#b3261e;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Revision 1</span>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin:12px 0 8px">Kanz try-on haul</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Fix requested 5h ago</div>
+      </div>
+      <div style="width:212px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:16px;opacity:.5">
+        <span style="background:#e0e2e6;color:#333840;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Applied</span>
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26;margin:12px 0 8px">Tarek Coffee</div>
+      </div>
+    </div>
+
+    <div style="padding:0 20px 8px;display:flex;align-items:baseline;gap:8px"><span style="font:400 22px/30px Inter,sans-serif;color:#181d26">Applied</span><span style="font:400 13px ui-monospace,Menlo,monospace;color:#41454d">3</span></div>
+    <div style="display:flex;gap:12px;padding:6px 20px 0;overflow:hidden">
+      <div style="width:160px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:14px">
+        <div style="font:400 15px/22px Inter,sans-serif;color:#181d26">Nefer Skin</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 2,800 offered</div>
+      </div>
+      <div style="width:160px;flex:none;border:1px solid #dddddd;border-radius:10px;padding:14px">
+        <div style="font:400 15px/22px Inter,sans-serif;color:#181d26">Hawwa Hair</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 3,500 offered</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Brief detail → apply. Creator sets their own price; the escrow promise sits right above the CTA. Raised bottom action bar is the one elevated surface.</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="flex:1;overflow:hidden">
+    <div style="height:236px;background:repeating-linear-gradient(135deg,#fcab79 0 12px,#fdbc92 12px 24px);display:flex;flex-direction:column;justify-content:space-between;padding:56px 20px 16px">
+      <div style="display:flex;justify-content:space-between">
+        <span style="width:40px;height:40px;border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;font:400 18px/1 Inter,sans-serif;color:#181d26">‹</span>
+        <span style="width:40px;height:40px;border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;font:400 15px/1 Inter,sans-serif;color:#181d26">♡</span>
+      </div>
+      <span style="align-self:flex-start;font:400 11px/1.3 ui-monospace,Menlo,monospace;color:#181d26;background:rgba(255,255,255,.8);padding:4px 7px;border-radius:4px">product shot — serum bottle</span>
+    </div>
+    <div style="padding:24px 20px 0">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:28px;height:28px;border-radius:9999px;background:#f5e9d4;flex:none"></div>
+        <span style="font:400 15px/22px Inter,sans-serif;color:#333840">Glow Lab</span>
+        <span style="background:#a8d8c4;color:#0a2e0e;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Open · 4 proposals</span>
+      </div>
+      <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;letter-spacing:-.2px;margin-bottom:12px">Honest 60s review of our Vitamin C serum</div>
+      <div style="font:400 15px/22px Inter,sans-serif;color:#333840;margin-bottom:24px;text-wrap:pretty">We want a real morning-routine feel, filmed at home, Egyptian Arabic, no studio lighting. Show the texture on skin and say the price out loud.</div>
+      <div style="border-top:1px solid #dddddd">
+        <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Video type</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">Talking head</span></div>
+        <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Duration</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">60 seconds</span></div>
+        <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Language</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">Egyptian Arabic</span></div>
+        <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Script</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">Brand-provided</span></div>
+        <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Shipping</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">Product sent to you</span></div>
+      </div>
+      <div style="background:#f5e9d4;border-radius:10px;padding:24px;margin-top:24px">
+        <div style="font:500 16px/1.4 Inter,sans-serif;color:#181d26;margin-bottom:10px">Three things to hit</div>
+        <div style="font:400 15px/22px Inter,sans-serif;color:#333840">01 &nbsp;Fast absorption, no sticky finish<br>02 &nbsp;Made in Egypt, dermatologist tested<br>03 &nbsp;Say “EGP 349” clearly</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;background:#fff;border-top:1px solid #dddddd;box-shadow:0 -2px 8px rgba(24,29,38,.06);padding:16px 20px 30px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font:500 16px/1.4 Inter,sans-serif;color:#181d26">EGP 2,500–4,000</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Brand's stated range</div>
+      </div>
+      <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Closes in 4 days</div>
+    </div>
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Apply — set your price</div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840;position:relative">
+  <div style="position:absolute;inset:0;background:rgba(24,29,38,.45)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:12px 12px 0 0;padding:20px 20px 30px">
+    <div style="width:44px;height:4px;border-radius:9999px;background:#e0e2e6;margin:0 auto 20px"></div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:6px">Your proposal</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:24px">Glow Lab · 60s talking head</div>
+
+    <div style="font:500 15px/22px Inter,sans-serif;color:#181d26;margin-bottom:8px">Your price</div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;gap:10px;margin-bottom:10px">
+      <span style="font:400 15px/22px Inter,sans-serif;color:#41454d">EGP</span>
+      <span style="flex:1;font:500 20px/28px Inter,sans-serif;color:#181d26">3,200</span>
+      <span style="width:2px;height:24px;background:#181d26"></span>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:24px">
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840">2,500</span>
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:9px 14px;font:500 13px/1.3 Inter,sans-serif">3,200</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:9px 14px;font:400 13px/1.3 Inter,sans-serif;color:#333840">4,000</span>
+    </div>
+
+    <div style="font:500 15px/22px Inter,sans-serif;color:#181d26;margin-bottom:8px">Delivery time</div>
+    <div style="display:flex;border:1px solid #8a8f99;border-radius:6px;overflow:hidden;margin-bottom:24px">
+      <span style="flex:1;text-align:center;padding:13px 0;font:400 15px/22px Inter,sans-serif;color:#333840;border-right:1px solid #8a8f99">3 days</span>
+      <span style="flex:1;text-align:center;padding:13px 0;font:500 15px/22px Inter,sans-serif;background:#181d26;color:#fff;border-right:1px solid #8a8f99">5 days</span>
+      <span style="flex:1;text-align:center;padding:13px 0;font:400 15px/22px Inter,sans-serif;color:#333840">7 days</span>
+    </div>
+
+    <div style="font:500 15px/22px Inter,sans-serif;color:#181d26;margin-bottom:8px">Note to the brand</div>
+    <div style="min-height:76px;border:1px solid #8a8f99;border-radius:6px;padding:12px 14px;font:400 15px/22px Inter,sans-serif;color:#333840;margin-bottom:20px">I've shot 4 skincare reviews this month. I can film with morning window light in Maadi.</div>
+
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px">
+      <span style="width:16px;height:16px;border-radius:9999px;background:#006400;flex:none;margin-top:3px"></span>
+      <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">The brand pays into escrow the moment they accept. Your EGP 3,200 is held by UGCX and released when they approve the video.</div>
+    </div>
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Send proposal</div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+
+<div class="dv-opt" id="1e">
+<div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Collaboration → upload. A vertical state timeline replaces status jargon; the revision request is the one place the danger tokens appear.</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:4px 20px 0">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+      <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+      <div style="flex:1">
+        <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Glow Lab</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Collaboration #1042</div>
+      </div>
+      <span style="background:#f4d35e;color:#181d26;border-radius:9999px;padding:5px 11px;font:500 12px/1.4 Inter,sans-serif">Funded</span>
+    </div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:20px">Vitamin C serum review</div>
+
+    <div style="background:#0a2e0e;border-radius:12px;padding:24px;color:#fff;margin-bottom:26px">
+      <div style="font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.6px;opacity:.75;margin-bottom:10px">HELD IN ESCROW</div>
+      <div style="font:400 28px/34px Inter,sans-serif;margin-bottom:6px">EGP 3,200</div>
+      <div style="font:400 15px/22px Inter,sans-serif;opacity:.85">Releases to your balance when Glow Lab approves your video.</div>
+    </div>
+
+    <div style="font:400 22px/30px Inter,sans-serif;color:#181d26;margin-bottom:16px">Where we are</div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;gap:14px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:none;width:16px"><span style="width:14px;height:14px;border-radius:9999px;background:#006400"></span><span style="flex:1;width:1px;background:#dddddd"></span></div>
+        <div style="padding-bottom:20px"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Proposal accepted</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">28 Aug · EGP 3,200 agreed</div></div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:none;width:16px"><span style="width:14px;height:14px;border-radius:9999px;background:#006400"></span><span style="flex:1;width:1px;background:#dddddd"></span></div>
+        <div style="padding-bottom:20px"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Escrow funded</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">28 Aug · paid by card</div></div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:none;width:16px"><span style="width:14px;height:14px;border-radius:9999px;border:4px solid #181d26;box-sizing:border-box"></span><span style="flex:1;width:1px;background:#dddddd"></span></div>
+        <div style="padding-bottom:20px;flex:1">
+          <div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Product shipped to you</div>
+          <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:12px">30 Aug · AWB 8842 191 003 · Bosta</div>
+          <div style="border:1px solid #dddddd;border-radius:10px;padding:16px">
+            <div style="font:400 15px/22px Inter,sans-serif;color:#333840;margin-bottom:14px">Did it arrive? Confirming starts your 5-day filming window.</div>
+            <div style="display:flex;gap:10px">
+              <span style="flex:1;background:#181d26;color:#fff;border-radius:12px;padding:14px 0;text-align:center;font:500 16px/1.4 Inter,sans-serif">It arrived</span>
+              <span style="border:1px solid #dddddd;border-radius:12px;padding:14px 16px;font:500 16px/1.4 Inter,sans-serif;color:#181d26">Not yet</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:none;width:16px"><span style="width:14px;height:14px;border-radius:9999px;border:1px solid #9297a0;box-sizing:border-box"></span></div>
+        <div><div style="font:500 15px/22px Inter,sans-serif;color:#9297a0">Film and upload</div><div style="font:400 13px/18px Inter,sans-serif;color:#9297a0">Due 4 Sep</div></div>
+      </div>
+    </div>
+
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center;margin-top:26px">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#f5e9d4;flex:none"></div>
+      <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Chat with Glow Lab</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Last message 2h ago</div></div>
+      <span style="background:#181d26;color:#fff;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">1</span>
+    </div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:4px 20px 0">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+      <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+      <div style="flex:1;font:500 15px/20px Inter,sans-serif;color:#181d26">Upload deliverable</div>
+      <span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Save draft</span>
+    </div>
+    <div style="background:#fdecea;border-radius:10px;padding:16px;margin-bottom:24px">
+      <div style="font:500 15px/22px Inter,sans-serif;color:#b3261e;margin-bottom:6px">Revision 1 requested</div>
+      <div style="font:400 15px/22px Inter,sans-serif;color:#333840">“Love the intro. Can you re-shoot the middle with a close-up of the pump and drop the background music?”</div>
+    </div>
+
+    <div style="display:flex;gap:14px;margin-bottom:16px">
+      <div style="width:96px;height:150px;border-radius:10px;background:repeating-linear-gradient(135deg,#e0e2e6 0 8px,#eceef1 8px 16px);flex:none;display:flex;align-items:flex-end;padding:8px;box-sizing:border-box">
+        <span style="font:400 10px/1.3 ui-monospace,Menlo,monospace;color:#181d26;background:rgba(255,255,255,.85);padding:3px 5px;border-radius:4px">video 9:16</span>
+      </div>
+      <div style="flex:1">
+        <div style="font:500 15px/22px Inter,sans-serif;color:#181d26">glowlab-review-v2.mp4</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:14px">62s · 1080×1920 · 184 MB</div>
+        <div style="height:6px;border-radius:9999px;background:#e0e2e6;overflow:hidden;margin-bottom:8px"><div style="width:68%;height:6px;background:#181d26"></div></div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Uploading · 68%</div>
+      </div>
+    </div>
+    <div style="border:1px dashed #8a8f99;border-radius:10px;padding:20px;text-align:center;font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:26px">+ Add another file</div>
+
+    <div style="font:400 22px/30px Inter,sans-serif;color:#181d26;margin-bottom:14px">Before you submit</div>
+    <div style="border-top:1px solid #dddddd;margin-bottom:24px">
+      <div style="display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:4px;background:#181d26;color:#fff;font:400 12px/20px Inter,sans-serif;text-align:center;flex:none">✓</span><span style="font:400 15px/22px Inter,sans-serif">Vertical 9:16, no letterboxing</span></div>
+      <div style="display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:4px;background:#181d26;color:#fff;font:400 12px/20px Inter,sans-serif;text-align:center;flex:none">✓</span><span style="font:400 15px/22px Inter,sans-serif">No copyrighted music</span></div>
+      <div style="display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:4px;border:1px solid #8a8f99;box-sizing:border-box;flex:none"></span><span style="font:400 15px/22px Inter,sans-serif">Pump close-up included</span></div>
+    </div>
+    <div style="min-height:70px;border:1px solid #8a8f99;border-radius:6px;padding:12px 14px;font:400 15px/22px Inter,sans-serif;color:#41454d">Note for the brand (optional)</div>
+  </div>
+  <div style="flex:none;background:#fff;border-top:1px solid #dddddd;box-shadow:0 -2px 8px rgba(24,29,38,.06);padding:16px 20px 30px">
+    <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:12px">Glow Lab has 3 days to approve or request one more revision.</div>
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Submit for review</div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+
+<div class="dv-opt" id="1f">
+<div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Collaboration chat. System messages are centered hairline capsules, so escrow and shipment events read as record, not chatter. Brand contact details never appear.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;display:flex;align-items:center;gap:12px;padding:4px 20px 14px;border-bottom:1px solid #dddddd">
+    <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">‹</span>
+    <div style="width:36px;height:36px;border-radius:9999px;background:#f5e9d4;flex:none"></div>
+    <div style="flex:1">
+      <div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Glow Lab</div>
+      <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Vitamin C serum review</div>
+    </div>
+    <span style="background:#f4d35e;color:#181d26;border-radius:9999px;padding:5px 11px;font:500 12px/1.4 Inter,sans-serif">Funded</span>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:20px;display:flex;flex-direction:column;gap:14px">
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/18px Inter,sans-serif;color:#41454d;text-align:center">Escrow funded · EGP 3,200 held · 28 Aug</div>
+    <div style="align-self:flex-start;max-width:280px;background:#f8fafc;border:1px solid #dddddd;border-radius:10px;padding:12px 14px;font:400 15px/22px Inter,sans-serif;color:#333840">Welcome Nour! Shipping the serum today. Please film in daylight if you can.</div>
+    <div style="align-self:flex-end;max-width:280px;background:#181d26;color:#fff;border-radius:10px;padding:12px 14px;font:400 15px/22px Inter,sans-serif">Perfect. I shoot mornings, window light in Maadi.</div>
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/18px Inter,sans-serif;color:#41454d;text-align:center">Shipment sent · AWB 8842 191 003 · 30 Aug</div>
+    <div style="align-self:center;background:#f5e9d4;border-radius:9999px;padding:7px 14px;font:400 13px/18px Inter,sans-serif;color:#181d26;text-align:center">You confirmed delivery · filming window ends 4 Sep</div>
+    <div style="align-self:flex-start;max-width:280px;background:#f8fafc;border:1px solid #dddddd;border-radius:10px;padding:12px 14px;font:400 15px/22px Inter,sans-serif;color:#333840">Got it — one thing, please say the price out loud near the end.</div>
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/18px Inter,sans-serif;color:#41454d;text-align:center">Deliverable submitted · glowlab-review.mp4</div>
+    <div style="align-self:center;background:#fdecea;border-radius:9999px;padding:7px 14px;font:400 13px/18px Inter,sans-serif;color:#b3261e;text-align:center">Revision 1 requested · see details</div>
+    <div style="align-self:flex-end;max-width:280px;background:#181d26;color:#fff;border-radius:10px;padding:12px 14px;font:400 15px/22px Inter,sans-serif">Re-shooting the middle tonight, v2 tomorrow morning.</div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:12px 16px 30px;display:flex;gap:10px;align-items:center">
+    <div style="width:40px;height:40px;border-radius:9999px;border:1px solid #dddddd;display:flex;align-items:center;justify-content:center;font:400 18px/1 Inter,sans-serif;color:#41454d">+</div>
+    <div style="flex:1;height:44px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;font:400 15px/22px Inter,sans-serif;color:#41454d">Message Glow Lab</div>
+    <div style="width:44px;height:44px;border-radius:9999px;background:#181d26;display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #fff;margin-left:3px"></span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1g">
+<div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Earnings → payout request. The ledger is the Transaction table made human: held, released, paid. Manual Phase 1 payout timing is stated, not hidden.</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:4px 20px 0">
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:24px">Earnings</div>
+    <div style="background:#f5e9d4;border-radius:12px;padding:24px;margin-bottom:16px">
+      <div style="font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.6px;color:#41454d;margin-bottom:10px">READY TO WITHDRAW</div>
+      <div style="font:400 32px/38px Inter,sans-serif;color:#181d26;margin-bottom:16px">EGP 3,200</div>
+      <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Request payout</div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:28px">
+      <div style="flex:1;border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26">EGP 6,400</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Held in escrow</div>
+      </div>
+      <div style="flex:1;border:1px solid #dddddd;border-radius:10px;padding:16px">
+        <div style="font:400 20px/28px Inter,sans-serif;color:#181d26">EGP 12,900</div>
+        <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Paid out to date</div>
+      </div>
+    </div>
+    <div style="font:400 22px/30px Inter,sans-serif;color:#181d26;margin-bottom:8px">Ledger</div>
+    <div style="border-top:1px solid #dddddd">
+      <div style="display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd">
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Released · Kanz Modest</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">2 Sep · collaboration #1039</div></div>
+        <div style="text-align:end"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">+ 3,200</div><span style="font:400 12px/1.4 Inter,sans-serif;color:#006400">Withdrawable</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd">
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Held · Glow Lab</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">28 Aug · collaboration #1042</div></div>
+        <div style="text-align:end"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">3,200</div><span style="font:400 12px/1.4 Inter,sans-serif;color:#41454d">In escrow</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd">
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Payout · InstaPay</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">21 Aug · ref PO-2291</div></div>
+        <div style="text-align:end"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">− 5,100</div><span style="font:400 12px/1.4 Inter,sans-serif;color:#006400">Paid</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #dddddd">
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Released · Nefer Skin</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">18 Aug · collaboration #1031</div></div>
+        <div style="text-align:end"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">+ 2,800</div><span style="font:400 12px/1.4 Inter,sans-serif;color:#006400">Paid</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840;position:relative">
+  <div style="position:absolute;inset:0;background:rgba(24,29,38,.45)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:12px 12px 0 0;padding:20px 20px 30px">
+    <div style="width:44px;height:4px;border-radius:9999px;background:#e0e2e6;margin:0 auto 20px"></div>
+    <div style="font:400 28px/34px Inter,sans-serif;color:#181d26;margin-bottom:6px">Request payout</div>
+    <div style="font:400 15px/22px Inter,sans-serif;color:#41454d;margin-bottom:24px">Available balance EGP 3,200</div>
+
+    <div style="font:500 15px/22px Inter,sans-serif;color:#181d26;margin-bottom:8px">Amount</div>
+    <div style="height:52px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;gap:10px;margin-bottom:10px">
+      <span style="font:400 15px/22px Inter,sans-serif;color:#41454d">EGP</span>
+      <span style="flex:1;font:500 20px/28px Inter,sans-serif;color:#181d26">3,200</span>
+      <span style="font:500 13px/1.3 Inter,sans-serif;color:#1b61c9">All</span>
+    </div>
+    <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:24px">Minimum EGP 500 per request.</div>
+
+    <div style="font:500 15px/22px Inter,sans-serif;color:#181d26;margin-bottom:8px">Send to</div>
+    <div style="border:1px solid #dddddd;border-radius:10px;margin-bottom:20px">
+      <div style="display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid #dddddd">
+        <span style="width:20px;height:20px;border-radius:9999px;border:6px solid #181d26;box-sizing:border-box;flex:none"></span>
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">InstaPay</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">nour.hassan@instapay</div></div>
+        <span style="background:#a8d8c4;color:#0a2e0e;border-radius:9999px;padding:3px 9px;font:500 12px/1.4 Inter,sans-serif">Fastest</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid #dddddd">
+        <span style="width:20px;height:20px;border-radius:9999px;border:1px solid #8a8f99;box-sizing:border-box;flex:none"></span>
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Vodafone Cash</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">0100 ••• 4471</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px">
+        <span style="width:20px;height:20px;border-radius:9999px;border:1px solid #8a8f99;box-sizing:border-box;flex:none"></span>
+        <div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Bank transfer</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">CIB ••• 8820</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px">
+      <span style="width:16px;height:16px;border-radius:9999px;background:#f4d35e;flex:none;margin-top:3px"></span>
+      <div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Payouts are reviewed and sent by our team within 2 business days. You'll get a notification the moment it's transferred.</div>
+    </div>
+    <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Request EGP 3,200</div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+
+<div class="dv-opt" id="1h">
+<div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Profile / portfolio. Approval rate and revision average are the trust signals Phase 1 already captures — no follower counts anywhere.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:4px 20px 0">
+    <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:20px">
+      <div style="width:72px;height:72px;border-radius:9999px;background:#a8d8c4;flex:none;display:flex;align-items:center;justify-content:center;font:400 24px Inter,sans-serif;color:#0a2e0e">NH</div>
+      <div style="flex:1;padding-top:4px">
+        <div style="font:400 28px/34px Inter,sans-serif;color:#181d26">Nour Hassan</div>
+        <div style="font:400 15px/22px Inter,sans-serif;color:#41454d">Cairo · filming since 2024</div>
+      </div>
+      <span style="border:1px solid #dddddd;border-radius:12px;padding:10px 14px;font:500 13px/1.3 Inter,sans-serif;color:#181d26">Edit</span>
+    </div>
+    <span style="display:inline-block;background:#0a2e0e;color:#fff;border-radius:9999px;padding:6px 12px;font:500 12px/1.4 Inter,sans-serif;margin-bottom:20px">Vetted creator · Aug 2026</span>
+    <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:8px 13px;font:400 13px/1.3 Inter,sans-serif">Beauty</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:8px 13px;font:400 13px/1.3 Inter,sans-serif">Skincare</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:8px 13px;font:400 13px/1.3 Inter,sans-serif">Mom &amp; baby</span>
+      <span style="border:1px solid #8a8f99;border-radius:9999px;padding:8px 13px;font:400 13px/1.3 Inter,sans-serif">Talking head</span>
+    </div>
+    <div style="display:flex;border:1px solid #dddddd;border-radius:10px;overflow:hidden;margin-bottom:28px">
+      <div style="flex:1;padding:16px;border-right:1px solid #dddddd"><div style="font:400 20px/28px Inter,sans-serif;color:#181d26">14</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Collaborations</div></div>
+      <div style="flex:1;padding:16px;border-right:1px solid #dddddd"><div style="font:400 20px/28px Inter,sans-serif;color:#181d26">96%</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Approved</div></div>
+      <div style="flex:1;padding:16px"><div style="font:400 20px/28px Inter,sans-serif;color:#181d26">1.2</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Revisions avg</div></div>
+    </div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+      <div style="font:400 22px/30px Inter,sans-serif;color:#181d26">Portfolio</div>
+      <span style="font:400 13px/18px Inter,sans-serif;color:#1b61c9">Add video</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+      <div style="height:196px;border-radius:10px;background:repeating-linear-gradient(135deg,#fcab79 0 10px,#fdbc92 10px 20px);display:flex;align-items:flex-end;padding:10px"><span style="font:400 10px/1.3 ui-monospace,Menlo,monospace;color:#181d26;background:rgba(255,255,255,.85);padding:3px 5px;border-radius:4px">serum review 9:16</span></div>
+      <div style="height:196px;border-radius:10px;background:repeating-linear-gradient(135deg,#a8d8c4 0 10px,#b8e2d2 10px 20px);display:flex;align-items:flex-end;padding:10px"><span style="font:400 10px/1.3 ui-monospace,Menlo,monospace;color:#181d26;background:rgba(255,255,255,.85);padding:3px 5px;border-radius:4px">unboxing 9:16</span></div>
+      <div style="height:196px;border-radius:10px;background:repeating-linear-gradient(135deg,#f4d35e 0 10px,#f7dd83 10px 20px)"></div>
+      <div style="height:196px;border-radius:10px;background:repeating-linear-gradient(135deg,#d9a441 0 10px,#e0b565 10px 20px)"></div>
+    </div>
+    <div style="border-top:1px solid #dddddd">
+      <div style="display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Base price</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">EGP 2,800</span></div>
+      <div style="display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">Payout details</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">InstaPay · verified</span></div>
+      <div style="display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid #dddddd"><span style="font:400 15px/22px Inter,sans-serif;color:#41454d">App language</span><span style="font:500 15px/22px Inter,sans-serif;color:#181d26">العربية</span></div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<sc-if value="{{ showPending }}" hint-placeholder-val="{{ true }}">
+<div class="dv-opt" id="1i">
+<div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Pending vetting. Manual review is honest about its timing, gives the creator one useful task, and lets them browse briefs at 45% disabled opacity while applying stays locked.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:4px 20px 0">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#e0e2e6;flex:none;display:flex;align-items:center;justify-content:center;font:500 15px Inter,sans-serif;color:#41454d">MA</div>
+      <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Mariam Adel</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Alexandria · Beauty</div></div>
+    </div>
+    <div style="background:#181d26;border-radius:12px;padding:24px;color:#fff;margin-bottom:24px">
+      <div style="font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.6px;opacity:.7;margin-bottom:12px">UNDER REVIEW</div>
+      <div style="font:400 28px/34px Inter,sans-serif;margin-bottom:10px">We're checking your profile</div>
+      <div style="font:400 15px/22px Inter,sans-serif;opacity:.85;margin-bottom:20px">A real person reviews every creator. Most are approved within 48 hours — we'll notify you either way.</div>
+      <div style="display:flex;gap:6px">
+        <span style="flex:1;height:4px;border-radius:9999px;background:#fff"></span>
+        <span style="flex:1;height:4px;border-radius:9999px;background:#fff"></span>
+        <span style="flex:1;height:4px;border-radius:9999px;background:#fff"></span>
+        <span style="flex:1;height:4px;border-radius:9999px;background:rgba(255,255,255,.3)"></span>
+      </div>
+      <div style="font:400 13px/18px Inter,sans-serif;opacity:.75;margin-top:10px">3 of 4 steps done</div>
+    </div>
+
+    <div style="border:1px solid #dddddd;border-radius:10px;margin-bottom:28px">
+      <div style="display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:9999px;background:#006400;color:#fff;font:400 11px/20px Inter,sans-serif;text-align:center;flex:none">✓</span><span style="flex:1;font:400 15px/22px Inter,sans-serif;color:#181d26">Profile and niches</span></div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:9999px;background:#006400;color:#fff;font:400 11px/20px Inter,sans-serif;text-align:center;flex:none">✓</span><span style="flex:1;font:400 15px/22px Inter,sans-serif;color:#181d26">3 portfolio videos</span></div>
+      <div style="display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid #dddddd"><span style="width:20px;height:20px;border-radius:9999px;background:#006400;color:#fff;font:400 11px/20px Inter,sans-serif;text-align:center;flex:none">✓</span><span style="flex:1;font:400 15px/22px Inter,sans-serif;color:#181d26">Base price set</span></div>
+      <div style="padding:16px">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px"><span style="width:20px;height:20px;border-radius:9999px;border:1px solid #8a8f99;box-sizing:border-box;flex:none"></span><div style="flex:1"><div style="font:500 15px/22px Inter,sans-serif;color:#181d26">Payout details</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">Needed before your first payment</div></div></div>
+        <div style="background:#181d26;color:#fff;border-radius:12px;padding:16px;text-align:center;font:500 16px/1.4 Inter,sans-serif">Add payout details</div>
+      </div>
+    </div>
+
+    <div style="font:400 22px/30px Inter,sans-serif;color:#181d26;margin-bottom:6px">Briefs you'll be able to apply to</div>
+    <div style="font:400 13px/18px Inter,sans-serif;color:#41454d;margin-bottom:16px">Applying unlocks the moment you're approved.</div>
+    <div style="opacity:.45;display:flex;flex-direction:column;gap:12px">
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:56px;height:56px;border-radius:10px;background:repeating-linear-gradient(135deg,#fcab79 0 8px,#fdbc92 8px 16px);flex:none"></div>
+        <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Glow Lab · 60s serum review</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 2,500–4,000</div></div>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:56px;height:56px;border-radius:10px;background:repeating-linear-gradient(135deg,#f4d35e 0 8px,#f7dd83 8px 16px);flex:none"></div>
+        <div style="flex:1"><div style="font:500 15px/20px Inter,sans-serif;color:#181d26">Bebe Care · baby wash routine</div><div style="font:400 13px/18px Inter,sans-serif;color:#41454d">EGP 1,800 fixed</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#181d26">Home</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.45"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Discover</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.45"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Work</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.45"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Earnings</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.3 Inter,sans-serif;letter-spacing:.3px;color:#41454d">Profile</span></div>
+  </div>
+</div>
+</x-import>
+</div>
+</sc-if>
+
+<sc-if value="{{ showArabic }}" hint-placeholder-val="{{ true }}">
+<div class="dv-opt" id="1j">
+<div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Arabic RTL pair for <a class="dv-oid" href="#1a">1a</a> and <a class="dv-oid" href="#1f">1f</a>. IBM Plex Sans Arabic, line heights ×1.15, logical direction only, Latin digits for money in their own text run, chevrons flipped.</div>
+<div class="dv-pair">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:'IBM Plex Sans Arabic',Inter,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:1;overflow:hidden;padding:0 20px">
+    <div style="display:flex;align-items:center;gap:12px;padding:4px 0 20px">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#a8d8c4;flex:none;display:flex;align-items:center;justify-content:center;font:500 15px 'IBM Plex Sans Arabic',sans-serif;color:#0a2e0e">ن</div>
+      <div style="flex:1">
+        <div style="font:500 15px/23px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">نور حسن</div>
+        <div style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d">القاهرة · العناية والجمال</div>
+      </div>
+      <div style="width:40px;height:40px;border-radius:9999px;border:1px solid #dddddd;display:flex;align-items:center;justify-content:center;position:relative"><span style="font:400 13px ui-monospace,Menlo,monospace;color:#41454d">3</span><span style="position:absolute;top:8px;inset-inline-start:9px;width:7px;height:7px;border-radius:9999px;background:#aa2d00"></span></div>
+    </div>
+    <div style="font:400 28px/40px 'IBM Plex Sans Arabic',sans-serif;color:#181d26;margin-bottom:6px">ثلاث مهام تنتظرك</div>
+    <div style="font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif;color:#41454d;margin-bottom:24px">تسليمان وشحنة واحدة تحتاج تأكيد الاستلام.</div>
+
+    <div style="background:#aa2d00;border-radius:12px;padding:24px;color:#fff;margin-bottom:16px">
+      <div style="font:500 12px/1.6 'IBM Plex Sans Arabic',sans-serif;letter-spacing:.3px;opacity:.85;margin-bottom:10px">باقي يومان</div>
+      <div style="font:400 20px/32px 'IBM Plex Sans Arabic',sans-serif;margin-bottom:8px">ارفعي الفيديو الخاص بسيروم فيتامين سي من Glow Lab</div>
+      <div style="font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif;opacity:.9;margin-bottom:20px">مبلغ <span dir="ltr" style="font-family:Inter,sans-serif">EGP 3,200</span> محفوظ في الضمان ويُصرف بعد موافقة العلامة.</div>
+      <div style="display:flex;gap:10px">
+        <div style="background:#fff;color:#181d26;border-radius:12px;padding:14px 20px;font:500 16px/1.5 'IBM Plex Sans Arabic',sans-serif">رفع الفيديو</div>
+        <div style="border:1px solid rgba(255,255,255,.4);border-radius:12px;padding:14px 18px;font:500 16px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#fff">الملخص</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:40px;height:40px;border-radius:10px;background:#f4d35e;flex:none"></div>
+        <div style="flex:1">
+          <div style="font:500 15px/23px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">أكّدي استلام الشحنة</div>
+          <div style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d">Bebe Care · <span dir="ltr" style="font-family:Inter,sans-serif">AWB 8842 191 003</span></div>
+        </div>
+        <div style="font:400 20px/1 Inter,sans-serif;color:#41454d">‹</div>
+      </div>
+      <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+        <div style="width:40px;height:40px;border-radius:10px;background:#fcab79;flex:none"></div>
+        <div style="flex:1">
+          <div style="font:500 15px/23px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">ردّي على Kanz Modest</div>
+          <div style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d">رسالتان لم تُقرأ · سؤال عن الإضاءة</div>
+        </div>
+        <span style="background:#181d26;color:#fff;border-radius:9999px;padding:3px 9px;font:500 12px/1.5 Inter,sans-serif">2</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px">
+      <div style="font:400 22px/34px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">بريفات مفتوحة تناسبك</div>
+      <span style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#1b61c9">عرض الكل</span>
+    </div>
+    <div style="border:1px solid #dddddd;border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center">
+      <div style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,#a8d8c4 0 8px,#b6e0cf 8px 16px);flex:none"></div>
+      <div style="flex:1">
+        <div style="font:500 15px/23px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">Tarek Coffee · فيديو أنبوكسينج</div>
+        <div style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d"><span dir="ltr" style="font-family:Inter,sans-serif">EGP 2,000–3,000</span> · يُرسل إليك</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:10px 8px 26px;display:flex;justify-content:space-around;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:#181d26"></span><span style="font:500 11px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#181d26">الرئيسية</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#41454d">استكشاف</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#41454d">أعمالي</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#41454d">أرباحي</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><span style="width:4px;height:4px;border-radius:9999px;background:transparent"></span><span style="font:400 11px/1.5 'IBM Plex Sans Arabic',sans-serif;color:#41454d">حسابي</span></div>
+  </div>
+</div>
+</x-import>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" style="width:402px;height:874px;background:#fff;display:flex;flex-direction:column;font-family:'IBM Plex Sans Arabic',Inter,sans-serif;color:#333840">
+  <div style="height:56px;flex:none"></div>
+  <div style="flex:none;display:flex;align-items:center;gap:12px;padding:4px 20px 14px;border-bottom:1px solid #dddddd">
+    <span style="font:400 20px/1 Inter,sans-serif;color:#181d26">›</span>
+    <div style="width:36px;height:36px;border-radius:9999px;background:#f5e9d4;flex:none"></div>
+    <div style="flex:1">
+      <div style="font:500 15px/23px 'IBM Plex Sans Arabic',sans-serif;color:#181d26">Glow Lab</div>
+      <div style="font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d">مراجعة سيروم فيتامين سي</div>
+    </div>
+    <span style="background:#f4d35e;color:#181d26;border-radius:9999px;padding:5px 11px;font:500 12px/1.5 'IBM Plex Sans Arabic',sans-serif">مدفوع للضمان</span>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:20px;display:flex;flex-direction:column;gap:14px">
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d;text-align:center">تم تمويل الضمان · <span dir="ltr" style="font-family:Inter,sans-serif">EGP 3,200</span> محفوظة</div>
+    <div style="align-self:flex-start;max-width:280px;background:#f8fafc;border:1px solid #dddddd;border-radius:10px;padding:12px 14px;font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif;color:#333840">أهلاً نور! هنبعت السيروم النهاردة. لو ينفع صوّري بضوء النهار.</div>
+    <div style="align-self:flex-end;max-width:280px;background:#181d26;color:#fff;border-radius:10px;padding:12px 14px;font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif">تمام، بصوّر الصبح بضوء الشباك في المعادي.</div>
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d;text-align:center">تم إرسال الشحنة · <span dir="ltr" style="font-family:Inter,sans-serif">AWB 8842 191 003</span></div>
+    <div style="align-self:center;background:#f5e9d4;border-radius:9999px;padding:7px 14px;font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#181d26;text-align:center">أكّدتِ الاستلام · مدة التصوير تنتهي ٤ سبتمبر</div>
+    <div style="align-self:flex-start;max-width:280px;background:#f8fafc;border:1px solid #dddddd;border-radius:10px;padding:12px 14px;font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif;color:#333840">حاجة واحدة كمان: اذكري السعر بصوت واضح في الآخر.</div>
+    <div style="align-self:center;border:1px solid #dddddd;border-radius:9999px;padding:7px 14px;font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#41454d;text-align:center">تم تسليم الفيديو · <span dir="ltr" style="font-family:Inter,sans-serif">glowlab-review.mp4</span></div>
+    <div style="align-self:center;background:#fdecea;border-radius:9999px;padding:7px 14px;font:400 13px/21px 'IBM Plex Sans Arabic',sans-serif;color:#b3261e;text-align:center">طُلب تعديل واحد · التفاصيل</div>
+    <div style="align-self:flex-end;max-width:280px;background:#181d26;color:#fff;border-radius:10px;padding:12px 14px;font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif">هعيد تصوير الجزء الأوسط الليلة، النسخة الثانية بكرة الصبح.</div>
+  </div>
+  <div style="flex:none;border-top:1px solid #dddddd;padding:12px 16px 30px;display:flex;gap:10px;align-items:center">
+    <div style="width:40px;height:40px;border-radius:9999px;border:1px solid #dddddd;display:flex;align-items:center;justify-content:center;font:400 18px/1 Inter,sans-serif;color:#41454d">+</div>
+    <div style="flex:1;height:44px;border:1px solid #8a8f99;border-radius:6px;display:flex;align-items:center;padding:0 14px;font:400 15px/25px 'IBM Plex Sans Arabic',sans-serif;color:#41454d">اكتبي رسالة</div>
+    <div style="width:44px;height:44px;border-radius:9999px;background:#181d26;display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:10px solid #fff;margin-right:3px"></span></div>
+  </div>
+</div>
+</x-import>
+</div>
+</div>
+</sc-if>
+
+</div>
+<p class="dv-next">Try next: “wire <a class="dv-oid" href="#1a">1a</a> into a clickable prototype — home → brief → apply → collab → upload” · “merge <a class="dv-oid" href="#1b">1b</a>'s feed into <a class="dv-oid" href="#1a">1a</a>” · “now the brand mode: campaign builder + proposal review”</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showArabic&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Canvas&quot;},&quot;showPending&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Canvas&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showArabic: this.props.showArabic ?? true,
+      showPending: this.props.showPending ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>
