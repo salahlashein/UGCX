@@ -1,13 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import type { AppConfig } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
+
+  // The production host (Railway) puts one proxy in front of the API.
+  // Trust it so req.ip is the client address. Without this, every
+  // request shares the proxy IP, and the auth throttle (10 per minute)
+  // applies to all users together.
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+  }
 
   app.useLogger(app.get(Logger));
   app.useGlobalFilters(new AllExceptionsFilter());

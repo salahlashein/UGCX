@@ -63,11 +63,13 @@ class EnvironmentVariables {
   @IsString()
   PAYMOB_IFRAME_ID?: string;
 
-  // C1: PAYMOB_HMAC_SECRET is optional in dev/test (ASM-P1-001, no real
-  // account exists yet) but required whenever NODE_ENV=production, since
-  // an empty secret makes webhook signature verification fail open.
+  // C1: PAYMOB_HMAC_SECRET is required in production only when Paymob is
+  // enabled (PAYMOB_API_KEY is set). The V1 launch uses manual payments
+  // and runs without Paymob. isValidPaymobSignature rejects every webhook
+  // when the secret is empty, so a missing secret fails closed.
   @ValidateIf(
-    (o: EnvironmentVariables) => o.NODE_ENV === Environment.Production,
+    (o: EnvironmentVariables) =>
+      o.NODE_ENV === Environment.Production && !!o.PAYMOB_API_KEY,
   )
   @IsString()
   @IsNotEmpty()
@@ -129,6 +131,16 @@ export function validate(
 
   if (errors.length > 0) {
     throw new Error(`Environment validation failed: ${errors.toString()}`);
+  }
+
+  // A short JWT secret lets an attacker brute-force it and forge tokens.
+  if (
+    validatedConfig.NODE_ENV === Environment.Production &&
+    validatedConfig.JWT_SECRET.length < 32
+  ) {
+    throw new Error(
+      'Environment validation failed: JWT_SECRET must have at least 32 characters in production',
+    );
   }
 
   return validatedConfig;
