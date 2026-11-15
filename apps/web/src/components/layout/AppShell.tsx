@@ -185,7 +185,7 @@ export function AppShell({ children, requiredRole, activeNav }: AppShellProps) {
               </div>
               <div className="flex flex-col min-w-0">
                 <AppText variant="titleSm" color="ink">
-                  {t('common.appName', 'UGCX')}
+                  {t('common.appName', 'ReelPal')}
                 </AppText>
                 <span
                   className="mono-caps truncate"

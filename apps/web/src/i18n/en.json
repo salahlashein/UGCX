@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "UGCX",
+    "appName": "ReelPal",
     "loading": "Loading",
     "retry": "Retry",
     "refresh": "Refresh",
@@ -30,7 +30,7 @@
   },
   "auth": {
     "roleSelect": {
-      "title": "Who are you on UGCX?",
+      "title": "Who are you on ReelPal?",
       "subtitle": "Select your workspace role to continue.",
       "brand": "I'm a brand",
       "brandSubtitle": "Post briefs, buy video content",

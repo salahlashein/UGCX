@@ -86,7 +86,7 @@ export class BrandsService {
       throw new DomainErrorException(
         HttpStatus.UNPROCESSABLE_ENTITY,
         'invalid_media_origin',
-        'Logo URL must originate from UGCX storage',
+        'Logo URL must originate from ReelPal storage',
       );
     }
 
@@ -97,7 +97,7 @@ export class BrandsService {
       throw new DomainErrorException(
         HttpStatus.UNPROCESSABLE_ENTITY,
         'invalid_media_origin',
-        'Business document URL must originate from UGCX storage',
+        'Business document URL must originate from ReelPal storage',
       );
     }
 

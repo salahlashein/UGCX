@@ -37,7 +37,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow UGCX to access your photos to attach a deliverable."
+          "photosPermission": "Allow ReelPal to access your photos to attach a deliverable."
         }
       ],
       [

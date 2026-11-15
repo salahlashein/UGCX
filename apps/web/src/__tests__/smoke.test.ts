@@ -6,7 +6,7 @@ import { formatAmount, formatMoney, getInitials } from '../utils/format';
 import { decodeJwtPayload } from '../store/authStore';
 import { FEATURE_FLAGS } from '../config/features';
 
-describe('UGCX Web Soft Launch Smoke Suite', () => {
+describe('ReelPal Web Soft Launch Smoke Suite', () => {
   it('enforces exact C3 Sage palette tokens and font weights 400/500 only', () => {
     assert.equal(colors.canvas, '#eff2ed');
     assert.equal(colors.primary, '#2f5d46');

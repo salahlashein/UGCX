@@ -73,7 +73,7 @@ export function PendingVettingScreen({ navigation }: Props) {
           <AppText variant="body" color="body">
             {t(
               'creator.vetting.subtitle',
-              'A human checks every creator on UGCX so brands trust the pool. Most reviews finish within 24 hours.',
+              'A human checks every creator on ReelPal so brands trust the pool. Most reviews finish within 24 hours.',
             )}
           </AppText>
           <View style={styles.progressRow}>

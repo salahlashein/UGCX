@@ -301,7 +301,7 @@ export function CampaignDetailScreen({ route, navigation }: Props) {
           <AppText variant="caption" color="muted" style={styles.escrowText}>
             {t(
               'creator.detail.escrowHoldNote',
-              "When the brand accepts, your EGP {{price}} moves from the brief's escrow into a hold at UGCX. UGCX releases it when they approve the video.",
+              "When the brand accepts, your EGP {{price}} moves from the brief's escrow into a hold at ReelPal. ReelPal releases it when they approve the video.",
               { price },
             )}
           </AppText>

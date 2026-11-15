@@ -6,16 +6,16 @@
 export const logger = {
   debug: (message: string, ...args: unknown[]): void => {
     if (__DEV__) {
-      console.debug(`[UGCX] ${message}`, ...args);
+      console.debug(`[ReelPal] ${message}`, ...args);
     }
   },
   info: (message: string, ...args: unknown[]): void => {
-    console.log(`[UGCX] ${message}`, ...args);
+    console.log(`[ReelPal] ${message}`, ...args);
   },
   warn: (message: string, ...args: unknown[]): void => {
-    console.warn(`[UGCX] ${message}`, ...args);
+    console.warn(`[ReelPal] ${message}`, ...args);
   },
   error: (message: string, error?: unknown): void => {
-    console.error(`[UGCX] ${message}`, error);
+    console.error(`[ReelPal] ${message}`, error);
   },
 };

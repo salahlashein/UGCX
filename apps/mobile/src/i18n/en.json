@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "UGCX",
+    "appName": "ReelPal",
     "loading": "Loading",
     "retry": "Retry",
     "cancel": "Cancel",
@@ -68,7 +68,7 @@
       "uploadFailed": "Could not save your portfolio. Please check your connection and try again."
     },
     "roleSelect": {
-      "title": "Who are you on UGCX?",
+      "title": "Who are you on ReelPal?",
       "subtitle": "You can't switch roles later in Phase 1 — pick the one that fits.",
       "brand": "I'm a brand",
       "brandSubtitle": "Post briefs, buy video content",
@@ -373,7 +373,7 @@
     },
     "fundEscrow": {
       "title": "Fund escrow",
-      "subtitle": "Held by UGCX. Released only when you approve the video.",
+      "subtitle": "Held by ReelPal. Released only when you approve the video.",
       "amountHeld": "AMOUNT HELD IN ESCROW",
       "briefMidpoint": "Brief midpoint",
       "platformFee": "Platform fee ({{percent}}%)",
@@ -462,7 +462,7 @@
       "submitProposal": "Submit a proposal",
       "slotsOpen": "{{count}} slots open",
       "applySetPrice": "Apply - set your price",
-      "escrowHoldNote": "When the brand accepts, your EGP {{price}} moves from the brief's escrow into a hold at UGCX. UGCX releases it when they approve the video.",
+      "escrowHoldNote": "When the brand accepts, your EGP {{price}} moves from the brief's escrow into a hold at ReelPal. ReelPal releases it when they approve the video.",
       "loadingBrief": "Loading brief...",
       "aboutProduct": "About the product",
       "talkingPoints": "Talking points",
@@ -517,7 +517,7 @@
     "vetting": {
       "badge": "UNDER REVIEW",
       "title": "We are reviewing your profile",
-      "subtitle": "A human checks every creator on UGCX so brands trust the pool. Most reviews finish within 24 hours.",
+      "subtitle": "A human checks every creator on ReelPal so brands trust the pool. Most reviews finish within 24 hours.",
       "stepAccountCreated": "Account created",
       "stepClipUploaded": "Basics & talking clip uploaded",
       "stepManualReview": "Manual review",

@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'UGCX — Creator & Brand Marketplace',
+  title: 'ReelPal — UGC from real creators',
   description: 'Egypt UGC Video Marketplace for Brands and Creators',
 };
 

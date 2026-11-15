@@ -28,7 +28,7 @@ export class MailerService {
 
     this.fromAddress =
       this.configService.get<string>('EMAIL_FROM') ||
-      (user ? `UGCX <${user}>` : 'UGCX <no-reply@ugcx.com>');
+      (user ? `ReelPal <${user}>` : 'ReelPal <no-reply@reelpal.app>');
 
     if (user && pass) {
       this.transporter = nodemailer.createTransport({
@@ -52,13 +52,13 @@ export class MailerService {
    * Sends a 6-digit verification code to the recipient.
    */
   async sendOtpEmail(to: string, otp: string): Promise<boolean> {
-    const subject = `Your UGCX Verification Code: ${otp}`;
+    const subject = `Your ReelPal Verification Code: ${otp}`;
     const html = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background-color: #eff2ed; border-radius: 16px;">
         <div style="background-color: #ffffff; padding: 32px 24px; border-radius: 12px; border: 1px solid #dce4dd; text-align: center;">
-          <h1 style="color: #2f5d46; font-size: 26px; margin: 0 0 16px; font-weight: 500; letter-spacing: -0.5px;">UGCX</h1>
+          <h1 style="color: #2f5d46; font-size: 26px; margin: 0 0 16px; font-weight: 500; letter-spacing: -0.5px;">ReelPal</h1>
           <p style="color: #171d19; font-size: 16px; line-height: 24px; margin: 0 0 24px;">
-            Here is your verification code to sign in to your UGCX account:
+            Here is your verification code to sign in to your ReelPal account:
           </p>
           <div style="display: inline-block; background-color: #e1ebe4; color: #2f5d46; font-size: 32px; font-weight: 500; letter-spacing: 8px; padding: 16px 28px; border-radius: 8px; margin-bottom: 24px;">
             ${otp}
@@ -81,7 +81,7 @@ export class MailerService {
         to,
         subject,
         html,
-        text: `Your UGCX verification code is: ${otp}`,
+        text: `Your ReelPal verification code is: ${otp}`,
       });
       this.logger.log(`Sent verification email to ${to}`);
       return true;

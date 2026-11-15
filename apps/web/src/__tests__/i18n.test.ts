@@ -49,18 +49,18 @@ describe('i18n Localization Parity & Utilities Suite', () => {
   });
 
   it('validates common dictionary entries in en and ar', () => {
-    assert.equal(en.common.appName, 'UGCX');
-    assert.equal(ar.common.appName, 'يو جي سي إكس');
+    assert.equal(en.common.appName, 'ReelPal');
+    assert.equal(ar.common.appName, 'ريل بال');
     assert.equal(typeof en.common.loading, 'string');
     assert.equal(typeof ar.common.loading, 'string');
   });
 
   it('resolves dot paths and falls back to English when undefined in Arabic', () => {
     const enVal = resolveDotPath(en as Record<string, unknown>, 'common.appName');
-    assert.equal(enVal, 'UGCX');
+    assert.equal(enVal, 'ReelPal');
 
     const arVal = resolveDotPath(ar as Record<string, unknown>, 'common.appName');
-    assert.equal(arVal, 'يو جي سي إكس');
+    assert.equal(arVal, 'ريل بال');
 
     // Simulate missing key in Arabic dictionary
     const mockAr: Record<string, unknown> = {};

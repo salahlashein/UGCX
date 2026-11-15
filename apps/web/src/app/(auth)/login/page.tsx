@@ -265,7 +265,7 @@ export default function LoginPage() {
             }}
           >
             <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>
-              UGCX
+              ReelPal
             </AppText>
             <AppText variant="overlineMono" color={colors.textSecondary}>
               {locale === 'ar' ? 'فيديوهات صناع المحتوى · ضمان' : 'Creator videos · Escrow'}
