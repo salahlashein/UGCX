@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   chipUnselected: {
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.surface,
     borderColor: colors.inputBorder,
   },
   chipSelected: {

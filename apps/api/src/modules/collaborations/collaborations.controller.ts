@@ -18,6 +18,9 @@ import { UserRole } from '../users/entities/user.entity';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { paginate } from '../../common/utils/paginate';
 import { CollaborationsService } from './collaborations.service';
+import { BrandRoleGuard } from '../brands/guards/brand-role.guard';
+import { BrandRoles } from '../brands/decorators/brand-roles.decorator';
+import { BrandMemberRole } from '../brands/entities/brand-member.entity';
 import { AcceptProposalDto } from './dto/accept-proposal.dto';
 import { ConfirmShipmentDto } from './dto/confirm-shipment.dto';
 
@@ -63,9 +66,11 @@ export class CollaborationsController {
     return { data: collaboration };
   }
 
-  /** TASK-P1-004 */
+  /** TASK-P1-004, TASK-P2-08 */
   @Post('proposals/:id/accept')
   @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(BrandMemberRole.OWNER, BrandMemberRole.APPROVER)
   @HttpCode(HttpStatus.CREATED)
   async accept(
     @CurrentUser() user: AuthUser,
@@ -78,6 +83,10 @@ export class CollaborationsController {
       data: {
         collaborationId: collaboration.id,
         status: collaboration.status,
+        creatorPrice: collaboration.creatorPrice,
+        platformFee: collaboration.platformFee,
+        totalAmount: collaboration.totalAmount,
+        currency: collaboration.currency,
         checkoutUrl,
       },
     };
@@ -86,6 +95,8 @@ export class CollaborationsController {
   /** TASK-P1-006 */
   @Post('collaborations/:id/confirm-shipment')
   @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(BrandMemberRole.OWNER, BrandMemberRole.APPROVER)
   async confirmShipment(
     @CurrentUser() user: AuthUser,
     @Param('id') id: string,
@@ -95,6 +106,21 @@ export class CollaborationsController {
       user.userId,
       id,
       dto,
+    );
+    return { data: collaboration };
+  }
+
+  /** TASK-W4-02: creator confirms receipt of shipped product */
+  @Post('collaborations/:id/confirm-receipt')
+  @Roles(UserRole.CREATOR)
+  @HttpCode(HttpStatus.OK)
+  async confirmReceipt(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    const collaboration = await this.collaborationsService.confirmReceipt(
+      user.userId,
+      id,
     );
     return { data: collaboration };
   }

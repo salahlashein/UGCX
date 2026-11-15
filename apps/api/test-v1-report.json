@@ -1,0 +1,429 @@
+{
+  "auth": {
+    "brandLogin": {
+      "user": "e7baf692-c3ea-4174-85d6-540112c92984",
+      "role": "brand",
+      "db": {
+        "id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "phone": "+201000000002",
+        "role": "brand",
+        "brand_id": "571d3301-30cd-44d5-b4a2-d1b0358c3967",
+        "company_name": "Glow Lab"
+      }
+    },
+    "creatorLogin": {
+      "user": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+      "role": "creator",
+      "db": {
+        "id": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+        "phone": "+201000000001",
+        "role": "creator",
+        "creator_id": "00ba27c2-8f3a-4531-a6d7-ad12237dc07c",
+        "display_name": "Nour Hassan",
+        "vetting_status": "approved"
+      }
+    },
+    "newRegistration": {
+      "user": "9a668c8f-dea1-4e87-82e2-188383b5867d",
+      "phone": "+201099492687",
+      "db": {
+        "id": "9a668c8f-dea1-4e87-82e2-188383b5867d",
+        "phone": "+201099492687",
+        "role": "creator",
+        "creator_id": "36660ce6-e0ca-4dad-a151-59d1ea2add51"
+      }
+    }
+  },
+  "brief": {
+    "created": {
+      "id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+      "brand_id": "571d3301-30cd-44d5-b4a2-d1b0358c3967",
+      "title": "Summer Skincare UGC Campaign 492687",
+      "status": "draft",
+      "escrow_funded_amount": "0.00",
+      "escrow_allocated_amount": "0.00",
+      "budget_min": "500.00",
+      "budget_max": "1000.00"
+    },
+    "funded": {
+      "id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+      "title": "Summer Skincare UGC Campaign 492687",
+      "status": "live",
+      "escrow_funded_amount": "1000.00",
+      "escrow_allocated_amount": "0.00",
+      "escrow_refunded_amount": "0.00"
+    },
+    "transactions": [
+      {
+        "id": "3043e188-e7bb-4513-b4f6-089eb51da2bf",
+        "campaign_id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+        "type": "charge",
+        "amount": "1000.00",
+        "status": "completed",
+        "created_at": "2026-10-29T19:01:24.229Z"
+      }
+    ]
+  },
+  "proposals": {
+    "submitted": {
+      "id": "05ed39c6-0b30-40a7-aefb-b9cbb0f2e7f4",
+      "campaign_id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+      "creator_id": "00ba27c2-8f3a-4531-a6d7-ad12237dc07c",
+      "price": "800.00",
+      "delivery_days": 5,
+      "pitch": "I have 50K followers in Beauty and love filming aesthetic unboxings in Cairo!",
+      "status": "applied"
+    },
+    "duplicateBlocked": true,
+    "duplicateHttpStatus": 409
+  },
+  "allocation": {
+    "acceptedProposal": {
+      "id": "05ed39c6-0b30-40a7-aefb-b9cbb0f2e7f4",
+      "status": "accepted"
+    },
+    "collaboration": {
+      "id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+      "campaign_id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+      "brand_id": "571d3301-30cd-44d5-b4a2-d1b0358c3967",
+      "creator_id": "00ba27c2-8f3a-4531-a6d7-ad12237dc07c",
+      "status": "funded",
+      "creator_price": "800.00",
+      "platform_fee": "80.00",
+      "total_amount": "880.00"
+    },
+    "holdTransaction": {
+      "id": "ecdb6b02-d953-4ec4-a57d-3037087f8a64",
+      "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+      "type": "hold",
+      "amount": "880.00",
+      "status": "completed"
+    },
+    "campaignEscrow": {
+      "id": "358928d6-e7ab-4fb6-b15d-e63e742409ff",
+      "escrow_funded_amount": "1000.00",
+      "escrow_allocated_amount": "880.00"
+    }
+  },
+  "chat": {
+    "messagesCount": 3,
+    "messages": [
+      {
+        "id": "b632b3d4-5ecb-4a61-b840-e4c112659213",
+        "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+        "sender_user_id": null,
+        "body": "{\"total\":\"880.00\",\"creatorPrice\":\"800.00\"}",
+        "sent_at": "2026-10-29T19:01:24.444Z"
+      },
+      {
+        "id": "850332cc-8cd2-42ec-a58e-715b514e7291",
+        "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+        "sender_user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "body": "Hi Nour! Excited to collaborate. Please focus on the texture.",
+        "sent_at": "2026-10-29T19:01:24.510Z"
+      },
+      {
+        "id": "3fb4c063-7817-4093-a346-27989cca74a3",
+        "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+        "sender_user_id": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+        "body": "Understood! I will record the close-up texture in daylight tomorrow.",
+        "sent_at": "2026-10-29T19:01:24.535Z"
+      }
+    ]
+  },
+  "deliverables": {
+    "submitted": {
+      "id": "c22bf836-f203-4aca-b014-cc25dd2cb82b",
+      "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+      "file_url": "https://pub-70e1fef88f8a4917b0e0806684f8064a.r2.dev/collaborations/ae437bdc-53ee-4bb9-936a-50983e6ed0c6/22bcf6d7-3c8a-4228-9f94-c376a093d1a6.mp4",
+      "status": "submitted",
+      "created_at": "2026-10-29T19:01:24.624Z"
+    },
+    "collabStatusAfterUpload": "delivered",
+    "approved": {
+      "id": "c22bf836-f203-4aca-b014-cc25dd2cb82b",
+      "status": "approved",
+      "updated_at": "2026-10-29T19:01:24.704Z"
+    },
+    "collabStatusAfterReview": "approved",
+    "releaseTransaction": {
+      "id": "4a94cab4-c817-4c64-b064-182409f17d99",
+      "collaboration_id": "ae437bdc-53ee-4bb9-936a-50983e6ed0c6",
+      "type": "release",
+      "amount": "880.00",
+      "status": "completed",
+      "created_at": "2026-10-29T19:01:24.704Z"
+    }
+  },
+  "earnings": {
+    "apiReported": {
+      "escrowBalance": "9000.00",
+      "pendingBalance": "5600.00",
+      "clearedBalance": "0.00",
+      "currency": "EGP"
+    },
+    "dbLedgerEntries": [
+      {
+        "id": "4a94cab4-c817-4c64-b064-182409f17d99",
+        "type": "release",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T19:01:24.704Z"
+      },
+      {
+        "id": "248ddf03-da74-4ac6-879a-00f0634818e3",
+        "type": "fee",
+        "amount": "80.00",
+        "status": "completed",
+        "created_at": "2026-10-29T19:01:24.704Z"
+      },
+      {
+        "id": "ecdb6b02-d953-4ec4-a57d-3037087f8a64",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T19:01:24.444Z"
+      },
+      {
+        "id": "e4de37d0-a24a-4a56-9227-c3d7269175dc",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T18:58:10.633Z"
+      },
+      {
+        "id": "99071282-6fe6-4ce8-934e-99ca01d1ea54",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T18:56:57.825Z"
+      },
+      {
+        "id": "7b679d86-b866-41c8-8283-d92ce34848e6",
+        "type": "release",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:35:27.757Z"
+      },
+      {
+        "id": "f1495b37-b8c8-4a0c-ad50-e4e1182f4f09",
+        "type": "fee",
+        "amount": "80.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:35:27.757Z"
+      },
+      {
+        "id": "656249b6-c782-4a1d-be29-1784a2694a37",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:35:27.509Z"
+      },
+      {
+        "id": "b5abf192-887c-4554-a99d-f757b8247543",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:35:16.035Z"
+      },
+      {
+        "id": "55981d4b-f2d0-4399-bd4c-f3a15fd69256",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:35:02.196Z"
+      },
+      {
+        "id": "05893b98-d176-4827-bd4f-02f3d970bfc3",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:31:39.622Z"
+      },
+      {
+        "id": "2d181ed1-6dc9-4771-9fc9-25d0897ff27a",
+        "type": "hold",
+        "amount": "880.00",
+        "status": "completed",
+        "created_at": "2026-10-29T17:30:38.952Z"
+      },
+      {
+        "id": "5c9d5f73-fe93-47ad-a793-685c97301311",
+        "type": "hold",
+        "amount": "1100.00",
+        "status": "completed",
+        "created_at": "2026-10-03T12:51:29.628Z"
+      },
+      {
+        "id": "06a3cefb-4811-4d8d-bbab-cc057815cab2",
+        "type": "fee",
+        "amount": "300.00",
+        "status": "completed",
+        "created_at": "2026-10-03T12:15:11.409Z"
+      },
+      {
+        "id": "9199f3aa-0713-427a-8f8d-94809bc467d6",
+        "type": "release",
+        "amount": "3300.00",
+        "status": "completed",
+        "created_at": "2026-10-03T12:15:11.409Z"
+      },
+      {
+        "id": "eb33d686-5221-46e3-828b-22b5489b4064",
+        "type": "hold",
+        "amount": "3300.00",
+        "status": "completed",
+        "created_at": "2026-10-03T12:07:47.424Z"
+      },
+      {
+        "id": "08268647-be86-44c0-8e74-3827e6f7be9e",
+        "type": "fee",
+        "amount": "100.00",
+        "status": "completed",
+        "created_at": "2026-09-19T09:47:30.508Z"
+      },
+      {
+        "id": "02825b3b-4b55-4b23-acb6-087545d0221b",
+        "type": "release",
+        "amount": "1100.00",
+        "status": "completed",
+        "created_at": "2026-09-19T09:47:30.508Z"
+      },
+      {
+        "id": "d0dd6990-9ae1-4077-b46a-ceb9920bcef4",
+        "type": "hold",
+        "amount": "1100.00",
+        "status": "completed",
+        "created_at": "2026-09-19T09:35:42.123Z"
+      },
+      {
+        "id": "c70b07e1-db88-46d3-b3b2-ae0e82f78b9c",
+        "type": "hold",
+        "amount": "3520.00",
+        "status": "completed",
+        "created_at": "2026-09-04T00:56:20.396Z"
+      }
+    ]
+  },
+  "notifications": {
+    "brandNotificationsCount": 20,
+    "creatorNotificationsCount": 18,
+    "recentDbNotifications": [
+      {
+        "id": "7b9fed6c-7fc8-4a0a-8faa-c9114d1e18eb",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "escrow_released",
+        "params": {
+          "total": "880.00",
+          "currency": "EGP",
+          "creatorName": "Nour Hassan",
+          "creatorPrice": "800.00"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.704Z"
+      },
+      {
+        "id": "43f0fd6a-beae-4b96-9f4e-0bc9acf43da6",
+        "user_id": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+        "event": "escrow_released",
+        "params": {
+          "currency": "EGP",
+          "brandName": "Glow Lab",
+          "creatorPrice": "800.00"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.704Z"
+      },
+      {
+        "id": "0dd3116e-7fac-4b4a-b379-b798ef08fbfd",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "deliverable_submitted",
+        "params": {
+          "title": "Summer Skincare UGC Campaign 492687",
+          "version": 1,
+          "creatorName": "Nour Hassan"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.624Z"
+      },
+      {
+        "id": "13e1223d-cb25-49a2-8114-e73e380fdf5a",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "message_received",
+        "params": {
+          "preview": "Understood! I will record the close-up texture in ",
+          "senderName": "Nour Hassan"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.535Z"
+      },
+      {
+        "id": "ce2f0ea9-be09-4a86-8627-361677fe9cf1",
+        "user_id": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+        "event": "message_received",
+        "params": {
+          "preview": "Hi Nour! Excited to collaborate. Please focus on t",
+          "senderName": "Glow Lab"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.510Z"
+      },
+      {
+        "id": "c8dc7c23-df1a-471d-a328-f45e3d673d4b",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "escrow_funded",
+        "params": {
+          "title": "Summer Skincare UGC Campaign 492687",
+          "total": "880.00",
+          "currency": "EGP",
+          "creatorPrice": "800.00"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.444Z"
+      },
+      {
+        "id": "51c6dd9f-e4d1-43cb-9d2c-c61da6908058",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "proposal_received",
+        "params": {
+          "count": 1,
+          "title": "Summer Skincare UGC Campaign 492687"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.331Z"
+      },
+      {
+        "id": "0fa167b5-eb46-4fec-a507-05cb3be5a963",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "brief_published",
+        "params": {
+          "title": "Summer Skincare UGC Campaign 492687"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T19:01:24.261Z"
+      },
+      {
+        "id": "7c443576-bd46-45ac-bdba-f2bd718c18d2",
+        "user_id": "e7baf692-c3ea-4174-85d6-540112c92984",
+        "event": "message_received",
+        "params": {
+          "preview": "Understood! I will record the close-up texture in ",
+          "senderName": "Nour Hassan"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T18:58:10.713Z"
+      },
+      {
+        "id": "ca618b6a-4910-4926-85ff-f72e71f260b2",
+        "user_id": "a9ef2e9c-fa99-47aa-a623-3b7251500616",
+        "event": "message_received",
+        "params": {
+          "preview": "Hi Nour! Excited to collaborate. Please focus on t",
+          "senderName": "Glow Lab"
+        },
+        "read_at": null,
+        "created_at": "2026-10-29T18:58:10.681Z"
+      }
+    ]
+  }
+}

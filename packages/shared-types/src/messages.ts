@@ -1,11 +1,35 @@
-// Mirrors apps/api/src/modules/messages (feature_backend_escrow_payments).
+import type { CollaborationStatus } from './collaborations';
+
+export type MessageKind = 'user' | 'system';
+
+export type SystemMessageEvent =
+  | 'escrow_funded'
+  | 'shipment_confirmed'
+  | 'shipment_received'
+  | 'deliverable_submitted'
+  | 'revision_requested'
+  | 'escrow_released';
 
 export interface Message {
   id: string;
   collaborationId: string;
-  senderUserId: string;
-  body: string;
+  kind?: MessageKind;
+  event?: SystemMessageEvent | null;
+  params?: Record<string, string | number> | null;
+  senderUserId: string | null;
+  body: string | null;
   sentAt: string;
+}
+
+export interface ChatListItem {
+  collaborationId: string;
+  counterpartName: string;
+  counterpartInitials: string;
+  campaignTitle: string;
+  lastMessagePreview: string | null;
+  lastMessageAt: string | null;
+  unreadCount: number;
+  collaborationStatus: CollaborationStatus;
 }
 
 /** POST /api/v1/collaborations/{id}/messages */

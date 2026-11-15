@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.full,
     borderWidth: 1,
   },
-  chipUnselected: { backgroundColor: colors.canvas, borderColor: colors.inputBorder },
+  chipUnselected: { backgroundColor: colors.surface, borderColor: colors.inputBorder },
   chipSelected: { backgroundColor: colors.primary, borderColor: colors.primary },
   error: { marginTop: spacing.xxs },
 });

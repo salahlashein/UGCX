@@ -72,4 +72,11 @@ export class Proposal {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  creatorStats?: {
+    jobsDone: number;
+    approvalRate: number;
+    averageRevisions: number;
+  };
+  portfolioCount?: number;
 }

@@ -1,6 +1,8 @@
 export type UserRole = 'brand' | 'creator' | 'admin';
 export type UserLocale = 'ar' | 'en';
 
+export const OTP_CODE_LENGTH = 6;
+
 export interface RegisterRequest {
   role: Extract<UserRole, 'brand' | 'creator'>;
   email: string;
@@ -27,12 +29,14 @@ export interface TokenPairResponse {
 }
 
 export interface SendOtpRequest {
-  phone: string;
+  phone?: string;
+  email?: string;
   role?: Extract<UserRole, 'brand' | 'creator'>;
 }
 
 export interface VerifyOtpRequest {
-  phone: string;
+  phone?: string;
+  email?: string;
   otp: string;
   role?: Extract<UserRole, 'brand' | 'creator'>;
 }

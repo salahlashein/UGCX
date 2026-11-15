@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -9,14 +10,28 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, IsNull, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { createHash, randomBytes } from 'crypto';
+import {
+  createHash,
+  createHmac,
+  randomBytes,
+  randomInt,
+  timingSafeEqual,
+} from 'crypto';
+import { OTP_CODE_LENGTH } from '@ugcx/shared-types';
 import type { AppConfig } from '../../config/configuration';
 import { parseDurationMs } from '../../common/utils/duration';
 import { User, UserRole } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { MailerService } from '../mailer/mailer.service';
 import { Brand } from '../brands/entities/brand.entity';
+import {
+  BrandMember,
+  BrandMemberRole,
+  BrandMemberStatus,
+} from '../brands/entities/brand-member.entity';
 import { Creator } from '../creators/entities/creator.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
+import { AuthOtpCode } from './entities/auth-otp-code.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
@@ -37,8 +52,11 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<AppConfig>,
+    private readonly mailerService: MailerService,
     @InjectRepository(RefreshToken)
     private readonly refreshTokensRepository: Repository<RefreshToken>,
+    @InjectRepository(AuthOtpCode)
+    private readonly authOtpCodesRepository: Repository<AuthOtpCode>,
   ) {}
 
   /**
@@ -77,9 +95,35 @@ export class AuthService {
 
       if (dto.role === UserRole.BRAND) {
         const brandRepo = manager.getRepository(Brand);
-        await brandRepo.save(
+        const savedBrand = await brandRepo.save(
           brandRepo.create({ userId: savedUser.id, country: 'EG' }),
         );
+        const memberRepo = manager.getRepository(BrandMember);
+        await memberRepo.save(
+          memberRepo.create({
+            brandId: savedBrand.id,
+            userId: savedUser.id,
+            role: BrandMemberRole.OWNER,
+            status: BrandMemberStatus.ACTIVE,
+            acceptedAt: new Date(),
+          }),
+        );
+        if (dto.email) {
+          const normalizedEmail = dto.email.trim().toLowerCase();
+          const invites = await memberRepo.find({
+            where: {
+              invitedEmail: normalizedEmail,
+              status: BrandMemberStatus.INVITED,
+            },
+          });
+          for (const invite of invites) {
+            invite.userId = savedUser.id;
+            invite.status = BrandMemberStatus.ACTIVE;
+            invite.acceptedAt = new Date();
+            invite.invitedEmail = null;
+            await memberRepo.save(invite);
+          }
+        }
       } else {
         const creatorRepo = manager.getRepository(Creator);
         await creatorRepo.save(
@@ -113,23 +157,160 @@ export class AuthService {
     }
 
     this.logger.log(`User ${user.id} logged in`);
+
+    if (user.role === UserRole.BRAND && user.email) {
+      const memberRepo = this.dataSource.getRepository(BrandMember);
+      const normalizedEmail = user.email.trim().toLowerCase();
+      const invites = await memberRepo.find({
+        where: {
+          invitedEmail: normalizedEmail,
+          status: BrandMemberStatus.INVITED,
+        },
+      });
+      for (const invite of invites) {
+        invite.userId = user.id;
+        invite.status = BrandMemberStatus.ACTIVE;
+        invite.acceptedAt = new Date();
+        invite.invitedEmail = null;
+        await memberRepo.save(invite);
+      }
+    }
+
     return this.issueTokenPair(user);
   }
 
   async sendOtp(dto: SendOtpDto): Promise<void> {
-    // In a real app, this would generate an OTP and send it via SMS (Twilio/etc).
-    // We are hardcoding to 0000.
-    this.logger.log(`Sent mock OTP 0000 to ${dto.phone}`);
+    const email = dto.email ? dto.email.trim().toLowerCase() : undefined;
+    const phone = dto.phone;
+
+    if (!email && !phone) {
+      throw new BadRequestException('Either email or phone is required');
+    }
+
+    const nodeEnv =
+      this.configService.get('nodeEnv', { infer: true }) ??
+      process.env.NODE_ENV ??
+      'development';
+
+    if (phone) {
+      if (nodeEnv === 'production') {
+        throw new BadRequestException('phone_otp_unavailable');
+      }
+      this.logger.log(`Sent mock OTP 0000 to ${phone}`);
+      return;
+    }
+
+    if (email) {
+      await this.authOtpCodesRepository.update(
+        { email, consumedAt: IsNull() },
+        { consumedAt: new Date() },
+      );
+
+      const otpNumber = randomInt(0, 10 ** OTP_CODE_LENGTH);
+      const code = String(otpNumber).padStart(OTP_CODE_LENGTH, '0');
+
+      const jwtSecret =
+        this.configService.get('jwt.secret', { infer: true }) ?? '';
+      const codeHash = createHmac('sha256', jwtSecret)
+        .update(`${email}:${code}`)
+        .digest('hex');
+
+      const ttlSeconds =
+        this.configService.get('otp.ttlSeconds', { infer: true }) ?? 600;
+      const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
+
+      const record = this.authOtpCodesRepository.create({
+        email,
+        codeHash,
+        attempts: 0,
+        expiresAt,
+        consumedAt: null,
+      });
+      await this.authOtpCodesRepository.save(record);
+
+      await this.mailerService.sendOtpEmail(email, code);
+      if (nodeEnv !== 'production') {
+        this.logger.log(`Sent verification email OTP to ${email}`);
+      }
+    }
   }
 
   async verifyOtp(
     dto: VerifyOtpDto,
   ): Promise<{ userId: string; role: UserRole } & TokenPair> {
-    if (dto.otp !== '0000') {
-      throw new UnauthorizedException('Invalid OTP');
+    const email = dto.email ? dto.email.trim().toLowerCase() : undefined;
+    const phone = dto.phone;
+
+    if (!email && !phone) {
+      throw new BadRequestException('Either email or phone is required');
     }
 
-    let user = await this.usersService.findByPhone(dto.phone);
+    const nodeEnv =
+      this.configService.get('nodeEnv', { infer: true }) ??
+      process.env.NODE_ENV ??
+      'production';
+
+    if (phone) {
+      if (nodeEnv === 'production') {
+        throw new BadRequestException('phone_otp_unavailable');
+      }
+      if (dto.otp !== '0000' && dto.otp !== '000000') {
+        throw new UnauthorizedException('Invalid OTP');
+      }
+    } else if (email) {
+      const isDevOrTest = nodeEnv === 'development' || nodeEnv === 'test';
+      const isDemoAccount =
+        email === 'brand@example.com' || email === 'creator@example.com';
+      const isFixedCode =
+        (isDevOrTest || isDemoAccount) &&
+        (dto.otp === '0000' || dto.otp === '000000');
+
+      if (!isFixedCode) {
+        const record = await this.authOtpCodesRepository.findOne({
+          where: { email, consumedAt: IsNull() },
+          order: { createdAt: 'DESC' },
+        });
+
+        if (!record || record.expiresAt < new Date()) {
+          throw new UnauthorizedException('Invalid OTP');
+        }
+
+        const maxAttempts =
+          this.configService.get('otp.maxAttempts', { infer: true }) ?? 5;
+        if (record.attempts >= maxAttempts) {
+          throw new UnauthorizedException('Invalid OTP');
+        }
+
+        record.attempts += 1;
+
+        const jwtSecret =
+          this.configService.get('jwt.secret', { infer: true }) ?? '';
+        const computedHash = createHmac('sha256', jwtSecret)
+          .update(`${email}:${dto.otp}`)
+          .digest('hex');
+
+        const expected = Buffer.from(record.codeHash, 'hex');
+        const actual = Buffer.from(computedHash, 'hex');
+
+        if (
+          expected.length !== actual.length ||
+          !timingSafeEqual(expected, actual)
+        ) {
+          await this.authOtpCodesRepository.save(record);
+          throw new UnauthorizedException('Invalid OTP');
+        }
+
+        record.consumedAt = new Date();
+        await this.authOtpCodesRepository.save(record);
+      }
+    }
+
+    let user: User | null = null;
+    if (email) {
+      user = await this.usersService.findByEmail(email);
+    } else if (phone) {
+      user = await this.usersService.findByPhone(phone);
+    }
 
     if (!user) {
       if (!dto.role) {
@@ -142,15 +323,28 @@ export class AuthService {
         const userRepo = manager.getRepository(User);
         const savedUser = await userRepo.save(
           userRepo.create({
-            phone: dto.phone,
+            email,
+            phone,
             role: dto.role,
+            phoneVerifiedAt: phone ? new Date() : null,
+            emailVerifiedAt: email ? new Date() : null,
           }),
         );
 
         if (dto.role === UserRole.BRAND) {
           const brandRepo = manager.getRepository(Brand);
-          await brandRepo.save(
+          const savedBrand = await brandRepo.save(
             brandRepo.create({ userId: savedUser.id, country: 'EG' }),
+          );
+          const memberRepo = manager.getRepository(BrandMember);
+          await memberRepo.save(
+            memberRepo.create({
+              brandId: savedBrand.id,
+              userId: savedUser.id,
+              role: BrandMemberRole.OWNER,
+              status: BrandMemberStatus.ACTIVE,
+              acceptedAt: new Date(),
+            }),
           );
         } else {
           const creatorRepo = manager.getRepository(Creator);
@@ -168,6 +362,37 @@ export class AuthService {
 
       this.logger.log(`User ${user.id} registered via OTP as ${user.role}`);
     } else {
+      if (phone && !user.phoneVerifiedAt) {
+        user.phoneVerifiedAt = new Date();
+        await this.dataSource.getRepository(User).update(user.id, {
+          phoneVerifiedAt: user.phoneVerifiedAt,
+        });
+      }
+      if (email && !user.emailVerifiedAt) {
+        user.emailVerifiedAt = new Date();
+        await this.dataSource.getRepository(User).update(user.id, {
+          emailVerifiedAt: user.emailVerifiedAt,
+        });
+      }
+      if (user.role === UserRole.BRAND && user.email) {
+        const memberRepo = this.dataSource.getRepository(BrandMember);
+        const normalizedEmail = user.email.trim().toLowerCase();
+        if (memberRepo && typeof memberRepo.find === 'function') {
+          const invites = await memberRepo.find({
+            where: {
+              invitedEmail: normalizedEmail,
+              status: BrandMemberStatus.INVITED,
+            },
+          });
+          for (const invite of invites) {
+            invite.userId = user.id;
+            invite.status = BrandMemberStatus.ACTIVE;
+            invite.acceptedAt = new Date();
+            invite.invitedEmail = null;
+            await memberRepo.save(invite);
+          }
+        }
+      }
       this.logger.log(`User ${user.id} logged in via OTP`);
     }
 

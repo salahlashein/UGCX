@@ -1,49 +1,84 @@
 import { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView, type WebViewNavigation } from 'react-native-webview';
 import { useTranslation } from 'react-i18next';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BrandCampaignsStackParamList } from '../../navigation/types';
 import { useAcceptProposal, useCollaboration } from '../../hooks/api/useCollaborations';
-import { parseApiError } from '../../services/apiError';
+import { useTopUpEscrow } from '../../hooks/api/useEscrow';
+import { PaymobCheckout } from '../../components/PaymobCheckout';
 import { LoadingState } from '../../components/ui/LoadingState';
 import { ErrorState } from '../../components/ui/ErrorState';
+import { AppText } from '../../components/ui/Text';
 import { Button } from '../../components/ui/Button';
-import { colors, spacing, typography } from '../../theme/tokens';
+import { Card } from '../../components/ui/Card';
+import { parseApiError } from '../../services/apiError';
+import { formatAmount } from '../../utils/format';
+import { colors, radius, spacing } from '../../theme/tokens';
 
 type Props = NativeStackScreenProps<BrandCampaignsStackParamList, 'AcceptProposal'>;
 
-const REDIRECT_URL = 'ugcx://payment-complete';
 const POLL_TIMEOUT_MS = 60_000;
-// react-native-webview has no web implementation at all (it renders
-// "does not support this platform" there). On web there is also no way to
-// read a cross-origin iframe's navigation, so the deep-link redirect this
-// screen watches for on native cannot be observed on web either. Payment
-// truth always comes from the collaboration status poll below, never from
-// the redirect itself, so on web this just opens the checkout in a new tab
-// and starts that same poll immediately instead of waiting for a redirect
-// it cannot see.
-const isWeb = Platform.OS === 'web';
 
 /**
- * TASK-P1-007/DES-P1-003: Paymob checkout in an in-app WebView, REQ-005's
- * poll-and-60s-timeout, EDGE-P1-002.
+ * TASK-P2-13: AcceptProposalScreen (REPLACE).
+ * On the normal path, acceptProposal allocates from campaign escrow and immediately returns status 'funded'.
+ * This screen displays the funded split confirmation and navigates to CollaborationDetail.
+ * When the brief escrow is short, the API answers `insufficient_escrow` with the shortfall.
+ * The brand then adds exactly that amount and the accept runs again. Nothing is charged silently.
  */
 export function AcceptProposalScreen({ route, navigation }: Props) {
+  const { proposalId } = route.params;
   const { t } = useTranslation();
   const acceptProposal = useAcceptProposal();
+
   const [collaborationId, setCollaborationId] = useState<string | undefined>();
   const [polling, setPolling] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
+  const [shortfall, setShortfall] = useState<{ campaignId: string; amount: string } | null>(
+    null,
+  );
+  const [topUpCheckoutUrl, setTopUpCheckoutUrl] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const topUp = useTopUpEscrow(shortfall?.campaignId ?? '');
+
+  const runAccept = () => {
+    setShortfall(null);
+    setTopUpCheckoutUrl(null);
+    acceptProposal.mutate(proposalId, {
+      onSuccess: (data) => {
+        setCollaborationId(data.collaborationId);
+      },
+      onError: (err) => {
+        const parsed = parseApiError(err);
+        if (parsed.code !== 'insufficient_escrow') return;
+        const amount = parsed.details?.find((d) => d.field === 'shortfall')?.message;
+        const campaignId = parsed.details?.find((d) => d.field === 'campaignId')?.message;
+        if (amount && campaignId) setShortfall({ campaignId, amount });
+      },
+    });
+  };
 
   useEffect(() => {
-    acceptProposal.mutate(route.params.proposalId, {
-      onSuccess: (data) => setCollaborationId(data.collaborationId),
-    });
+    runAccept();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [proposalId]);
+
+  const startTopUp = () => {
+    if (!shortfall) return;
+    topUp.mutate(
+      { amount: Number(shortfall.amount), method: 'card' },
+      {
+        onSuccess: (data) => {
+          if (/^https?:/.test(data.checkoutUrl)) {
+            setTopUpCheckoutUrl(data.checkoutUrl);
+          } else {
+            runAccept();
+          }
+        },
+      },
+    );
+  };
 
   const collaborationQuery = useCollaboration(collaborationId, { poll: polling });
   const status = collaborationQuery.data?.status;
@@ -69,115 +104,178 @@ export function AcceptProposalScreen({ route, navigation }: Props) {
     }, POLL_TIMEOUT_MS);
   };
 
-  const handleNavigationChange = (navState: WebViewNavigation) => {
-    if (navState.url.startsWith(REDIRECT_URL) && !polling && status === 'pending_payment') {
-      startPolling();
-    }
-  };
-
-  // The mutation is fired from an effect, which runs after the first paint,
-  // so the first render lands here in 'idle' state with no data yet. Treat
-  // idle the same as pending rather than falling through to the WebView
-  // below with an unresolved checkoutUrl.
   if (acceptProposal.isIdle || acceptProposal.isPending) {
     return <LoadingState />;
   }
 
-  if (acceptProposal.isError) {
-    return <ErrorState message={parseApiError(acceptProposal.error).message} />;
+  if (topUpCheckoutUrl) {
+    return (
+      <View style={styles.container}>
+        <PaymobCheckout
+          checkoutUrl={topUpCheckoutUrl}
+          onRedirectDetected={() => setTimeout(runAccept, 2500)}
+        />
+      </View>
+    );
   }
 
-  // H1: only 'funded' means escrow actually holds the money. Every other
-  // status the poll can land on (payment_failed, cancelled) must not show
-  // the success state.
-  if (status === 'funded') {
+  if (acceptProposal.isError && shortfall) {
+    const shown = formatAmount(shortfall.amount);
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.funded}>{t('brand.acceptProposal.funded')}</Text>
-        <Button
-          title={t('common.done')}
-          onPress={() =>
-            navigation.replace('CollaborationDetail', { collaborationId: collaborationId! })
-          }
-        />
+      <SafeAreaView style={styles.center} edges={['bottom']}>
+        <Card tone="canvas" style={styles.successCard}>
+          <AppText variant="titleMd" color="ink" style={styles.textCenter}>
+            {t('brand.escrow.shortfallTitle', 'Not enough escrow')}
+          </AppText>
+          <AppText variant="body" color="body" style={styles.detailText}>
+            {t(
+              'brand.escrow.shortfallMessage',
+              'This brief holds less than the proposal costs. Add EGP {{amount}} to accept it.',
+              { amount: shown },
+            )}
+          </AppText>
+          {topUp.isError ? (
+            <AppText variant="bodySm" color="danger" style={styles.textCenter} accessibilityRole="alert">
+              {parseApiError(topUp.error).message}
+            </AppText>
+          ) : null}
+          <Button
+            title={t('brand.escrow.topUpAction', 'Add EGP {{amount}} to escrow', { amount: shown })}
+            loading={topUp.isPending}
+            onPress={startTopUp}
+          />
+          <Button
+            title={t('common.back', 'Back')}
+            variant="secondary"
+            onPress={() => navigation.goBack()}
+          />
+        </Card>
       </SafeAreaView>
     );
   }
 
+  if (acceptProposal.isError) {
+    return (
+      <ErrorState
+        message={parseApiError(acceptProposal.error).message}
+        onRetry={runAccept}
+      />
+    );
+  }
+
+  const result = acceptProposal.data;
+
+  // Normal Phase 2 path: Status is already funded from campaign escrow allocation
+  if (result.status === 'funded' || status === 'funded') {
+    const targetCollabId = collaborationId || result.collaborationId;
+    return (
+      <SafeAreaView style={styles.center} edges={['bottom']}>
+        <Card tone="canvas" style={styles.successCard}>
+          <AppText variant="titleMd" color="success" style={styles.textCenter}>
+            {t('brand.acceptProposal.funded', 'Collaboration Funded')}
+          </AppText>
+          <AppText variant="body" color="body" style={styles.detailText}>
+            {t(
+              'brand.acceptProposal.allocatedSuccess',
+              'Creator fee of {{price}} {{currency}} plus platform fee {{fee}} {{currency}} allocated from escrow.',
+              {
+                price: result.creatorPrice,
+                fee: result.platformFee,
+                currency: result.currency,
+              },
+            )}
+          </AppText>
+          <Button
+            title={t('common.done', 'Go to collaboration')}
+            onPress={() =>
+              navigation.replace('CollaborationDetail', { collaborationId: targetCollabId })
+            }
+          />
+        </Card>
+      </SafeAreaView>
+    );
+  }
+
+  // Top-up or payment failure states
   if (status && status !== 'pending_payment') {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.timeout}>{t('brand.acceptProposal.failed')}</Text>
-        <Button title={t('common.back')} variant="secondary" onPress={() => navigation.goBack()} />
+      <SafeAreaView style={styles.center} edges={['bottom']}>
+        <AppText variant="body" color="danger" style={styles.textCenter}>
+          {t('brand.acceptProposal.failed', 'Payment failed. Please try again.')}
+        </AppText>
+        <Button
+          title={t('common.back', 'Back')}
+          variant="secondary"
+          onPress={() => navigation.goBack()}
+        />
       </SafeAreaView>
     );
   }
 
   if (timedOut) {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.timeout}>{t('brand.acceptProposal.timeout')}</Text>
-        <Button title={t('common.back')} variant="secondary" onPress={() => navigation.goBack()} />
+      <SafeAreaView style={styles.center} edges={['bottom']}>
+        <AppText variant="body" color="body" style={styles.textCenter}>
+          {t('brand.acceptProposal.timeout', 'Payment confirmation timed out.')}
+        </AppText>
+        <Button
+          title={t('common.back', 'Back')}
+          variant="secondary"
+          onPress={() => navigation.goBack()}
+        />
       </SafeAreaView>
     );
   }
 
   if (polling) {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.waiting}>{t('brand.acceptProposal.waiting')}</Text>
+      <SafeAreaView style={styles.center} edges={['bottom']}>
+        <AppText variant="body" color="body" style={styles.textCenter}>
+          {t('brand.acceptProposal.waiting', 'Confirming payment...')}
+        </AppText>
       </SafeAreaView>
     );
   }
 
-  if (!acceptProposal.data) {
-    return <LoadingState />;
-  }
-
-  const checkoutUrl = acceptProposal.data.checkoutUrl;
-
-  if (isWeb) {
+  // If checkoutUrl is provided (top up payment required)
+  if (result.checkoutUrl) {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.waiting}>{t('brand.acceptProposal.openPaymentHint')}</Text>
-        <Button
-          title={t('brand.acceptProposal.openPayment')}
-          onPress={() => {
-            window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-            startPolling();
-          }}
+      <View style={styles.container}>
+        <PaymobCheckout
+          checkoutUrl={result.checkoutUrl}
+          onRedirectDetected={startPolling}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 
-  return (
-    <View style={styles.container}>
-      <WebView
-        source={{ uri: checkoutUrl }}
-        onShouldStartLoadWithRequest={(request) => {
-          if (request.url.startsWith(REDIRECT_URL)) {
-            startPolling();
-            return false;
-          }
-          return true;
-        }}
-        onNavigationStateChange={handleNavigationChange}
-      />
-    </View>
-  );
+  return <LoadingState />;
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.canvas,
+  },
   center: {
     flex: 1,
+    backgroundColor: colors.canvas,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.xl,
+  },
+  successCard: {
+    width: '100%',
+    padding: spacing.xl,
+    borderRadius: radius.lg,
+    alignItems: 'center',
     gap: spacing.md,
   },
-  waiting: { ...typography.body, color: colors.body },
-  timeout: { ...typography.body, color: colors.body, textAlign: 'center' },
-  funded: { ...typography.title, color: colors.success },
+  textCenter: {
+    textAlign: 'center',
+  },
+  detailText: {
+    textAlign: 'center',
+    marginBottom: spacing.sm,
+  },
 });

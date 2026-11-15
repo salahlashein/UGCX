@@ -9,11 +9,15 @@ import {
 } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 import type { CreatorEarningsStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
+import { Card } from '../../components/ui/Card';
+import { Icon } from '../../components/ui/Icon';
 import { AppBottomSheet } from '../../components/ui/BottomSheet';
 import { colors, spacing, radius } from '../../theme/tokens';
 import { useCreatorEarnings, useCreatorLedger, useRequestPayout } from '../../hooks/api/useCreator';
+import { isFeatureEnabled } from '../../config/features';
 
 const METHODS = [
   { id: 'instapay', title: 'InstaPay', meta: 'Default payout method', fastest: true },
@@ -23,7 +27,13 @@ const METHODS = [
 
 type Props = NativeStackScreenProps<CreatorEarningsStackParamList, 'Earnings'>;
 
-export function PayoutsScreen() {
+/**
+ * TASK-P3-12: PayoutsScreen (Creator Screen 12).
+ * Reads string amounts from ledger and formats numbers with Intl.NumberFormat.
+ * Maps statusToken to design system tokens (muted, success).
+ */
+export function PayoutsScreen(_props?: Partial<Props>) {
+  const { t } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const { data: earnings } = useCreatorEarnings();
@@ -35,13 +45,22 @@ export function PayoutsScreen() {
 
   useEffect(() => {
     if (earnings?.pendingBalance) {
-      setAmount(earnings.pendingBalance.toString());
+      setAmount(earnings.pendingBalance);
     }
   }, [earnings]);
 
+  const formatAmount = (val: string | undefined) => {
+    const num = Math.round(Number(val || 0));
+    return new Intl.NumberFormat('en-US').format(num);
+  };
+
   const handleRequestPayout = () => {
-    if (!earnings?.pendingBalance || earnings.pendingBalance <= 0) {
-      Alert.alert('No funds', 'You have no withdrawable balance.');
+    const pendingNum = Number(earnings?.pendingBalance || 0);
+    if (pendingNum <= 0) {
+      Alert.alert(
+        t('common.notice', 'Notice'),
+        t('creator.payout.noFunds', 'You have no withdrawable balance.'),
+      );
       return;
     }
     bottomSheetRef.current?.present();
@@ -52,103 +71,137 @@ export function PayoutsScreen() {
       await requestPayout.mutateAsync({ amount, method });
       bottomSheetRef.current?.dismiss();
       Alert.alert(
-        'Success',
-        'Payout requested successfully. Admin will review within 2 business days.',
+        t('common.success', 'Success'),
+        t(
+          'creator.payout.successMessage',
+          'Payout requested successfully. Admin will review within 2 business days.',
+        ),
       );
       refetchLedger();
-    } catch (e) {
-      Alert.alert('Error', 'Failed to request payout.');
+    } catch {
+      Alert.alert(
+        t('common.error.title', 'Error'),
+        t('creator.payout.failedMessage', 'Failed to request payout.'),
+      );
     }
   };
+
+  const currency = earnings?.currency || 'EGP';
 
   return (
     <View style={styles.screen}>
       <FlatList
         style={styles.screen}
-        contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl }}
+        contentContainerStyle={styles.content}
         data={ledger || []}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <View>
-            <AppText
-              variant="displayMd"
-              color="ink"
-              style={{ marginBottom: spacing.lg, marginTop: spacing.lg }}
-            >
-              Earnings
+          <View style={styles.headerBlock}>
+            <AppText variant="displayMd" color="ink">
+              {t('creator.earnings.title', 'Earnings')}
             </AppText>
-            <View style={styles.balanceCard}>
-              <AppText style={styles.kicker}>READY TO WITHDRAW</AppText>
-              <AppText style={styles.balanceAmount}>EGP {earnings?.pendingBalance || 0}</AppText>
+
+            {/* Hero Ready to Withdraw Balance Card matching BrandDashboardScreen spendCard */}
+            <Card style={styles.balanceCard}>
+              <AppText variant="overline" color="muted" style={styles.kicker}>
+                {t('creator.earnings.readyToWithdraw', 'READY TO WITHDRAW')}
+              </AppText>
+              <AppText variant="metric" color="ink" style={styles.balanceAmount}>
+                {currency} {formatAmount(earnings?.pendingBalance)}
+              </AppText>
               <Pressable style={styles.cta} onPress={handleRequestPayout}>
-                <AppText variant="label" color="onPrimary">
-                  Request payout
+                <AppText variant="button" color="onPrimary">
+                  {t('creator.earnings.requestPayout', 'Request payout')}
                 </AppText>
               </Pressable>
-            </View>
+            </Card>
+
+            {/* Escrow & Cleared Balance Stats inside white Cards */}
             <View style={styles.statRow}>
-              <View style={styles.statCard}>
-                <AppText variant="titleLg" color="ink">
-                  EGP {earnings?.escrowBalance || 0}
+              <Card style={styles.statCard}>
+                <View style={styles.statIcon}>
+                  <Icon name="shield" size={16} color="primary" />
+                </View>
+                <AppText variant="titleSm" color="ink" style={styles.tabular}>
+                  {currency} {formatAmount(earnings?.escrowBalance)}
                 </AppText>
-                <AppText variant="caption" color="muted">
-                  Held in escrow
+                <AppText variant="bodySm" color="muted">
+                  {t('creator.earnings.heldInEscrow', 'Held in escrow')}
                 </AppText>
-              </View>
-              <View style={styles.statCard}>
-                <AppText variant="titleLg" color="ink">
-                  EGP {earnings?.clearedBalance || 0}
+              </Card>
+              <Card style={styles.statCard}>
+                <View style={styles.statIcon}>
+                  <Icon name="check-circle" size={16} color="primary" />
+                </View>
+                <AppText variant="titleSm" color="ink" style={styles.tabular}>
+                  {currency} {formatAmount(earnings?.clearedBalance)}
                 </AppText>
-                <AppText variant="caption" color="muted">
-                  Paid out to date
+                <AppText variant="bodySm" color="muted">
+                  {t('creator.earnings.paidOutToDate', 'Paid out to date')}
                 </AppText>
-              </View>
+              </Card>
             </View>
-            <AppText variant="titleLg" color="ink" style={{ marginBottom: 8 }}>
-              Ledger
+
+            <AppText variant="titleSm" color="ink" style={styles.ledgerHeading}>
+              {t('creator.earnings.ledger', 'Ledger')}
             </AppText>
           </View>
         }
-        renderItem={({ item }) => (
-          <View style={styles.ledgerRow}>
-            <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <AppText variant="label" color="ink">
-                {item.title}
-              </AppText>
-              <AppText variant="caption" color="muted">
-                {item.meta}
-              </AppText>
-            </View>
-            <View style={{ alignItems: 'flex-end' }}>
-              <AppText variant="label" color="ink">
-                {item.amount}
-              </AppText>
-              <AppText variant="caption" style={{ color: item.statusColor, fontWeight: '500' }}>
-                {item.status}
-              </AppText>
-            </View>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const isSuccess = item.statusToken === 'success';
+          const tokenColor = isSuccess ? colors.success : colors.muted;
+
+          return (
+            <Card style={styles.ledgerRow}>
+              <View style={styles.ledgerIcon}>
+                <Icon name="dollar-sign" size={16} color="primary" />
+              </View>
+              <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                <AppText variant="label" color="ink">
+                  {item.title}
+                </AppText>
+                <AppText variant="bodySm" color="muted">
+                  {item.meta}
+                </AppText>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <AppText variant="label" color="ink" style={styles.tabular}>
+                  {item.sign}
+                  {item.amount}
+                </AppText>
+                <AppText variant="caption" style={{ color: tokenColor }}>
+                  {item.status}
+                </AppText>
+              </View>
+            </Card>
+          );
+        }}
+        ItemSeparatorComponent={() => <View style={{ height: spacing.xs }} />}
         ListEmptyComponent={
-          <AppText variant="body" color="muted" style={{ textAlign: 'center', marginTop: 40 }}>
-            No transactions yet.
-          </AppText>
+          <Card style={styles.emptyCard}>
+            <AppText variant="body" color="muted" style={{ textAlign: 'center' }}>
+              {t('creator.earnings.noTransactions', 'No transactions yet.')}
+            </AppText>
+          </Card>
         }
       />
 
       <AppBottomSheet ref={bottomSheetRef} snapPoints={['85%']}>
         <AppText variant="displayMd" color="ink">
-          Request payout
+          {t('creator.payout.title', 'Request payout')}
         </AppText>
         <AppText variant="caption" color="muted" style={{ marginBottom: spacing.lg }}>
-          Available balance EGP {earnings?.pendingBalance || 0}
+          {t('creator.payout.availableBalance', 'Available balance {{currency}} {{balance}}', {
+            currency,
+            balance: formatAmount(earnings?.pendingBalance),
+          })}
         </AppText>
         <AppText variant="label" color="ink" style={styles.label}>
-          Amount
+          {t('creator.payout.amount', 'Amount')}
         </AppText>
         <View style={styles.amountRow}>
           <AppText variant="body" color="muted">
-            EGP
+            {currency}
           </AppText>
           <RNTextInput
             value={amount}
@@ -156,17 +209,17 @@ export function PayoutsScreen() {
             keyboardType="numeric"
             style={styles.amountInput}
           />
-          <Pressable onPress={() => setAmount(earnings?.pendingBalance?.toString() || '0')}>
-            <AppText variant="label" style={{ color: colors.link, fontSize: 13 }}>
-              All
+          <Pressable onPress={() => setAmount(earnings?.pendingBalance || '0')}>
+            <AppText variant="label" color="link">
+              {t('common.all', 'All')}
             </AppText>
           </Pressable>
         </View>
         <AppText variant="caption" color="muted" style={{ marginBottom: spacing.lg }}>
-          Minimum EGP 500 per request.
+          {t('creator.payout.minimumAmount', 'Minimum EGP 500 per request.')}
         </AppText>
         <AppText variant="label" color="ink" style={styles.label}>
-          Send to
+          {t('creator.payout.sendTo', 'Send to')}
         </AppText>
         {METHODS.map((m) => (
           <Pressable key={m.id} onPress={() => setMethod(m.id)} style={styles.methodRow}>
@@ -181,7 +234,7 @@ export function PayoutsScreen() {
             </View>
             {m.fastest && (
               <View style={styles.fastestTag}>
-                <AppText variant="caption" style={styles.fastestText}>
+                <AppText variant="overline" color="primary">
                   Fastest
                 </AppText>
               </View>
@@ -189,15 +242,22 @@ export function PayoutsScreen() {
           </Pressable>
         ))}
         <View style={styles.disclosureRow}>
-          <View style={styles.disclosureDot} />
+          <View style={styles.disclosureIcon}>
+            <Icon name="clock" size={14} color="primary" />
+          </View>
           <AppText variant="caption" color="muted" style={{ flex: 1 }}>
-            Payouts are reviewed and sent by our team within 2 business days. You'll get a
-            notification the moment it's transferred.
+            {t(
+              'creator.payout.disclosure',
+              'Payouts are reviewed and sent by our team within 2 business days. You will get a notification the moment it is transferred.',
+            )}
           </AppText>
         </View>
         <Pressable style={styles.cta} onPress={handleSubmitPayout}>
-          <AppText variant="label" color="onPrimary">
-            Request EGP {amount}
+          <AppText variant="button" color="onPrimary">
+            {t('creator.payout.requestCta', 'Request {{currency}} {{amount}}', {
+              currency,
+              amount,
+            })}
           </AppText>
         </Pressable>
       </AppBottomSheet>
@@ -207,61 +267,104 @@ export function PayoutsScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.canvas },
+  content: {
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  tabular: {
+    fontVariant: ['tabular-nums'],
+  },
+  headerBlock: {
+    gap: spacing.md,
+    marginBottom: spacing.sm,
+  },
   balanceCard: {
-    backgroundColor: colors.signatureCream,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
+    borderRadius: radius.xxl,
+    paddingVertical: spacing.lg,
+    alignItems: 'center',
+    gap: spacing.xs,
   },
   kicker: {
-    fontFamily: 'monospace',
-    fontSize: 11,
-    letterSpacing: 0.6,
-    color: colors.muted,
-    marginBottom: 10,
+    letterSpacing: 0.8,
   },
-  balanceAmount: { fontSize: 32, lineHeight: 38, color: colors.ink, marginBottom: 16 },
+  balanceAmount: {
+    fontVariant: ['tabular-nums'],
+    marginBottom: spacing.sm,
+  },
   cta: {
+    alignSelf: 'stretch',
     backgroundColor: colors.primary,
     borderRadius: radius.lg,
-    paddingVertical: 16,
+    minHeight: 48,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  statRow: { flexDirection: 'row', gap: 12, marginBottom: spacing.xl },
+  statRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
   statCard: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: colors.hairline,
+    gap: spacing.xxs,
+  },
+  statIcon: {
+    width: 30,
+    height: 30,
     borderRadius: radius.md,
-    padding: spacing.md,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xxs,
+  },
+  ledgerHeading: {
+    paddingHorizontal: spacing.xxs,
+    marginTop: spacing.xs,
   },
   ledgerRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.sm,
     alignItems: 'center',
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderColor: colors.hairline,
+    paddingVertical: spacing.sm,
   },
-  label: { marginBottom: 8 },
+  ledgerIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyCard: {
+    padding: spacing.xl,
+    alignItems: 'center',
+  },
+  label: { marginBottom: spacing.xs },
   amountRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: spacing.sm,
     height: 52,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.inputBorder,
-    borderRadius: radius.sm,
-    paddingHorizontal: 14,
-    marginBottom: 10,
+    borderRadius: radius.lg,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.xs,
   },
-  amountInput: { flex: 1, fontSize: 17, fontWeight: '600', color: colors.ink },
+  amountInput: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '500',
+    color: colors.ink,
+    fontVariant: ['tabular-nums'],
+  },
   methodRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.sm,
     alignItems: 'center',
-    paddingVertical: 16,
-    borderBottomWidth: 1,
+    paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
   radio: {
@@ -273,18 +376,23 @@ const styles = StyleSheet.create({
   },
   radioSelected: { borderWidth: 6, borderColor: colors.primary },
   fastestTag: {
-    backgroundColor: colors.signatureMint,
+    backgroundColor: colors.accentSoft,
     borderRadius: radius.pill,
-    paddingVertical: 3,
-    paddingHorizontal: 9,
+    paddingVertical: 4,
+    paddingHorizontal: spacing.xs,
   },
-  fastestText: { fontWeight: '500', color: colors.signatureForest },
-  disclosureRow: { flexDirection: 'row', gap: 10, marginVertical: spacing.md },
-  disclosureDot: {
-    width: 16,
-    height: 16,
-    borderRadius: radius.full,
-    backgroundColor: colors.signatureYellow,
-    marginTop: 3,
+  disclosureRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.sm,
+    marginVertical: spacing.md,
+  },
+  disclosureIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: radius.sm,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

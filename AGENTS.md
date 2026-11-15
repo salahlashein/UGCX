@@ -1,9 +1,49 @@
 # High-Level Architecture & Current Scope
 See HLD.md for the overarching architecture and roadmap.
-The current active project phase is **Removing Mock Data & Implementing Payouts**. The detailed step-by-step implementation plan is located at `operations/specs/remove_mock_data/plan_phase_2.md`.
 
-# Design reference
-See DESIGN.md for design conventions. Read it before design or UI work.
+The current active project phases are **Brand Flow Integration & Creator Sync** (`apps/mobile` + `apps/api`) and **Web Application Soft Launch** (`apps/web`). The plans are sets of documents:
+
+### Brand Flow Integration & Creator Sync (`operations/specs/brand_flow_integration/`)
+- `operations/specs/brand_flow_integration/00_overview.md` — current-state audit, phase map, cross-cutting decisions, status glossary, ledger invariants, verification commands. Read this first.
+- `plan_phase_1.md` — brand identity, team roles, brief authoring. Artboards 3a, 4a, 3b, 4c, 4g, 4h.
+- `plan_phase_2.md` — campaign escrow, funding, allocation, refund, billing. Artboards 3c, 3d, 4d, 4e, 4f, 4h.
+- `plan_phase_3.md` — deliverable review loop, dashboard, chats. Artboards 3e, 3f, 3g, 3h.
+- `plan_phase_4.md` — notification event backbone, failure UX, Arabic completion. Artboard 4b and creator screen 15.
+
+### Web Application Soft Launch (`operations/specs/web_app_soft_launch/`)
+- `operations/specs/web_app_soft_launch/00_overview.md` — web architecture, phase map, cross-cutting decisions, complete route map, verification commands.
+- `operations/specs/web_app_soft_launch/plan_phase_1.md` — Next.js 15 workspace scaffold (`apps/web`), C3 Sage UI primitives, bilingual EN/AR RTL, Axios JWT refresh, responsive `AppShell`, and Auth/Onboarding.
+- `operations/specs/web_app_soft_launch/plan_phase_2.md` — Brand web flows: dashboard, 1-page post brief, campaign escrow checkout, proposals inbox & accept, shipment, video review player, chats, billing ledger, brand profile.
+- `operations/specs/web_app_soft_launch/plan_phase_3.md` — Creator web flows: home queue, campaign discovery, submit proposal, work board, deliverable video upload, earnings & payout request, creator profile, shared chat/notifications/settings, and E2E verification.
+
+### Web Application Architecture Modernization (`operations/specs/web_app_architecture_refactor/`)
+- `00_overview.md` — Architecture modernization roadmap, cross-cutting decisions, exit criteria.
+- `plan_phase_1.md` — Localization single folder consolidation (`src/i18n/en.json`, `ar.json`, `index.tsx`, `types.ts`).
+- `plan_phase_2.md` — Common usage deduplication (`queryAggregator`, `dashboardMetrics`, `useKeyboardShortcut`).
+- `plan_phase_3.md` — Hook separation, domain isolation (`useBrandDashboardData`, `useCreatorHomeData`) and Query Key Factory (`queryKeys.ts`).
+- `plan_phase_4.md` — Monolithic page decomposition into feature slices (`src/features/brand/*`, `src/features/creator/*`).
+- `plan_phase_5.md` — Next.js 15 App Router hardening (`middleware.ts` Edge route protection, `loading.tsx` skeletons, `error.tsx` boundaries).
+
+Every task in those files carries a NEW, EXTEND, or REPLACE verdict against the code that already ships. Check the verdict before you write a line.
+
+## Decisions a future agent must not rediscover
+
+1. Escrow funds at the **campaign**, not at the collaboration. A proposal accept allocates from the campaign balance and raises no second charge.
+2. `transactions` is the **only** ledger. Campaign rows carry `campaign_id`. Collaboration rows carry `collaboration_id`. There is no parallel escrow table.
+3. Brand team roles (`owner`, `approver`, `viewer`) live in `brand_members` and are enforced by `BrandRoleGuard`. They are **not** in the JWT. `RolesGuard` still owns the coarse `brand`, `creator`, `admin` check.
+4. The notification event catalog lives in `packages/shared-types/src/notifications.ts`. One event, two copy strings, two recipients. Never add a second catalog.
+5. Money is `numeric(10,2)` strings in the database and integer cents in arithmetic, through `apps/api/src/common/utils/money.ts`. Never use `parseFloat` on an amount.
+6. Every new mobile screen ships an English and an Arabic screenshot pair before its phase closes.
+7. High-risk features (Product Catalog, 5-Step Campaign Wizard, Brand Team Management, Automated Payouts, APNs Push) are gated behind feature flags in `packages/shared-types/src/feature-flags.ts` and `apps/mobile/src/config/features.ts`. Do not re-enable without explicit user request.
+
+# Design reference & UI System (Brand C3 Sage)
+See `DESIGN.md` for design conventions. Read it before any design or UI work.
+
+The **Brand C3 Sage** design system is the single source of truth for all mobile UI across both Brand and Creator views:
+- **Theme tokens:** Always import colors, spacing, radius, and sizes from `apps/mobile/src/theme/tokens.ts`, typography from `apps/mobile/src/theme/typography.ts`, fonts from `apps/mobile/src/theme/fonts.ts`, and shadows from `apps/mobile/src/theme/elevation.ts`. Never hardcode hex colors, font sizes, or raw shadows.
+- **Core surfaces:** Page backgrounds use `colors.canvas` (`#eff2ed`). Content sits inside white elevated `<Card>` or `<PressableCard>` containers (`colors.surface` `#ffffff`, `radius.xl` 18px, `elevation.soft`), with `colors.primary` (`#2f5d46`) for primary actions and `colors.accentSoft` (`#e1ebe4`) for icon tiles.
+- **Reusable primitives:** Always build screens from `apps/mobile/src/components/ui/` (`AppText`, `Card`, `PressableCard`, `SignatureCard`, `Button`, `TextInput`, `FilterChip`, `StatusBadge`, `Icon`, `LoadingState`, `ErrorState`, `EmptyState`, `QueryStateView`, `AppBottomSheet`) and `apps/mobile/src/navigation/FloatingTabBar.tsx`.
+- **Reference screens:** Use `BrandDashboardScreen.tsx`, `BrandProfileScreen.tsx`, `MyBriefsScreen.tsx`, and `BrandBillingScreen.tsx` in `apps/mobile/src/screens/brand/` as the canonical layout templates for dashboards, profiles, lists, and ledgers.
 
 
 # Instructions

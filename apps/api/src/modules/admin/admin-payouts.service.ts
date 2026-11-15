@@ -13,8 +13,14 @@ import { CollaborationsService } from '../collaborations/collaborations.service'
 import { TransactionsService } from '../transactions/transactions.service';
 import { MarkPaidDto } from './dto/mark-paid.dto';
 import { DomainErrorException } from '../../common/exceptions/domain-error.exception';
+import { NotificationsService } from '../notifications/notifications.service';
+import { Notification } from '../notifications/entities/notification.entity';
+import {
+  PayoutRequest,
+  PayoutRequestStatus,
+} from '../creators/entities/payout-request.entity';
 
-/** TASK-P1-010 */
+/** TASK-P1-010, TASK-P4-04 */
 @Injectable()
 export class AdminPayoutsService {
   private readonly logger = new Logger(AdminPayoutsService.name);
@@ -23,6 +29,7 @@ export class AdminPayoutsService {
     private readonly dataSource: DataSource,
     private readonly collaborationsService: CollaborationsService,
     private readonly transactionsService: TransactionsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async list(
@@ -47,7 +54,7 @@ export class AdminPayoutsService {
     collaborationStatus: CollaborationStatus;
   }> {
     try {
-      return await this.dataSource.transaction(async (manager) => {
+      const txResult = await this.dataSource.transaction(async (manager) => {
         const collaboration = await manager
           .getRepository(Collaboration)
           .findOne({ where: { id: collaborationId } });
@@ -90,14 +97,77 @@ export class AdminPayoutsService {
           manager,
         );
 
+        // DEC-W003: Close oldest PENDING payout request for this creator
+        const payoutReqRepo = manager.getRepository(PayoutRequest);
+        const oldestPendingReq = await payoutReqRepo.findOne({
+          where: {
+            creatorId: collaboration.creatorId,
+            status: PayoutRequestStatus.PENDING,
+          },
+          order: { createdAt: 'ASC' },
+        });
+        if (oldestPendingReq) {
+          oldestPendingReq.status = PayoutRequestStatus.PAID;
+          await payoutReqRepo.save(oldestPendingReq);
+        }
+
+        // TASK-P4-04: record payout_sent notification for creator
+        let notifications: Notification[] = [];
+        try {
+          const loadedCollab = await manager
+            .getRepository(Collaboration)
+            .findOne({
+              where: { id: collaboration.id },
+              relations: { creator: true },
+            });
+
+          if (loadedCollab?.creator?.userId) {
+            notifications = await this.notificationsService.record(
+              {
+                event: 'payout_sent',
+                params: {
+                  amount: collaboration.creatorPrice,
+                  currency: collaboration.currency,
+                  method: dto.method,
+                },
+                creatorUserId: loadedCollab.creator.userId,
+                collaborationId: collaboration.id,
+                campaignId: collaboration.campaignId,
+                deepLinkByRole: {
+                  creator: {
+                    stack: 'EarningsTab',
+                    screen: 'Earnings',
+                  },
+                },
+              },
+              manager,
+            );
+          }
+        } catch (notifErr: unknown) {
+          const message =
+            notifErr instanceof Error ? notifErr.message : String(notifErr);
+          this.logger.warn(
+            `Failed to record payout_sent notification: ${message}`,
+          );
+        }
+
         this.logger.log(
           `Collaboration ${saved.id} marked paid by admin ${adminUserId}`,
         );
         return {
-          transactionId: transaction.id,
-          collaborationStatus: saved.status,
+          result: {
+            transactionId: transaction.id,
+            collaborationStatus: saved.status,
+          },
+          notifications,
         };
       });
+
+      if (txResult.notifications?.length) {
+        await this.notificationsService.push(txResult.notifications);
+      }
+
+      return txResult.result;
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new DomainErrorException(

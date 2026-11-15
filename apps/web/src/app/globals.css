@@ -1,0 +1,199 @@
+@import 'tailwindcss';
+
+:root {
+  --color-primary: #2f5d46;
+  --color-primary-active: #244a37;
+  --color-accent-soft: #e1ebe4;
+  --color-canvas: #eff2ed;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f6f8f5;
+  --color-surface-strong: #e1e7e2;
+  --color-surface-dark: #17241c;
+  --color-surface-dark-elevated: #1f3027;
+  --color-hairline: #dde3de;
+  --color-ink: #17241c;
+  --color-body: #2c3a31;
+  --color-muted: #5d6b62;
+  --color-border-strong: #93a097;
+  --color-input-border: #7f8c83;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+  --color-danger: #b3261e;
+  --color-danger-surface: #fdecea;
+  --color-success: #006400;
+  --color-info: #254fad;
+  --color-signature-coral: #aa2d00;
+  --color-signature-forest: #0a2e0e;
+  --color-signature-cream: #f5e9d4;
+  --color-signature-peach: #fcab79;
+  --color-signature-mint: #a8d8c4;
+  --color-signature-yellow: #f4d35e;
+  --color-signature-mustard: #d9a441;
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  --dash-line: 1px dashed #b9c4bc;
+  --paper:
+    linear-gradient(rgba(168, 216, 196, 0.07) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, rgba(168, 216, 196, 0.07) 1px, transparent 1px) 0 0 / 22px 22px,
+    var(--color-surface-dark);
+}
+
+:lang(ar) .mono-caps,
+:lang(ar) [data-mono-caps] {
+  /* Components set these inline, so the override needs the same weight.
+     Uppercase and letter spacing break Arabic letter joining. */
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Some labels get their caps from utility classes instead of a text variant.
+   Arabic has no uppercase, and tracking breaks letter joining, so neutralize
+   both on an Arabic page whatever set them. */
+:lang(ar) .uppercase,
+:lang(ar) [class*='tracking-'] {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* A money value keeps its own order inside a right to left line. */
+.ltr-num {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family:
+    var(--font-inter),
+    var(--font-arabic),
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[dir='rtl'] body {
+  font-family:
+    var(--font-arabic),
+    var(--font-inter),
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive Shell Visibility */
+.ugcx-desktop-sidebar {
+  display: none;
+}
+
+.ugcx-mobile-tabbar {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .ugcx-desktop-sidebar {
+    display: flex;
+  }
+
+  .ugcx-mobile-tabbar {
+    display: none;
+  }
+}
+
+/* The dashboard action grid folds to one column on a narrow screen. */
+@media (max-width: 900px) {
+  .ugcx-action-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* KPI cells fold to two columns on a narrow screen. */
+@media (max-width: 760px) {
+  .ugcx-kpi-cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Responsive 2-column form & detail grid that folds on tablets and mobile screens */
+.ugcx-two-column-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ugcx-two-column-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* Sticky sidebar for 2-column layouts on desktop */
+.ugcx-sticky-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 1025px) {
+  .ugcx-sticky-sidebar {
+    position: sticky !important;
+    top: 24px !important;
+    align-self: start !important;
+  }
+}
+
+/* Segmented controls row that collapses cleanly on mobile */
+.ugcx-segments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .ugcx-segments-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* 2-column input row that folds on small mobile screens */
+.ugcx-two-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 580px) {
+  .ugcx-two-input-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+
+/* The brief pipeline folds as the screen narrows. */
+@media (max-width: 1080px) {
+  .ugcx-pipeline {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 760px) {
+  .ugcx-pipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

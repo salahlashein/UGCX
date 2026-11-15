@@ -1,0 +1,525 @@
+{
+  "common": {
+    "appName": "يو جي سي إكس",
+    "loading": "جارٍ التحميل",
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "submit": "إرسال",
+    "next": "التالي",
+    "back": "رجوع",
+    "done": "تم",
+    "close": "إغلاق",
+    "logout": "تسجيل الخروج",
+    "language": "اللغة",
+    "untitled": "موجز بدون عنوان",
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات",
+    "error": {
+      "title": "حدث خطأ ما",
+      "generic": "حدث خطأ ما. حاول مرة أخرى."
+    },
+    "empty": {
+      "title": "لا يوجد شيء هنا بعد",
+      "generic": "لا يوجد شيء هنا بعد."
+    },
+    "required": "هذا الحقل مطلوب",
+    "continue": "متابعة",
+    "offline": "لا يوجد اتصال بالإنترنت. سنعيد المحاولة عند عودة الاتصال."
+  },
+  "auth": {
+    "roleSelect": {
+      "title": "مرحبًا بك في يو جي سي إكس",
+      "subtitle": "اختر طريقة استخدامك للمنصة",
+      "brand": "أنا علامة تجارية",
+      "brandSubtitle": "انشر الموجزات واشترِ محتوى الفيديو",
+      "creator": "أنا صانع محتوى",
+      "creatorSubtitle": "قدّم على الموجزات، صوّر، واحصل على أرباحك",
+      "haveAccount": "لديك حساب بالفعل؟ سجّل الدخول"
+    },
+    "otp": {
+      "tab": "رمز الهاتف (+20)",
+      "phoneLabel": "رقم الهاتف المصري",
+      "phonePlaceholder": "+201000000002",
+      "sendCode": "إرسال رمز التحقق",
+      "codeLabel": "رمز التحقق (OTP)",
+      "codeHint": "استخدم الرمز 0000 في بيئة التطوير",
+      "verify": "تأكيد ومتابعة"
+    },
+    "demo": {
+      "title": "دخول تجريبي سريع",
+      "brand": "دخول تجريبي كعلامة تجارية",
+      "creator": "دخول تجريبي كصانع محتوى"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "password": "كلمة المرور",
+      "locale": "اللغة المفضلة",
+      "submit": "إنشاء الحساب",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "tab": "البريد الإلكتروني وكلمة المرور",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "أنشئ حسابًا",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    }
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "briefs": "الموجزات",
+    "proposals": "العروض",
+    "chats": "المحادثات",
+    "billing": "الفواتير",
+    "campaigns": "الحملات",
+    "products": "المنتجات",
+    "profile": "الملف الشخصي",
+    "home": "الرئيسية",
+    "discover": "استكشف",
+    "work": "أعمالي",
+    "earnings": "الأرباح",
+    "browse": "تصفح",
+    "myApplications": "عروضي",
+    "myCollaborations": "تعاوناتي",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات"
+  },
+  "brand": {
+    "campaigns": {
+      "title": "الحملات",
+      "empty": "لم تنشئ أي حملة بعد.",
+      "createNew": "حملة جديدة",
+      "status": { "draft": "مسودة", "live": "منشورة" }
+    },
+    "wizard": {
+      "title": "إنشاء حملة",
+      "stepProduct": "المنتج",
+      "stepDetails": "التفاصيل",
+      "stepScript": "النص",
+      "stepShipping": "الشحن",
+      "stepReview": "المراجعة",
+      "selectProduct": "اختر منتجًا",
+      "createProduct": "إنشاء منتج جديد",
+      "niche": "المجال",
+      "language": "لغة الفيديو",
+      "videoType": "نوع الفيديو",
+      "durationSeconds": "المدة (بالثواني)",
+      "scriptMode": "من يكتب النص؟",
+      "scriptModeBrand": "العلامة التجارية تكتبه",
+      "scriptModeCreator": "صانع المحتوى يكتبه",
+      "script": "النص",
+      "talkingPoints": "النقاط الرئيسية",
+      "doNotSay": "عبارات ممنوعة",
+      "needsShipping": "تتطلب هذه الحملة شحن منتج",
+      "slots": "عدد أماكن صانعي المحتوى",
+      "publish": "نشر الحملة",
+      "publishSuccess": "تم نشر الحملة",
+      "saveDraft": "حفظ كمسودة"
+    },
+    "proposals": {
+      "title": "العروض",
+      "empty": "لا توجد عروض لهذه الحملة بعد.",
+      "shortlist": "إضافة للقائمة المختصرة",
+      "decline": "رفض",
+      "accept": "قبول",
+      "status": {
+        "applied": "مُقدَّم",
+        "shortlisted": "في القائمة المختصرة",
+        "declined": "مرفوض",
+        "accepted": "مقبول"
+      },
+      "overview": {
+        "empty": "لا توجد عروض بعد. ستظهر هنا عندما يتقدم المبدعون إلى موجزاتك المفتوحة.",
+        "rowLabel": "{{title}}، {{count}} عروض",
+        "waiting": "{{count}} بانتظار مراجعتك"
+      }
+    },
+    "acceptProposal": {
+      "title": "إتمام الدفع",
+      "waiting": "جارٍ تأكيد الدفع…",
+      "timeout": "الدفع لا يزال قيد المعالجة، تحقق مرة أخرى بعد قليل.",
+      "funded": "تم التمويل",
+      "failed": "فشل الدفع. لم يتم حجز أي مبلغ في الضمان.",
+      "openPaymentHint": "افتح صفحة الدفع في تبويب جديد لإتمام العملية، ثم عد إلى هنا.",
+      "openPayment": "فتح صفحة الدفع"
+    },
+    "products": {
+      "title": "المنتجات",
+      "empty": "لم تضف أي منتج بعد.",
+      "addNew": "منتج جديد",
+      "name": "اسم المنتج",
+      "description": "الوصف",
+      "valueProps": "مميزات المنتج"
+    },
+    "collaboration": {
+      "title": "التعاون",
+      "status": "الحالة",
+      "confirmShipment": "تأكيد الشحن",
+      "carrier": "شركة الشحن",
+      "trackingNumber": "رقم التتبع",
+      "reviewDeliverable": "مراجعة التسليم",
+      "approve": "الموافقة",
+      "requestRevision": "طلب تعديل",
+      "decline": "رفض",
+      "feedback": "ملاحظات",
+      "openChat": "محادثة صانع المحتوى"
+    },
+    "profile": {
+      "title": "ملف العلامة التجارية",
+      "companyName": "اسم الشركة",
+      "country": "الدولة",
+      "teamMembers": "أعضاء الفريق",
+      "paymentMethods": "طرق الدفع",
+      "billingHistory": "سجل الفواتير",
+      "verified": "موثق",
+      "edit": "تعديل الملف",
+      "statTeam": "الفريق",
+      "statProducts": "المنتجات",
+      "statSpent": "ج.م مصروفة",
+      "groupWorkspace": "مساحة العمل",
+      "groupMoney": "المدفوعات",
+      "groupPreferences": "التفضيلات",
+      "getVerified": "وثّق علامتك",
+      "restartForDirection": "تم تحديث اتجاه النص."
+    },
+    "team": {
+      "title": "الفريق",
+      "invite": "دعوة",
+      "roles": {
+        "owner": "المالك",
+        "approver": "صلاحية اعتماد التسليمات",
+        "viewer": "عرض فقط"
+      },
+      "invitedSuffix": "تمت الدعوة",
+      "inviteSheetTitle": "دعوة زميل فريق",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "sendInvite": "إرسال الدعوة",
+      "changeRole": "تغيير الدور",
+      "removeMember": "إزالة من الفريق",
+      "removeConfirm": "هل أنت متأكد من رغبتك في إزالة هذا العضو؟",
+      "you": "أنت"
+    },
+    "setup": {
+      "title": "إعداد علامتك التجارية",
+      "subtitle": "يراها صانعو المحتوى قبل التقديم.",
+      "uploadLogo": "رفع الشعار",
+      "brandName": "اسم العلامة التجارية",
+      "category": "التصنيف",
+      "businessDocument": "السجل التجاري (اختياري)",
+      "businessDocumentHint": "ارفع المستند للحصول على شارة التحقق",
+      "continue": "متابعة",
+      "uploadFailed": "فشل الرفع"
+    },
+    "verify": {
+      "title": "تأكيد رقمك",
+      "subtitle": "أرسلنا رمزاً إلى {{phone}}",
+      "resendIn": "إعادة إرسال الرمز خلال {{seconds}}",
+      "resend": "إعادة إرسال الرمز",
+      "continue": "متابعة"
+    },
+    "brief": {
+      "title": "موجز جديد",
+      "header": "موجز جديد",
+      "fieldTitle": "العنوان",
+      "deliverable": "نوع المحتوى",
+      "length": "المدة",
+      "language": "اللغة",
+      "budgetRange": "نطاق الميزانية (ج.م)",
+      "minBudget": "الحد الأدنى",
+      "maxBudget": "الحد الأقصى",
+      "shipping": "شحن المنتج لصانع المحتوى",
+      "reviewAndFund": "مراجعة وتمويل الضمان",
+      "errors": {
+        "title": "يجب أن يتراوح العنوان بين 3 و 140 حرفاً",
+        "deliverable": "يرجى تحديد نوع المحتوى",
+        "length": "يجب أن تتراوح المدة بين 5 و 600 ثانية",
+        "language": "يرجى تحديد اللغة",
+        "budgetMin": "يجب ألا يقل الحد الأدنى عن 100 ج.م",
+        "budgetMax": "يجب ألا يقل الحد الأقصى للميزانية عن الحد الأدنى"
+      },
+      "types": {
+        "talking_head": "حديث مباشر",
+        "try_on": "تجربة ملابس",
+        "unboxing": "فتح الصندوق"
+      },
+      "languages": {
+        "ar": "العربية المصرية",
+        "en": "الإنجليزية"
+      },
+      "niche": "الفئة",
+      "steps": {
+        "stepOf": "الخطوة {{step}} من {{total}}",
+        "basicsTitle": "عن ماذا هذا الموجز؟",
+        "basicsHint": "يرى المبدعون العنوان أولاً.",
+        "titlePlaceholder": "فتح علبة آيس لاتيه",
+        "wizardLink": "تحتاج إلى منتج أو نص أو أماكن أكثر؟ استخدم المعالج الكامل",
+        "videoTitle": "ما نوع الفيديو الذي تحتاجه؟",
+        "videoHint": "اختر النوع والمدة واللغة.",
+        "typeHints": {
+          "talking_head": "يتحدث المبدع إلى الكاميرا",
+          "try_on": "يجرّب المبدع المنتج أمام الكاميرا",
+          "unboxing": "يفتح المبدع العلبة ويُظهر رد فعله"
+        },
+        "seconds": "{{count}} ث",
+        "budgetTitle": "ما ميزانيتك لكل فيديو؟",
+        "budgetHint": "يحدد المبدعون أسعارهم داخل هذا النطاق. بعدها تموّل الضمان.",
+        "shippingHint": "فعّلها عندما يحتاج المبدعون إلى المنتج بأيديهم.",
+        "reviewTitle": "راجع موجزك",
+        "reviewHint": "اضغط تعديل لتغيير أي خطوة.",
+        "edit": "تعديل",
+        "escrowEstimate": "بعدها تموّل نحو {{amount}} ج.م في الضمان. لا يُدفع للمبدعين إلا بعد موافقتك."
+      }
+    },
+    "briefs": {
+      "title": "موجزاتي",
+      "filters": {
+        "all": "الكل",
+        "draft": "مسودة",
+        "open": "مفتوح",
+        "completed": "مكتمل"
+      },
+      "empty": {
+        "title": "لا توجد موجزات بعد",
+        "message": "انشر موجزك الأول لبدء استلام العروض.",
+        "action": "موجز جديد"
+      },
+      "meta": {
+        "draft": "لم ينشر بعد",
+        "proposals": "{{count}} عروض",
+        "paidOut": "تم الدفع"
+      },
+      "actions": {
+        "pause": "إيقاف مؤقت",
+        "resume": "استئناف",
+        "close": "إغلاق الموجز واسترداد الضمان"
+      }
+    },
+    "fundEscrow": {
+      "title": "تمويل الضمان",
+      "subtitle": "يُحفظ المبلغ حتى توافق على التسليم النهائي، ثم يُحرر لصانع المحتوى.",
+      "totalKicker": "إجمالي التمويل",
+      "budgetSub": "الميزانية · متوسط النطاق {{range}}",
+      "paymentMethod": "طريقة الدفع",
+      "methodCard": "بطاقة الشركة •• 4471",
+      "methodBankTransfer": "تحويل بنكي",
+      "submit": "تمويل ونشر الموجز",
+      "chargeDeclinedTitle": "تم رفض البطاقة",
+      "chargeDeclinedMessage": "تم رفض بطاقة الشركة •• 4471. جرب طريقة أخرى.",
+      "tryAgain": "حاول مرة أخرى",
+      "stillProcessingTitle": "لا يزال قيد المعالجة",
+      "stillProcessingMessage": "يستغرق تأكيد الدفع وقتاً أطول من المعتاد. يمكنك التحديث للتحقق من الحالة."
+    },
+    "dashboard": {
+      "welcome": "لوحة تحكم العلامة التجارية",
+      "thisMonth": "هذا الشهر",
+      "spent": "المصروف",
+      "deliverables": "التسليمات",
+      "attentionProposals": "{{count}} موجزات بحاجة لمراجعة العروض",
+      "attentionDeliverables": "{{count}} تسليمات بانتظار المراجعة",
+      "activeBriefs": "الموجزات النشطة ({{count}})",
+      "greetingMorning": "صباح الخير",
+      "greetingAfternoon": "مساء الخير",
+      "greetingEvening": "مساء الخير",
+      "notifications": "الإشعارات",
+      "spentThisMonth": "المصروف هذا الشهر",
+      "deliverablesReceived": "{{count}} تسليمات مستلمة",
+      "actionNewBrief": "موجز جديد",
+      "actionProposals": "العروض",
+      "actionReview": "المراجعة",
+      "actionWallet": "المحفظة",
+      "seeAll": "عرض الكل"
+    },
+    "review": {
+      "title": "مراجعة التسليم",
+      "versionLine": "الإصدار {{version}} · تم الإرسال",
+      "previousFeedback": "ملاحظات الإصدار {{version}}:",
+      "addNoteLabel": "إضافة ملاحظة (اختياري)",
+      "notePlaceholder": "ممتاز، تمت الموافقة.",
+      "requestRevision": "طلب تعديل",
+      "approveRelease": "موافقة وتحرير الدفعة",
+      "successTitle": "تمت الموافقة على التسليم",
+      "successMessage": "تم تحرير الدفعة: {{amount}} {{currency}}",
+      "errors": {
+        "noteRequired": "يرجى تقديم ملاحظات لمنشئ المحتوى"
+      }
+    },
+    "escrow": {
+      "shortfallTitle": "رصيد الضمان غير كافٍ",
+      "shortfallMessage": "رصيد هذا الموجز أقل من تكلفة العرض. أضف {{amount}} ج.م لقبوله.",
+      "topUpAction": "أضف {{amount}} ج.م إلى الضمان"
+    },
+    "billing": {
+      "title": "سجل الفواتير والضمان",
+      "lifetimeSpend": "إجمالي الإنفاق",
+      "empty": "لا توجد معاملات بعد. موّل موجزاً لعرض سجل الضمان."
+    }
+  },
+  "creator": {
+    "home": {
+      "title": "الرئيسية لصانع المحتوى",
+      "urgent": "مهام عاجلة",
+      "upcoming": "مهام قادمة",
+      "emptyQueue": "لا توجد مهام معلقة! تصفح الموجزات المتاحة للتقديم."
+    },
+    "browse": {
+      "title": "تصفح الحملات",
+      "empty": "لا توجد حملات تطابق مجالاتك حاليًا.",
+      "filters": "التصفية",
+      "clearFilters": "مسح التصفية"
+    },
+    "campaignDetail": {
+      "title": "تفاصيل الحملة",
+      "apply": "تقديم عرض",
+      "price": "سعرك (ج.م)",
+      "deliveryDays": "أيام التسليم",
+      "pitch": "عرضك",
+      "applySuccess": "تم إرسال الطلب",
+      "alreadyApplied": "لقد تقدمت لهذه الحملة من قبل"
+    },
+    "applications": {
+      "title": "عروضي",
+      "empty": "لم تتقدم لأي حملة بعد."
+    },
+    "collaborations": {
+      "title": "الأعمال النشطة",
+      "empty": "لا توجد تعاونات بعد.",
+      "openChat": "محادثة العلامة التجارية"
+    },
+    "upload": {
+      "title": "رفع التسليم",
+      "selectFile": "اختر ملف فيديو (.mp4, .mov, .webm)",
+      "type": "نوع التسليم",
+      "uploading": "جارٍ الرفع…",
+      "registering": "جارٍ التسجيل…",
+      "success": "تم تسليم الملف",
+      "fileTooLarge": "هذا الملف أكبر من الحجم المسموح به (250 ميجابايت)",
+      "unsupportedType": "هذا النوع من الملفات غير مدعوم",
+      "failedBanner": "فشل الرفع. انقطع الاتصال عند {{percent}}%. انقر لإعادة المحاولة.",
+      "failedAt": "فشل عند {{percent}}%",
+      "retryAction": "إعادة محاولة الرفع",
+      "failedGeneric": "فشل الرفع. تحقق من اتصالك وحاول مرة أخرى."
+    },
+    "profile": {
+      "title": "ملف صانع المحتوى",
+      "displayName": "الاسم المعروض",
+      "city": "المدينة",
+      "niches": "المجالات",
+      "basePrice": "السعر الأساسي (ج.م)",
+      "portfolio": "معرض الأعمال",
+      "addPortfolioItem": "إضافة عمل",
+      "mediaUrl": "رابط الملف",
+      "mediaType": "نوع الملف"
+    },
+    "payout": {
+      "title": "الأرباح والسحب",
+      "clearedBalance": "الرصيد المتاح للسحب",
+      "escrowBalance": "في الضمان",
+      "pendingBalance": "قيد التسوية",
+      "requestPayout": "طلب سحب الرصيد",
+      "method": "طريقة الدفع",
+      "accountIdentifier": "معرّف الحساب (IBAN / إنستاباي / محفظة)",
+      "holderName": "اسم صاحب الحساب",
+      "saved": "تم حفظ بيانات الدفع"
+    }
+  },
+  "chat": {
+    "title": "المحادثة",
+    "placeholder": "اكتب رسالة",
+    "send": "إرسال",
+    "empty": "لا توجد رسائل بعد. ابدأ المحادثة!",
+    "notEligible": "تُفتح المحادثة بعد تمويل هذا التعاون.",
+    "system": {
+      "escrow_funded_brand": "تم تمويل الضمان · {{total}} ج.م",
+      "escrow_funded_creator": "تم تمويل الضمان · {{creatorPrice}} ج.م",
+      "shipment_confirmed": "📦 تم تحديد الشحنة كمرسلة",
+      "deliverable_submitted_brand": "أرسل {{creatorName}} الإصدار {{version}}",
+      "deliverable_submitted_creator": "لقد أرسلت الإصدار {{version}}",
+      "revision_requested_brand": "لقد طلبت تعديلاً",
+      "revision_requested_creator": "طلبت {{brandName}} تعديلاً",
+      "escrow_released_brand": "تم تحرير الضمان · {{total}} ج.م",
+      "escrow_released_creator": "تم تحرير الضمان · {{creatorPrice}} ج.م"
+    }
+  },
+  "niche": {
+    "beauty_personal_care": "الجمال والعناية الشخصية",
+    "fashion": "الأزياء",
+    "mom_baby": "الأمومة والطفولة",
+    "food_fmcg": "الأغذية والمنتجات الاستهلاكية",
+    "home_lifestyle": "المنزل ونمط الحياة",
+    "other": "أخرى"
+  },
+  "errors": {
+    "network": "تعذر الوصول إلى الخادم. تحقق من اتصالك.",
+    "unauthorized": "انتهت صلاحية جلستك. سجّل الدخول مرة أخرى.",
+    "duplicateProposal": "لقد تقدمت لهذه الحملة من قبل."
+  },
+  "status": {
+    "campaign": {
+      "draft": "مسودة",
+      "live": "مفتوح",
+      "paused": "متوقف مؤقتاً",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "proposal": {
+      "applied": "مُقدَّم",
+      "shortlisted": "في القائمة المختصرة",
+      "accepted": "مقبول",
+      "declined": "مرفوض"
+    },
+    "collaboration": {
+      "pending_payment": "بانتظار الدفع",
+      "funded": "تم التمويل",
+      "shipped": "تم الشحن",
+      "in_progress": "قيد التنفيذ",
+      "delivered": "تم التسليم",
+      "approved": "تمت الموافقة",
+      "paid": "مدفوع",
+      "payment_failed": "فشل الدفع",
+      "cancelled": "ملغاة",
+      "revision_requested": "مطلوب تعديل"
+    },
+    "deliverable": {
+      "submitted": "تم التسليم",
+      "revision_requested": "طلب تعديل",
+      "approved": "تمت الموافقة",
+      "declined": "مرفوض"
+    }
+  },
+  "notif": {
+    "empty": {
+      "title": "لا يوجد جديد",
+      "message": "ستتلقى الإشعارات هنا عند وجود تحديثات على حملاتك وتعاوناتك."
+    },
+    "header": {
+      "markAllRead": "تحديد الكل كمقروء"
+    },
+    "brand": {
+      "brief_published": "الحملة \"{{title}}\" أصبحت متاحة وتستقبل العروض الآن",
+      "proposal_received": "{{count}} عرض جديد على \"{{title}}\"",
+      "escrow_funded": "تم إيداع ضمان بمبلغ {{total}} {{currency}} للتعاون",
+      "deliverable_submitted": "أرسل {{creatorName}} المسودة v{{version}} للحملة \"{{title}}\"",
+      "escrow_released": "تم تحرير {{creatorPrice}} {{currency}} إلى {{creatorName}}",
+      "message_received": "رسالة جديدة من {{senderName}}: {{preview}}"
+    },
+    "creator": {
+      "proposal_shortlisted": "وضعت {{brandName}} عرضك في القائمة المختصرة للحملة \"{{title}}\"",
+      "proposal_declined": "لم يتم اختيار عرضك للحملة \"{{title}}\"",
+      "escrow_funded": "تم إيداع الضمان للحملة \"{{title}}\". يمكنك بدء التصوير!",
+      "shipment_confirmed": "تم شحن المنتج للحملة \"{{title}}\"",
+      "revision_requested": "طلبت {{brandName}} تعديلاً على عملك المُسلَّم",
+      "escrow_released": "تم تحرير {{creatorPrice}} {{currency}} إلى رصيد أرباحك",
+      "message_received": "رسالة جديدة من {{senderName}}: {{preview}}",
+      "payout_sent": "تم إرسال مستحقاتك بمبلغ {{amount}} {{currency}} عبر {{method}}"
+    }
+  }
+}

@@ -1,11 +1,16 @@
 import { randomUUID } from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { AppConfig } from '../../config/configuration';
 
 const UPLOAD_URL_TTL_SECONDS = 15 * 60;
+const READ_URL_TTL_SECONDS = 15 * 60;
 
 /**
  * TASK-P1-007/DES-P1-003: R2 is S3-compatible, so the AWS SDK v3 S3 client
@@ -26,7 +31,7 @@ export class R2StorageClient {
   // never the same URL the brand's browser fetches the finished video from
   // (the plan's own security guideline denies public reads on that
   // endpoint). fileUrl must be built from a real public/CDN domain.
-  private readonly publicBaseUrl: string;
+  readonly publicBaseUrl: string;
 
   constructor(private readonly configService: ConfigService<AppConfig>) {
     const r2 = this.configService.get('r2', { infer: true });
@@ -111,5 +116,26 @@ export class R2StorageClient {
       expiresIn: UPLOAD_URL_TTL_SECONDS,
     });
     return { uploadUrl, fileUrl: `${this.publicBaseUrl}/${key}` };
+  }
+
+  /**
+   * DES-P3-303 / SEC-303: a time limited GET URL for a deliverable object. The bucket
+   * serves no public reads, so this is the only way a brand plays the video.
+   */
+  async createReadUrl(
+    fileUrl: string,
+    ttlSeconds = READ_URL_TTL_SECONDS,
+  ): Promise<string> {
+    if (!fileUrl.startsWith(`${this.publicBaseUrl}/`)) {
+      throw new Error('fileUrl origin does not match publicBaseUrl');
+    }
+    const key = fileUrl.slice(`${this.publicBaseUrl}/`.length);
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+    return await getSignedUrl(this.s3, command, {
+      expiresIn: ttlSeconds,
+    });
   }
 }

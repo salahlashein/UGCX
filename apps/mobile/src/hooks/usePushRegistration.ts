@@ -7,10 +7,26 @@ import { useAuthStore } from '../store/authStore';
 import { useRegisterPushToken } from './api/usePushToken';
 import { navigationRef } from '../navigation/navigationRef';
 import { logger } from '../services/logger';
+import { isFeatureEnabled } from '../config/features';
+
+import type { NotificationDeepLink } from '@ugcx/shared-types';
 
 interface NotificationData {
   collaborationId?: string;
+  deepLink?: NotificationDeepLink;
 }
+
+export const ALLOWED_DEEP_LINKS: Record<string, string[]> = {
+  BriefsTab: ['MyBriefs', 'ProposalsInbox', 'CollaborationDetail', 'ReviewDeliverable', 'CollaborationChat'],
+  ProposalsTab: ['ProposalsAcrossBriefs', 'ProposalsInbox', 'CreatorProfilePreview'],
+  ChatsTab: ['BrandChats', 'CollaborationChat'],
+  DashboardTab: ['BrandDashboard', 'Notifications'],
+  HomeTab: ['Home', 'Notifications'],
+  DiscoverTab: ['Discover', 'CampaignDetail'],
+  WorkTab: ['WorkStatus', 'DeliverableUpload', 'CollaborationChat'],
+  EarningsTab: ['Earnings'],
+  ProfileTab: ['Profile', 'MyProposals', 'BrandProfile', 'BrandTeam', 'BrandBilling'],
+};
 
 // expo-notifications has no web implementation: getLastNotificationResponse
 // and getExpoPushTokenAsync both throw UnavailabilityError there instead of
@@ -20,8 +36,8 @@ interface NotificationData {
 const isWeb = Platform.OS === 'web';
 
 /**
- * TASK-P1-013: REQ-009, EDGE-P1-003 (permission denied never blocks core
- * flows — every step below fails soft and only logs).
+ * TASK-P1-013, TASK-P4-07: REQ-009, EDGE-P1-003, PAT-403.
+ * Deep link routing with route allow list and fallback to collaborationId.
  */
 export function usePushRegistration(): void {
   const user = useAuthStore((state) => state.user);
@@ -30,7 +46,7 @@ export function usePushRegistration(): void {
   const lastResponse = isWeb ? undefined : Notifications.useLastNotificationResponse();
 
   useEffect(() => {
-    if (isWeb || !user) return;
+    if (isWeb || !user || !isFeatureEnabled('pushNotifications')) return;
 
     (async () => {
       try {
@@ -61,16 +77,43 @@ export function usePushRegistration(): void {
 
   useEffect(() => {
     if (!lastResponse || !navigationRef.isReady() || !user) return;
-    const data = lastResponse.notification.request.content.data as NotificationData;
-    if (!data.collaborationId) return;
 
-    const tabName = user.role === 'brand' ? 'CampaignsTab' : 'CollaborationsTab';
-    const screenName = user.role === 'brand' ? 'CollaborationDetail' : 'MyCollaborationsList';
-    navigationRef.dispatch(
-      CommonActions.navigate({
-        name: tabName,
-        params: { screen: screenName, params: { collaborationId: data.collaborationId } },
-      }),
-    );
+    try {
+      const data = lastResponse.notification?.request?.content?.data as NotificationData | undefined;
+      if (!data) return;
+
+      // 1. Check deepLink from push payload
+      if (data.deepLink && typeof data.deepLink === 'object') {
+        const { stack, screen, params } = data.deepLink;
+        const allowedScreens = ALLOWED_DEEP_LINKS[stack];
+
+        if (allowedScreens && allowedScreens.includes(screen)) {
+          navigationRef.dispatch(
+            CommonActions.navigate({
+              name: stack,
+              params: { screen, params },
+            }),
+          );
+          return;
+        } else {
+          logger.warn(`Push deep link disallowed or unknown: stack=${stack}, screen=${screen}`);
+          return;
+        }
+      }
+
+      // 2. Fallback: collaborationId branch for backwards compatibility
+      if (data.collaborationId) {
+        const tabName = user.role === 'brand' ? 'BriefsTab' : 'WorkTab';
+        const screenName = user.role === 'brand' ? 'CollaborationDetail' : 'WorkStatus';
+        navigationRef.dispatch(
+          CommonActions.navigate({
+            name: tabName,
+            params: { screen: screenName, params: { id: data.collaborationId } },
+          }),
+        );
+      }
+    } catch (err) {
+      logger.warn('Failed to handle notification response', err);
+    }
   }, [lastResponse, user]);
 }

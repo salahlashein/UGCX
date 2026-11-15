@@ -21,6 +21,9 @@ import { paginate } from '../../common/utils/paginate';
 import { ProposalsService } from './proposals.service';
 import { CreateProposalDto } from './dto/create-proposal.dto';
 import { UpdateProposalStatusDto } from './dto/update-proposal-status.dto';
+import { BrandRoleGuard } from '../brands/guards/brand-role.guard';
+import { BrandRoles } from '../brands/decorators/brand-roles.decorator';
+import { BrandMemberRole } from '../brands/entities/brand-member.entity';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -87,6 +90,8 @@ export class ProposalsController {
 
   @Patch('proposals/:id/status')
   @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(BrandMemberRole.OWNER, BrandMemberRole.APPROVER)
   async updateStatus(
     @CurrentUser() user: AuthUser,
     @Param('id') id: string,
@@ -98,5 +103,45 @@ export class ProposalsController {
       dto.status,
     );
     return { data: proposal };
+  }
+
+  /** REQ-213, TASK-P2-11: Creator trust preview */
+  @Get('proposals/:id/creator-profile')
+  @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(
+    BrandMemberRole.OWNER,
+    BrandMemberRole.APPROVER,
+    BrandMemberRole.VIEWER,
+  )
+  async getCreatorProfile(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    const profile = await this.proposalsService.getCreatorProfilePreview(
+      user.userId,
+      id,
+    );
+    return { data: profile };
+  }
+
+  /** BG-22, TASK-W3-05: Proposal accept quote */
+  @Get('proposals/:id/quote')
+  @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(
+    BrandMemberRole.OWNER,
+    BrandMemberRole.APPROVER,
+    BrandMemberRole.VIEWER,
+  )
+  async getAcceptQuote(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    const quote = await this.proposalsService.getAcceptQuote(
+      user.userId,
+      id,
+    );
+    return { data: quote };
   }
 }

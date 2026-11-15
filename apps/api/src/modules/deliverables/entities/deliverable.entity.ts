@@ -5,10 +5,12 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Collaboration } from '../../collaborations/entities/collaboration.entity';
+import type { DeliverableFeedback } from './deliverable-feedback.entity';
 
 export enum DeliverableType {
   READY_AD = 'ready_ad',
@@ -28,6 +30,11 @@ export enum DeliverableStatus {
 
 /** A registered file the creator uploaded to R2 (DES-P1-003); the API never stores video bytes. */
 @Entity('deliverables')
+@Index(
+  'uq_deliverables_collaboration_version',
+  ['collaborationId', 'version'],
+  { unique: true },
+)
 export class Deliverable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -36,9 +43,18 @@ export class Deliverable {
   @Column({ name: 'collaboration_id' })
   collaborationId: string;
 
+  @Column({ type: 'int', default: 1 })
+  version: number;
+
+  @Column({ type: 'text', nullable: true })
+  note: string | null;
+
   @ManyToOne(() => Collaboration, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'collaboration_id' })
   collaboration: Collaboration;
+
+  @OneToMany('DeliverableFeedback', 'deliverable')
+  feedback: DeliverableFeedback[];
 
   @Column({
     type: 'enum',

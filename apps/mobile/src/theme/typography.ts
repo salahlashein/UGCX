@@ -12,6 +12,7 @@
  */
 
 export const typography = {
+  metric: { fontSize: 38, lineHeight: 46, letterSpacing: -1, weight: 500 }, // invented: hero money figures
   displayLg: { fontSize: 32, lineHeight: 38, letterSpacing: 0, weight: 400 }, // <- display-lg 40
   displayMd: { fontSize: 28, lineHeight: 34, letterSpacing: 0, weight: 400 }, // <- display-md 32
   titleLg: { fontSize: 22, lineHeight: 30, letterSpacing: 0.12, weight: 400 }, // <- title-lg 24

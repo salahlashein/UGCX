@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TextInput,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { CreatorProfileStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
+import { Card } from '../../components/ui/Card';
+import { TextInput } from '../../components/ui/TextInput';
+import { FilterChip } from '../../components/ui/FilterChip';
+import { Button } from '../../components/ui/Button';
+import { BackButton } from '../../components/ui/BackButton';
+import { LoadingState } from '../../components/ui/LoadingState';
 import { useCreatorProfile, useUpdateCreatorProfile } from '../../hooks/api/useCreator';
-import { colors, spacing, radius } from '../../theme/tokens';
-import { Icon } from '../../components/ui/Icon';
+import { colors, spacing } from '../../theme/tokens';
 import type { Niche } from '@ugcx/shared-types';
 
 type Props = NativeStackScreenProps<CreatorProfileStackParamList, 'EditProfile'>;
 
-const AVAILABLE_NICHES = [
-  { id: 'beauty_personal_care', label: 'Beauty & Skincare' },
-  { id: 'mom_baby', label: 'Mom & Baby' },
-  { id: 'food_fmcg', label: 'Food & FMCG' },
-  { id: 'fashion', label: 'Fashion' },
-  { id: 'home_lifestyle', label: 'Home & Lifestyle' },
+const AVAILABLE_NICHES: Niche[] = [
+  'beauty_personal_care',
+  'mom_baby',
+  'food_fmcg',
+  'fashion',
+  'home_lifestyle',
 ];
 
 export function EditProfileScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { data: profile, isLoading } = useCreatorProfile();
   const updateProfile = useUpdateCreatorProfile();
 
@@ -69,90 +70,72 @@ export function EditProfileScreen({ navigation }: Props) {
 
   if (isLoading) {
     return (
-      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
+      <SafeAreaView style={styles.screen} edges={['top']}>
+        <LoadingState />
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10}>
-          <Icon name="arrow-left" size={24} color="ink" />
-        </Pressable>
-        <AppText variant="titleLg" color="ink" style={{ flex: 1, marginStart: spacing.md }}>
-          Edit Profile
+        <BackButton onPress={() => navigation.goBack()} />
+        <AppText variant="titleSm" color="ink" style={{ flex: 1 }}>
+          {t('creator.editProfile.title', 'Edit profile')}
         </AppText>
-        <Pressable onPress={handleSave} disabled={updateProfile.isPending}>
-          <AppText
-            variant="label"
-            style={{ color: updateProfile.isPending ? colors.muted : colors.primary }}
-          >
-            {updateProfile.isPending ? 'Saving...' : 'Save'}
-          </AppText>
-        </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: spacing.lg }}>
-        <AppText variant="label" color="ink" style={styles.label}>
-          Display Name
-        </AppText>
-        <TextInput
-          style={styles.input}
-          value={displayName}
-          onChangeText={setDisplayName}
-          placeholder="e.g. Mariam Adel"
-          placeholderTextColor={colors.muted}
-        />
+      <ScrollView contentContainerStyle={styles.content}>
+        <Card style={styles.formCard}>
+          <TextInput
+            label={t('creator.profile.displayName', 'Display name')}
+            value={displayName}
+            onChangeText={setDisplayName}
+            placeholder={t('creator.editProfile.displayNamePlaceholder', 'Your full name')}
+          />
+          <TextInput
+            label={t('creator.profile.city', 'City')}
+            value={city}
+            onChangeText={setCity}
+            placeholder={t('creator.editProfile.cityPlaceholder', 'e.g. Cairo, Alexandria')}
+          />
+          <TextInput
+            label={t('creator.editProfile.basePriceLabel', 'Base Price (EGP)')}
+            value={basePrice}
+            onChangeText={setBasePrice}
+            keyboardType="numeric"
+            placeholder="2500"
+          />
+        </Card>
 
-        <AppText variant="label" color="ink" style={styles.label}>
-          City
-        </AppText>
-        <TextInput
-          style={styles.input}
-          value={city}
-          onChangeText={setCity}
-          placeholder="e.g. Cairo"
-          placeholderTextColor={colors.muted}
-        />
+        <Card style={styles.formCard}>
+          <AppText variant="caption" color="body" style={styles.sectionLabel}>
+            {t('creator.profile.niches', 'Niches')}
+          </AppText>
+          <View style={styles.nicheGrid}>
+            {AVAILABLE_NICHES.map((nicheId) => {
+              const isSelected = selectedNiches.includes(nicheId);
+              return (
+                <FilterChip
+                  key={nicheId}
+                  label={t(`niche.${nicheId}`, nicheId)}
+                  selected={isSelected}
+                  onPress={() => toggleNiche(nicheId)}
+                />
+              );
+            })}
+          </View>
+        </Card>
 
-        <AppText variant="label" color="ink" style={styles.label}>
-          Base Price (EGP)
-        </AppText>
-        <TextInput
-          style={styles.input}
-          value={basePrice}
-          onChangeText={setBasePrice}
-          keyboardType="numeric"
-          placeholder="e.g. 2500"
-          placeholderTextColor={colors.muted}
+        <Button
+          title={updateProfile.isPending ? t('common.loading', 'Loading') : t('common.save', 'Save')}
+          variant="primary"
+          loading={updateProfile.isPending}
+          disabled={updateProfile.isPending}
+          onPress={handleSave}
         />
-
-        <AppText variant="label" color="ink" style={styles.label}>
-          Niches
-        </AppText>
-        <View style={styles.nicheGrid}>
-          {AVAILABLE_NICHES.map((niche) => {
-            const isSelected = selectedNiches.includes(niche.id as Niche);
-            return (
-              <Pressable
-                key={niche.id}
-                onPress={() => toggleNiche(niche.id)}
-                style={[styles.nicheChip, isSelected && styles.nicheChipSelected]}
-              >
-                <AppText
-                  variant="caption"
-                  style={{ color: isSelected ? colors.onPrimary : colors.body }}
-                >
-                  {niche.label}
-                </AppText>
-              </Pressable>
-            );
-          })}
-        </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -161,38 +144,24 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
-  label: { marginBottom: 8, marginTop: spacing.md },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    borderRadius: radius.sm,
-    paddingHorizontal: 14,
-    height: 48,
-    fontSize: 15,
-    color: colors.ink,
-    marginBottom: spacing.md,
+  content: {
+    padding: spacing.md,
+    paddingBottom: spacing.xxl,
+    gap: spacing.md,
+  },
+  formCard: {
+    gap: spacing.xs,
+  },
+  sectionLabel: {
+    marginBottom: spacing.xs,
   },
   nicheGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-  },
-  nicheChip: {
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    borderRadius: radius.pill,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    backgroundColor: colors.surfaceSoft,
-  },
-  nicheChipSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    gap: spacing.xs,
   },
 });

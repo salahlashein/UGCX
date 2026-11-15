@@ -1,10 +1,17 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { StorageController } from './storage.controller';
-import { R2StorageClient } from './r2-storage.client';
+import { R2StorageModule } from './r2-storage.module';
+import { CollaborationsModule } from '../collaborations/collaborations.module';
+import { Deliverable } from '../deliverables/entities/deliverable.entity';
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([Deliverable]),
+    R2StorageModule,
+    CollaborationsModule,
+  ],
   controllers: [StorageController],
-  providers: [R2StorageClient],
-  exports: [R2StorageClient],
+  exports: [R2StorageModule],
 })
 export class StorageModule {}

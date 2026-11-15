@@ -2,6 +2,7 @@ import { I18nManager, Text as RNText, type TextProps, type TextStyle } from 'rea
 import { colors } from '../../theme/tokens';
 import { typography, type TypographyRole } from '../../theme/typography';
 import { fontFamilyFor, LINE_HEIGHT_MULTIPLIER_AR } from '../../theme/fonts';
+import i18n from '../../i18n';
 
 type ColorRole = keyof typeof colors;
 
@@ -18,7 +19,7 @@ interface Props extends TextProps {
  * follows reading direction.
  */
 export function AppText({ variant = 'body', color = 'body', style, ...props }: Props) {
-  const isArabic = I18nManager.isRTL;
+  const isArabic = i18n.language === 'ar' || I18nManager.isRTL;
   const role = typography[variant];
   const family = fontFamilyFor(role.weight, isArabic);
   const lineHeight = Math.round(role.lineHeight * (isArabic ? LINE_HEIGHT_MULTIPLIER_AR : 1));
@@ -32,9 +33,9 @@ export function AppText({ variant = 'body', color = 'body', style, ...props }: P
           fontWeight: String(role.weight) as TextStyle['fontWeight'],
           fontSize: role.fontSize,
           lineHeight,
-          letterSpacing: role.letterSpacing,
+          letterSpacing: isArabic ? 0 : role.letterSpacing,
           color: colors[color],
-          writingDirection: 'auto',
+          writingDirection: isArabic ? 'rtl' : 'ltr',
         },
         style,
       ]}

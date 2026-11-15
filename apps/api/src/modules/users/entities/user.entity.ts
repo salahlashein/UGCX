@@ -57,11 +57,20 @@ export class User {
   })
   locale: UserLocale;
 
+  @Column({ name: 'display_name', type: 'varchar', length: 80, nullable: true })
+  displayName: string | null;
+
   // feature_mobile_app_phase1 addendum: the Expo push token for this
   // user's device, used to send REQ-009 notifications. Nullable since not
   // every user has granted push permission (EDGE-P1-003).
   @Column({ name: 'expo_push_token', type: 'text', nullable: true })
   expoPushToken: string | null;
+
+  @Column({ name: 'phone_verified_at', type: 'timestamptz', nullable: true })
+  phoneVerifiedAt: Date | null;
+
+  @Column({ name: 'email_verified_at', type: 'timestamptz', nullable: true })
+  emailVerifiedAt: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

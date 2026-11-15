@@ -118,9 +118,36 @@ export class Collaboration {
   })
   shipmentConfirmedAt: Date | null;
 
+  @Column({
+    name: 'received_at',
+    type: 'timestamptz',
+    nullable: true,
+  })
+  receivedAt: Date | null;
+
+  @Column({
+    name: 'brand_last_read_at',
+    type: 'timestamptz',
+    nullable: true,
+  })
+  brandLastReadAt: Date | null;
+
+  @Column({
+    name: 'creator_last_read_at',
+    type: 'timestamptz',
+    nullable: true,
+  })
+  creatorLastReadAt: Date | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  revisionsUsed?: number;
+  revisionLimit?: number;
+  dueAt?: string | null;
+  approvedAt?: string | null;
+  paidAt?: string | null;
 }

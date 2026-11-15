@@ -28,6 +28,12 @@ export interface AppConfig {
     bucketName: string;
     publicBaseUrl: string;
   };
+  campaignDefaultOpenDays: number;
+  reportingTimeZone: string;
+  otp: {
+    ttlSeconds: number;
+    maxAttempts: number;
+  };
 }
 
 export default (): AppConfig => ({
@@ -60,10 +66,19 @@ export default (): AppConfig => ({
     accountId: process.env.R2_ACCOUNT_ID ?? '',
     accessKeyId: process.env.R2_ACCESS_KEY_ID ?? '',
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? '',
-    bucketName: process.env.R2_BUCKET_NAME ?? '',
+    bucketName: process.env.R2_BUCKET_NAME || 'ugcx-deliverables',
     // M4: the public/CDN domain the brand's browser actually fetches a
     // deliverable from; distinct from the private R2 S3 API endpoint used
     // to presign the upload.
     publicBaseUrl: process.env.R2_PUBLIC_BASE_URL ?? '',
+  },
+  campaignDefaultOpenDays: parseInt(
+    process.env.CAMPAIGN_DEFAULT_OPEN_DAYS ?? '14',
+    10,
+  ),
+  reportingTimeZone: process.env.REPORTING_TIME_ZONE ?? 'Africa/Cairo',
+  otp: {
+    ttlSeconds: parseInt(process.env.OTP_TTL_SECONDS ?? '600', 10),
+    maxAttempts: parseInt(process.env.OTP_MAX_ATTEMPTS ?? '5', 10),
   },
 });

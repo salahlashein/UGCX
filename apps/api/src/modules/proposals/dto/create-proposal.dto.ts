@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsString,
   Max,
+  MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
@@ -19,5 +20,6 @@ export class CreateProposalDto {
 
   @IsString()
   @MinLength(1)
+  @MaxLength(600)
   pitch: string;
 }

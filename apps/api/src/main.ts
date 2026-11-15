@@ -36,7 +36,12 @@ async function bootstrap(): Promise<void> {
     app.enableCors({ origin: corsOrigins, credentials: true });
   } else if (nodeEnv !== 'production') {
     app.enableCors({
-      origin: ['http://localhost:8081', 'http://localhost:19006'],
+      origin: [
+        'http://localhost:8081',
+        'http://localhost:19006',
+        'http://localhost:3001',
+        'http://127.0.0.1:3001',
+      ],
       credentials: true,
     });
   }

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { colors, radius, spacing } from '../../theme/tokens';
+import { elevation } from '../../theme/elevation';
 
 /** TASK-P1-016 / Data Models "Tone". */
 export type CardTone =
@@ -33,7 +34,7 @@ const DARK_TEXT_TONES = new Set<CardTone>(['coral', 'forest', 'dark']);
 const LARGE_RADIUS_TONES = new Set<CardTone>(['coral', 'forest', 'dark']);
 
 const TONE_BACKGROUND: Record<CardTone, string> = {
-  canvas: colors.canvas,
+  canvas: colors.surface,
   soft: colors.surfaceSoft,
   strong: colors.surfaceStrong,
   cream: colors.signatureCream,
@@ -55,10 +56,9 @@ function toneShape(tone: CardTone): ViewStyle {
   if (tone === 'canvas') {
     return {
       backgroundColor: TONE_BACKGROUND.canvas,
-      borderRadius: radius.md,
-      borderWidth: 1,
-      borderColor: colors.hairline,
+      borderRadius: radius.xl,
       padding: spacing.md,
+      ...elevation.soft,
     };
   }
   return {

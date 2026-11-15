@@ -9,6 +9,9 @@ import { CreatorsModule } from '../creators/creators.module';
 import { UsersModule } from '../users/users.module';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { PaymentsModule } from '../payments/payments.module';
+import { EscrowModule } from '../escrow/escrow.module';
+import { MessagesModule } from '../messages/messages.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -18,9 +21,12 @@ import { PaymentsModule } from '../payments/payments.module';
     CreatorsModule,
     UsersModule,
     TransactionsModule,
+    EscrowModule,
     // forwardRef: PaymentsModule's webhook controller also depends on
     // CollaborationsService, making this a legitimate two-way dependency.
     forwardRef(() => PaymentsModule),
+    forwardRef(() => MessagesModule),
+    NotificationsModule,
   ],
   controllers: [CollaborationsController],
   providers: [CollaborationsService],

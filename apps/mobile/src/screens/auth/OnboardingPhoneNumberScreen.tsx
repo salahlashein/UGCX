@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput as RNTextInput, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
@@ -10,23 +11,24 @@ import { useSendOtp } from '../../hooks/api/useAuth';
 type Props = NativeStackScreenProps<AuthStackParamList, 'OnboardingPhoneNumber'>;
 
 export function OnboardingPhoneNumberScreen({ navigation, route }: Props) {
-  const [phone, setPhone] = useState('');
-  const canContinue = phone.replace(/\D/g, '').length >= 10;
+  const { t } = useTranslation();
+  const [email, setEmail] = useState('');
+  const canContinue = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const role = route.params.role;
   const sendOtp = useSendOtp();
 
   const handleSendCode = () => {
-    const formattedPhone = `+20${phone.replace(/\D/g, '')}`;
+    const trimmedEmail = email.trim().toLowerCase();
     sendOtp.mutate(
-      { phone: formattedPhone, role },
+      { email: trimmedEmail, role },
       {
         onSuccess: () => {
-          navigation.navigate('OnboardingOtp', { role, phone: formattedPhone });
+          navigation.navigate('OnboardingOtp', { role, email: trimmedEmail });
         },
         onError: (err) => {
           console.error(err);
-          // In a real app, show a toast. For now, navigate anyway since we're in dev.
-          navigation.navigate('OnboardingOtp', { role, phone: formattedPhone });
+          // In a dev/demo fallback, navigate anyway
+          navigation.navigate('OnboardingOtp', { role, email: trimmedEmail });
         },
       },
     );
@@ -36,29 +38,26 @@ export function OnboardingPhoneNumberScreen({ navigation, route }: Props) {
     <View style={styles.screen}>
       <View style={styles.content}>
         <AppText variant="displayLg" color="ink" style={styles.heading}>
-          What's your number?
+          {t('auth.phone.title', "What's your email?")}
         </AppText>
         <AppText variant="body" color="muted" style={styles.sub}>
-          We'll text you a code to confirm it's you.
+          {t('auth.phone.subtitle', "We'll email you a code to confirm it's you.")}
         </AppText>
         <View style={styles.row}>
-          <View style={styles.prefix}>
-            <AppText variant="label" color="ink">
-              +20
-            </AppText>
-          </View>
           <RNTextInput
-            value={phone}
-            onChangeText={setPhone}
-            placeholder="100 123 4471"
+            value={email}
+            onChangeText={setEmail}
+            placeholder={t('auth.phone.placeholder', 'name@example.com')}
             placeholderTextColor={colors.muted}
-            keyboardType="phone-pad"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
             style={styles.input}
             autoFocus
           />
         </View>
         <AppText variant="caption" color="muted" style={styles.hint}>
-          Used for delivery updates and account recovery — never shown to brands.
+          {t('auth.phone.hint', 'Used for secure login, brief updates, and receipts.')}
         </AppText>
       </View>
       <Pressable
@@ -67,7 +66,7 @@ export function OnboardingPhoneNumberScreen({ navigation, route }: Props) {
         onPress={handleSendCode}
       >
         <AppText variant="label" style={canContinue ? styles.ctaText : styles.ctaTextDisabled}>
-          Send code
+          {t('auth.phone.sendCode', 'Send code')}
         </AppText>
       </Pressable>
     </View>

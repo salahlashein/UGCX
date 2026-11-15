@@ -276,3 +276,27 @@ Publish the API for external use and layer an MCP server on top of it, following
 | Escrow | Held funds, captured from the brand and released to the creator only after content approval. |
 | Ledger | The Transaction table. The internal record of every fund movement, since Paymob does not split payments natively. |
 | RTL | Right-to-left layout, required for Arabic. |
+
+---
+
+# 6 · Architectural Audit Findings & V1 Decommissioning Baseline (2026-10-29)
+
+### 6.1 Architecture Health Summary
+- **Backend**: NestJS modular monolith with TypeORM and PostgreSQL 16. Single-table immutable ledger (`transactions`) enforces double-entry invariant (`charge`, `hold`, `release`, `fee`).
+- **Frontend**: React Native Expo with Zustand client stores and TanStack Query server-state cache. Full bilingual localization with English and Arabic RTL.
+- **Verification**: All 8 core marketplace flows were verified end-to-end against the real PostgreSQL database and captured via Puppeteer automation.
+
+### 6.2 Active V1 Decommissioning Strategy
+To maximize release speed and eliminate live third-party failure points, high-risk modules are isolated behind feature flags (`features.ts` / `feature-flags.ts`):
+1. `brandTeamManagement`: Disabled for launch. Brands operate as single-user entities.
+2. `productCatalog`: Disabled. Brands write product details directly into brief text fields.
+3. `campaignWizardMultiStep`: Replaced by a streamlined 1-page PostBrief form.
+4. `creatorVettingGate` & `creatorVerificationClip`: Selfie upload is optional; creators are auto-admitted to discovery.
+5. `automatedPayouts`: Replaced with manual operations payout notices.
+6. `pushNotifications`: APNs/FCM disabled in favor of predictable in-app notifications.
+
+### 6.3 Technical Debt & Remediation Priorities
+- **CRITICAL**: Scope deliverable review transactions strictly to database writes to prevent connection pool exhaustion during concurrent reviews.
+- **HIGH**: Resolve ESLint `@typescript-eslint/no-explicit-any` errors in test specs and services to ensure CI pipeline stability.
+- **HIGH**: Add IP and phone-rate throttling to `/auth/otp/send` to prevent SMS bombing.
+- **MEDIUM**: Implement asynchronous webhook queue for Paymob payment confirmations.

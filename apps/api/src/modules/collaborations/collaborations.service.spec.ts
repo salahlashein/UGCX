@@ -18,6 +18,14 @@ import { TransactionsService } from '../transactions/transactions.service';
 import { PaymobClient } from '../payments/paymob.client';
 import { PaymentProviderError } from '../payments/payment-provider.error';
 
+import { EscrowService } from '../escrow/escrow.service';
+import { InsufficientEscrowError } from '../escrow/escrow.errors';
+import { CampaignStatus } from '../campaigns/entities/campaign.entity';
+import { MessagesService } from '../messages/messages.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { computeDueAt } from './due-at';
+import { DomainErrorException } from '../../common/exceptions/domain-error.exception';
+
 describe('CollaborationsService', () => {
   let service: CollaborationsService;
   let collaborationsRepository: {
@@ -39,6 +47,10 @@ describe('CollaborationsService', () => {
   let transactionsService: {
     findByPaymobReference: jest.Mock;
     recordHold: jest.Mock;
+  };
+  let escrowService: {
+    quote: jest.Mock;
+    allocate: jest.Mock;
   };
   let paymobClient: { createCheckout: jest.Mock };
 
@@ -80,11 +92,25 @@ describe('CollaborationsService', () => {
       findByPaymobReference: jest.fn(),
       recordHold: jest.fn(),
     };
+    escrowService = {
+      quote: jest.fn().mockReturnValue({
+        priceCents: 100000,
+        feeCents: 10000,
+        totalCents: 110000,
+      }),
+      allocate: jest.fn().mockResolvedValue({
+        holdTransactionId: 'txn-hold-1',
+        allocatedAmount: '1100.00',
+      }),
+    };
     paymobClient = {
       createCheckout: jest.fn().mockResolvedValue({
         paymobOrderId: 'paymob-order-1',
         checkoutUrl: 'https://accept.paymob.com/iframe/1?payment_token=x',
       }),
+    };
+    const messagesService = {
+      createSystemMessage: jest.fn().mockResolvedValue({ id: 'msg-sys' }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -104,58 +130,105 @@ describe('CollaborationsService', () => {
         { provide: CreatorsService, useValue: creatorsService },
         { provide: UsersService, useValue: usersService },
         { provide: TransactionsService, useValue: transactionsService },
+        { provide: EscrowService, useValue: escrowService },
         { provide: PaymobClient, useValue: paymobClient },
+        { provide: MessagesService, useValue: messagesService },
+        {
+          provide: NotificationsService,
+          useValue: {
+            record: jest.fn().mockResolvedValue([]),
+            push: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     }).compile();
 
     service = module.get(CollaborationsService);
   });
 
-  describe('acceptProposal (REQ-001)', () => {
-    const appliedProposal = {
+  describe('acceptProposal (TASK-P2-08, REQ-207)', () => {
+    const liveAppliedProposal = {
       id: 'proposal-1',
       campaignId: 'campaign-1',
       creatorId: 'creator-1',
       price: '1000.00',
       currency: 'EGP',
       status: ProposalStatus.APPLIED,
-      campaign: { brandId: 'brand-1' },
+      campaign: {
+        id: 'campaign-1',
+        brandId: 'brand-1',
+        status: CampaignStatus.LIVE,
+      },
     };
 
-    it('computes creatorPrice/platformFee/totalAmount without float drift (GUD-001)', async () => {
-      proposalsService.findById.mockResolvedValue(appliedProposal);
+    it('1. a successful accept creates a collaboration with status funded and checkoutUrl null', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
 
       const { collaboration, checkoutUrl } = await service.acceptProposal(
         'user-brand-1',
         'proposal-1',
       );
 
+      expect(collaboration.status).toBe(CollaborationStatus.FUNDED);
       expect(collaboration.creatorPrice).toBe('1000.00');
       expect(collaboration.platformFee).toBe('100.00');
       expect(collaboration.totalAmount).toBe('1100.00');
-      expect(checkoutUrl).toContain('accept.paymob.com');
-      expect(paymobClient.createCheckout).toHaveBeenCalledWith(
-        110000,
-        expect.any(String),
-        expect.any(Object),
+      expect(checkoutUrl).toBeNull();
+    });
+
+    it('2. a successful accept calls escrowService.allocate exactly once', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
+
+      await service.acceptProposal('user-brand-1', 'proposal-1');
+
+      expect(escrowService.allocate).toHaveBeenCalledTimes(1);
+      expect(escrowService.allocate).toHaveBeenCalledWith(
+        'campaign-1',
+        'collab-1',
+        '1000.00',
+        'EGP',
+        fakeManager,
       );
     });
 
-    it('rejects a proposal not owned by the accepting brand (404, not 403)', async () => {
-      proposalsService.findById.mockResolvedValue({
-        ...appliedProposal,
-        campaign: { brandId: 'someone-elses-brand' },
-      });
+    it('3. a successful accept calls paymobClient.createCheckout zero times', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
 
-      await expect(
-        service.acceptProposal('user-brand-1', 'proposal-1'),
-      ).rejects.toBeInstanceOf(NotFoundException);
+      await service.acceptProposal('user-brand-1', 'proposal-1');
+
+      expect(paymobClient.createCheckout).toHaveBeenCalledTimes(0);
     });
 
-    it('rejects accepting a proposal that is not applied (422)', async () => {
+    it('4. a successful accept calls proposalsService.markAccepted once with the same manager', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
+
+      await service.acceptProposal('user-brand-1', 'proposal-1');
+
+      expect(proposalsService.markAccepted).toHaveBeenCalledTimes(1);
+      expect(proposalsService.markAccepted).toHaveBeenCalledWith(
+        'proposal-1',
+        fakeManager,
+      );
+    });
+
+    it('5. accepts a shortlisted proposal (previously threw, now allowed)', async () => {
       proposalsService.findById.mockResolvedValue({
-        ...appliedProposal,
+        ...liveAppliedProposal,
         status: ProposalStatus.SHORTLISTED,
+      });
+
+      const { collaboration } = await service.acceptProposal(
+        'user-brand-1',
+        'proposal-1',
+      );
+
+      expect(collaboration.status).toBe(CollaborationStatus.FUNDED);
+    });
+
+    it('6. a declined proposal throws invalid_state_transition', async () => {
+      proposalsService.findById.mockResolvedValue({
+        ...liveAppliedProposal,
+        status: ProposalStatus.DECLINED,
       });
 
       await expect(
@@ -165,8 +238,42 @@ describe('CollaborationsService', () => {
       });
     });
 
-    it('maps a duplicate accept (unique proposal_id) to 409 (EDGE-P1-001)', async () => {
-      proposalsService.findById.mockResolvedValue(appliedProposal);
+    it('7. a campaign in paused throws campaign_not_open', async () => {
+      proposalsService.findById.mockResolvedValue({
+        ...liveAppliedProposal,
+        campaign: {
+          id: 'campaign-1',
+          brandId: 'brand-1',
+          status: CampaignStatus.PAUSED,
+        },
+      });
+
+      await expect(
+        service.acceptProposal('user-brand-1', 'proposal-1'),
+      ).rejects.toMatchObject({
+        response: { code: 'campaign_not_open' },
+      });
+    });
+
+    it('8. InsufficientEscrowError propagates with code insufficient_escrow', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
+      escrowService.allocate.mockRejectedValueOnce(
+        new InsufficientEscrowError({
+          requiredCents: 308000,
+          availableCents: 100000,
+          shortfallCents: 208000,
+        }),
+      );
+
+      await expect(
+        service.acceptProposal('user-brand-1', 'proposal-1'),
+      ).rejects.toMatchObject({
+        response: { code: 'insufficient_escrow' },
+      });
+    });
+
+    it('9. a unique violation on proposal_id maps to 409 collaboration_already_exists', async () => {
+      proposalsService.findById.mockResolvedValue(liveAppliedProposal);
       collaborationsRepository.save.mockRejectedValueOnce({ code: '23505' });
 
       await expect(
@@ -176,20 +283,19 @@ describe('CollaborationsService', () => {
       });
     });
 
-    it('maps a Paymob failure to a 502, does not leak provider details, and deletes the orphaned row (GEN-08/H2)', async () => {
-      proposalsService.findById.mockResolvedValue(appliedProposal);
-      paymobClient.createCheckout.mockRejectedValueOnce(
-        new PaymentProviderError('raw provider detail'),
-      );
+    it('10. rejects a proposal not owned by the accepting brand with 404', async () => {
+      proposalsService.findById.mockResolvedValue({
+        ...liveAppliedProposal,
+        campaign: {
+          id: 'campaign-1',
+          brandId: 'someone-elses-brand',
+          status: CampaignStatus.LIVE,
+        },
+      });
 
       await expect(
         service.acceptProposal('user-brand-1', 'proposal-1'),
-      ).rejects.toMatchObject({ response: { code: 'payment_provider_error' } });
-      // H2: the insert happens before the Paymob call now (no open DB
-      // transaction spans the network call), so a Paymob failure must
-      // compensate by deleting the orphaned pending_payment row instead
-      // of relying on a transaction rollback.
-      expect(collaborationsRepository.delete).toHaveBeenCalledWith('collab-1');
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 
@@ -463,6 +569,130 @@ describe('CollaborationsService', () => {
       expect(collaborationsRepository.findAndCount).toHaveBeenCalledWith(
         expect.objectContaining({ where: { creatorId: 'creator-1' } }),
       );
+    });
+  });
+
+  describe('findOwnedByCreator', () => {
+    it('loads the campaign and brand names, and hides private brand fields', async () => {
+      collaborationsRepository.findOne.mockResolvedValue({
+        id: 'collab-1',
+        campaign: { needsShipping: false },
+        brand: {
+          id: 'brand-1',
+          userId: 'user-brand-1',
+          companyName: 'Glow Lab',
+          logoUrl: null,
+          country: 'EG',
+          businessDocumentUrl: 'https://private.example/doc.pdf',
+        },
+      });
+
+      const result = await service.findOwnedByCreator(
+        'user-creator-1',
+        'collab-1',
+      );
+
+      expect(result.campaign.needsShipping).toBe(false);
+      expect(result.brand.companyName).toBe('Glow Lab');
+      expect(result.brand).not.toHaveProperty('businessDocumentUrl');
+      expect(result.brand).not.toHaveProperty('userId');
+      expect(collaborationsRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 'collab-1', creatorId: 'creator-1' },
+        relations: { campaign: { product: true }, brand: true, proposal: true },
+      });
+    });
+  });
+
+  describe('TASK-W4-02: computeDueAt', () => {
+    it('computeDueAt with needsShipping false uses createdAt', () => {
+      const createdAt = new Date('2026-11-01T10:00:00Z');
+      const due = computeDueAt(
+        { createdAt, receivedAt: null },
+        { needsShipping: false },
+        { deliveryDays: 5 },
+      );
+      expect(due).toBe(new Date('2026-11-06T10:00:00Z').toISOString());
+    });
+
+    it('computeDueAt with needsShipping true and no receipt returns null', () => {
+      const due = computeDueAt(
+        { createdAt: new Date('2026-11-01T10:00:00Z'), receivedAt: null },
+        { needsShipping: true },
+        { deliveryDays: 5 },
+      );
+      expect(due).toBeNull();
+    });
+
+    it('computeDueAt with a receipt adds deliveryDays days', () => {
+      const receivedAt = new Date('2026-11-03T12:00:00Z');
+      const due = computeDueAt(
+        { createdAt: new Date('2026-11-01T10:00:00Z'), receivedAt },
+        { needsShipping: true },
+        { deliveryDays: 7 },
+      );
+      expect(due).toBe(new Date('2026-11-10T12:00:00Z').toISOString());
+    });
+  });
+
+  describe('TASK-W4-02: confirmReceipt', () => {
+    it('creator confirms receipt on a shipped collaboration', async () => {
+      const shippedCollab = {
+        id: 'collab-1',
+        creatorId: 'creator-1',
+        brandId: 'brand-1',
+        campaignId: 'camp-1',
+        status: CollaborationStatus.SHIPPED,
+        receivedAt: null,
+        campaign: { title: 'Test Brief', needsShipping: true },
+        creator: { displayName: 'Creator One' },
+        brand: { companyName: 'Brand Inc' },
+      };
+      collaborationsRepository.findOne.mockResolvedValue(shippedCollab);
+      collaborationsRepository.save.mockImplementation(async (c: any) => c);
+
+      const result = await service.confirmReceipt('user-creator-1', 'collab-1');
+      expect(result.receivedAt).toBeInstanceOf(Date);
+      expect(result.status).toBe(CollaborationStatus.SHIPPED);
+    });
+
+    it('second confirm returns 422 already_received', async () => {
+      const alreadyReceivedCollab = {
+        id: 'collab-1',
+        creatorId: 'creator-1',
+        status: CollaborationStatus.SHIPPED,
+        receivedAt: new Date(),
+        campaign: { needsShipping: true },
+        brand: {},
+      };
+      collaborationsRepository.findOne.mockResolvedValue(alreadyReceivedCollab);
+
+      await expect(
+        service.confirmReceipt('user-creator-1', 'collab-1'),
+      ).rejects.toThrow(DomainErrorException);
+    });
+
+    it('creator who does not own the collaboration gets 404', async () => {
+      collaborationsRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.confirmReceipt('user-creator-2', 'collab-1'),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('confirm on non-shipped status returns 422 invalid_state_transition', async () => {
+      const fundedCollab = {
+        id: 'collab-1',
+        creatorId: 'creator-1',
+        status: CollaborationStatus.FUNDED,
+        receivedAt: null,
+        campaign: { needsShipping: true },
+        brand: {},
+      };
+      collaborationsRepository.findOne.mockResolvedValue(fundedCollab);
+
+      await expect(
+        service.confirmReceipt('user-creator-1', 'collab-1'),
+      ).rejects.toThrow(DomainErrorException);
     });
   });
 });

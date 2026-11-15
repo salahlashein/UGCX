@@ -4,7 +4,7 @@ import type {
   Proposal,
   UpdateProposalStatusRequest,
 } from '@ugcx/shared-types';
-import { apiPaginated, apiPatch, apiPost } from '../../services/apiHelpers';
+import { apiGet, apiPaginated, apiPatch, apiPost } from '../../services/apiHelpers';
 
 /** TASK-P1-007 */
 export function useCampaignProposals(campaignId: string | undefined) {
@@ -39,5 +39,14 @@ export function useUpdateProposalStatus(campaignId: string) {
       apiPatch<Proposal>(`/proposals/${id}/status`, dto),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['proposals', 'campaign', campaignId] }),
+  });
+}
+
+/** TASK-P2-11: Creator profile preview hook (artboard 4d) */
+export function useCreatorProfilePreview(proposalId: string | undefined) {
+  return useQuery({
+    queryKey: ['proposals', proposalId, 'creator-profile'],
+    queryFn: () => apiGet<import('@ugcx/shared-types').CreatorProfilePreview>(`/proposals/${proposalId}/creator-profile`),
+    enabled: !!proposalId,
   });
 }

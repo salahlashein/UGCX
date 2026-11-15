@@ -41,7 +41,7 @@ AppBottomSheet.displayName = 'AppBottomSheet';
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.surface,
     borderRadius: radius.lg,
   },
   handle: {

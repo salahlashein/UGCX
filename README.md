@@ -17,6 +17,8 @@ Install these tools before you start.
 
 1. Copy `.env.example` to `.env` at the repository root, and copy
    `apps/api/.env.example` to `apps/api/.env`. Fill in real local values.
+   Make sure to set `PLATFORM_FEE_RATE=0.10` for escrow calculations.
+   Also set `CAMPAIGN_DEFAULT_OPEN_DAYS=14` and `REPORTING_TIME_ZONE=Africa/Cairo`.
 2. Run `pnpm install` at the repository root. This installs every workspace
    package.
 3. Run `docker compose up -d db`. This starts PostgreSQL in the background.

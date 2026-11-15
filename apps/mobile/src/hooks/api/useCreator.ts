@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CreatePortfolioItemRequest,
   Creator,
+  CreatorEarnings,
+  CreatorLedgerEntry,
   CreatorPayoutDetail,
   CreatorPortfolioItem,
   UpdateCreatorRequest,
@@ -23,10 +25,7 @@ export function useCreatorProfile() {
 export function useCreatorEarnings() {
   return useQuery({
     queryKey: ['creator', 'me', 'earnings'],
-    queryFn: () =>
-      apiGet<{ escrowBalance: number; pendingBalance: number; clearedBalance: number }>(
-        '/creators/me/earnings',
-      ),
+    queryFn: () => apiGet<CreatorEarnings>('/creators/me/earnings'),
   });
 }
 
@@ -81,7 +80,7 @@ export function useUpsertPayoutDetails() {
 export function useCreatorLedger() {
   return useQuery({
     queryKey: ['creator', 'me', 'ledger'],
-    queryFn: () => apiGet<any[]>('/creators/me/ledger'),
+    queryFn: () => apiGet<CreatorLedgerEntry[]>('/creators/me/ledger'),
   });
 }
 
