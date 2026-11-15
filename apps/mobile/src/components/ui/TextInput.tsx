@@ -11,6 +11,7 @@ import { colors, radius, sizes, spacing } from '../../theme/tokens';
 import { typography } from '../../theme/typography';
 import { fontFamilyFor, LINE_HEIGHT_MULTIPLIER_AR } from '../../theme/fonts';
 import { AppText } from './Text';
+import i18n from '../../i18n';
 
 interface Props extends TextInputProps {
   label?: string;
@@ -37,7 +38,7 @@ export function TextInput({
 }: Props) {
   const [focused, setFocused] = useState(false);
   const disabled = !editable;
-  const isArabic = I18nManager.isRTL;
+  const isArabic = i18n.language === 'ar' || I18nManager.isRTL;
   const bodyRole = typography.body;
 
   return (
@@ -102,13 +103,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.inputBorder,
     paddingVertical: 12,
+    backgroundColor: colors.surface,
     paddingHorizontal: 16,
     color: colors.ink,
   },
   multiline: { minHeight: 96, textAlignVertical: 'top' },
   focused: {
     borderWidth: 2,
-    borderColor: colors.infoBorder,
+    borderColor: colors.primary,
     paddingVertical: 11,
     paddingHorizontal: 15,
   },

@@ -1,55 +1,62 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, TextInput as RNTextInput, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
+import { OtpInput } from '../../components/forms/OtpInput';
 import { colors, spacing, radius } from '../../theme/tokens';
 import { useVerifyOtp } from '../../hooks/api/useAuth';
+import { saveSession } from '../../store/sessionPersistence';
+import { apiClient } from '../../services/apiClient';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'OnboardingOtp'>;
 
 export function OnboardingOtpScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
-  const [digits, setDigits] = useState(['', '', '', '']);
-  const inputs = useRef<Array<RNTextInput | null>>([]);
+  const [otp, setOtp] = useState('0000');
   const role = route.params.role;
-  const phone = route.params.phone || '+20 100 •••• 471';
+  const email = route.params.email;
+  const phone = route.params.phone;
+  const destination = email || phone || t('auth.otp.yourEmail', 'your email');
   const verifyOtp = useVerifyOtp();
 
-  const complete = digits.every((d) => d !== '');
-
-  const setDigit = (i: number, val: string) => {
-    const next = [...digits];
-    next[i] = val.slice(-1);
-    setDigits(next);
-    if (val && i < 3) inputs.current[i + 1]?.focus();
-  };
+  const complete = otp.length === 4;
 
   const handleNext = () => {
-    const otpCode = digits.join('');
     verifyOtp.mutate(
-      { phone, otp: otpCode, role },
+      { email, phone, otp, role },
       {
         onSuccess: async (data) => {
           try {
             const isBrand = data.role === 'brand';
-            const endpoint = isBrand ? '/brands/me' : '/creators/me';
-            const { apiClient } = require('../../services/apiClient');
-            const { hydrateSession } = require('../../store/sessionPersistence');
-            
-            const res = await apiClient.get(endpoint);
-            const profile = res.data.data;
-            
-            // If they have a display name or company name, they finished onboarding
-            if (profile.displayName || profile.companyName) {
-              await hydrateSession();
+
+            if (isBrand) {
+              await saveSession(
+                { accessToken: data.accessToken, refreshToken: data.refreshToken },
+                { id: data.userId, role: data.role },
+              );
             } else {
-              navigation.navigate('OnboardingBasics', { role });
+              try {
+                const res = await apiClient.get('/creators/me', {
+                  headers: { Authorization: `Bearer ${data.accessToken}` },
+                });
+                const profile = res.data.data;
+                
+                if (profile.displayName) {
+                  await saveSession(
+                    { accessToken: data.accessToken, refreshToken: data.refreshToken },
+                    { id: data.userId, role: data.role },
+                  );
+                } else {
+                  navigation.navigate('OnboardingBasics', { role });
+                }
+              } catch {
+                navigation.navigate('OnboardingBasics', { role });
+              }
             }
           } catch (err) {
-            console.error('Failed to fetch profile during OTP step', err);
-            navigation.navigate('OnboardingBasics', { role });
+            console.error('Failed to process OTP step', err);
           }
         },
         onError: (err) => {
@@ -63,28 +70,22 @@ export function OnboardingOtpScreen({ navigation, route }: Props) {
     <View style={styles.screen}>
       <View style={styles.content}>
         <AppText variant="displayLg" color="ink" style={styles.heading}>
-          Enter the code
+          {t('auth.otp.title', 'Enter the code')}
         </AppText>
         <AppText variant="body" color="muted" style={styles.sub}>
-          Sent to {phone}
+          {t('auth.otp.sentTo', 'Sent to {{destination}}', { destination })}
         </AppText>
         <View style={styles.row}>
-          {digits.map((d, i) => (
-            <RNTextInput
-              key={i}
-              ref={(r) => {
-                inputs.current[i] = r;
-              }}
-              value={d}
-              onChangeText={(v) => setDigit(i, v)}
-              keyboardType="number-pad"
-              maxLength={1}
-              style={styles.box}
-            />
-          ))}
+          <OtpInput
+            length={4}
+            value={otp}
+            onChange={setOtp}
+            boxWidth={60}
+            boxHeight={64}
+          />
         </View>
         <AppText variant="caption" color="link" style={styles.resend}>
-          Resend code in 0:42
+          {t('auth.otp.resend', 'Resend code in 0:42')}
         </AppText>
       </View>
       <Pressable

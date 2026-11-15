@@ -12,6 +12,10 @@ export interface PaginationMeta {
   page: number;
   perPage: number;
   totalPages: number;
+  facets?: {
+    niches?: Array<{ value: string; count: number }>;
+    [key: string]: unknown;
+  };
 }
 
 export interface PaginationLinks {

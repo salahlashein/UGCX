@@ -12,4 +12,7 @@ export class RegisterDeliverableDto {
   @IsInt()
   @Min(1)
   durationSeconds?: number;
+
+  @IsOptional()
+  note?: string;
 }

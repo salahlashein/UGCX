@@ -27,8 +27,8 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
 
 const VARIANT_BACKGROUND: Record<ButtonVariant, ViewStyle> = {
   primary: { backgroundColor: colors.primary },
-  secondary: { backgroundColor: colors.canvas, borderWidth: 1, borderColor: colors.hairline },
-  secondaryOnDark: { backgroundColor: colors.canvas },
+  secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.hairline },
+  secondaryOnDark: { backgroundColor: colors.surface },
   ghost: { backgroundColor: 'transparent' },
   danger: { backgroundColor: colors.danger },
 };

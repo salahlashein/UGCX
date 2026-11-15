@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 import type {
   CreatorHomeStackParamList,
   CreatorDiscoverStackParamList,
@@ -8,6 +9,7 @@ import type {
   CreatorProfileStackParamList,
 } from './types';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { FloatingTabBar } from './FloatingTabBar';
 
 // Screens
 import { CreatorHomeScreen } from '../screens/creator/CreatorHomeScreen';
@@ -22,9 +24,7 @@ import { PayoutsScreen } from '../screens/creator/PayoutsScreen';
 import { CreatorProfileScreen } from '../screens/creator/CreatorProfileScreen';
 import { EditProfileScreen } from '../screens/creator/EditProfileScreen';
 import { MyProposalsScreen } from '../screens/creator/MyProposalsScreen';
-import { SettingsScreen } from '../screens/shared/SettingsScreen';
 import { Icon } from '../components/ui/Icon';
-import { colors } from '../theme/tokens';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator<CreatorHomeStackParamList>();
@@ -76,68 +76,59 @@ function ProfileStackNavigator() {
       <ProfileStack.Screen name="Profile" component={CreatorProfileScreen} />
       <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
       <ProfileStack.Screen name="MyProposals" component={MyProposalsScreen} />
-      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
     </ProfileStack.Navigator>
   );
 }
 
 export function CreatorTabNavigator() {
+  const { t } = useTranslation();
+
   return (
     <Tab.Navigator
+      tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: {
-          elevation: 0,
-          shadowOpacity: 0,
-          borderTopWidth: 1,
-          borderTopColor: colors.hairline,
-          backgroundColor: colors.canvas,
-        },
-        tabBarIcon: ({ color, size }) => {
+        animation: 'none',
+        tabBarIcon: ({ focused }) => {
           let iconName: React.ComponentProps<typeof Icon>['name'] = 'circle';
           if (route.name === 'HomeTab') iconName = 'home';
           else if (route.name === 'DiscoverTab') iconName = 'search';
           else if (route.name === 'WorkTab') iconName = 'briefcase';
           else if (route.name === 'EarningsTab') iconName = 'dollar-sign';
           else if (route.name === 'ProfileTab') iconName = 'user';
-          // color from react-navigation is a hex string, but our Icon component expects a ColorRole.
-          // In this case, we can just pass the string to a raw wrapper or just use 'primary'/'muted' based on active state.
-          const isFocused = color === colors.primary;
-          return <Icon name={iconName} size={size} color={isFocused ? 'primary' : 'muted'} />;
+          return <Icon name={iconName} size={20} color={focused ? 'primary' : 'borderStrong'} />;
         },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.muted,
       })}
     >
-      <Tab.Screen name="HomeTab" options={{ tabBarLabel: 'Home' }}>
+      <Tab.Screen name="HomeTab" options={{ tabBarLabel: t('nav.home', 'Home') }}>
         {() => (
           <ErrorBoundary>
             <HomeStackNavigator />
           </ErrorBoundary>
         )}
       </Tab.Screen>
-      <Tab.Screen name="DiscoverTab" options={{ tabBarLabel: 'Discover' }}>
+      <Tab.Screen name="DiscoverTab" options={{ tabBarLabel: t('nav.discover', 'Discover') }}>
         {() => (
           <ErrorBoundary>
             <DiscoverStackNavigator />
           </ErrorBoundary>
         )}
       </Tab.Screen>
-      <Tab.Screen name="WorkTab" options={{ tabBarLabel: 'Work' }}>
+      <Tab.Screen name="WorkTab" options={{ tabBarLabel: t('nav.work', 'Work') }}>
         {() => (
           <ErrorBoundary>
             <WorkStackNavigator />
           </ErrorBoundary>
         )}
       </Tab.Screen>
-      <Tab.Screen name="EarningsTab" options={{ tabBarLabel: 'Earnings' }}>
+      <Tab.Screen name="EarningsTab" options={{ tabBarLabel: t('nav.earnings', 'Earnings') }}>
         {() => (
           <ErrorBoundary>
             <EarningsStackNavigator />
           </ErrorBoundary>
         )}
       </Tab.Screen>
-      <Tab.Screen name="ProfileTab" options={{ tabBarLabel: 'Profile' }}>
+      <Tab.Screen name="ProfileTab" options={{ tabBarLabel: t('nav.profile', 'Profile') }}>
         {() => (
           <ErrorBoundary>
             <ProfileStackNavigator />

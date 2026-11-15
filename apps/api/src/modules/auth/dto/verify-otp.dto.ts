@@ -1,14 +1,19 @@
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsOptional, IsString } from 'class-validator';
 import { UserRole } from '../../users/entities/user.entity';
 
 export class VerifyOtpDto {
+  @IsOptional()
   @IsString()
-  phone: string;
+  phone?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
 
   @IsString()
   otp: string;
 
   @IsOptional()
-  @IsIn([UserRole.BRAND, UserRole.CREATOR])
-  role?: UserRole.BRAND | UserRole.CREATOR;
+  @IsIn([UserRole.BRAND, UserRole.CREATOR, UserRole.ADMIN])
+  role?: UserRole.BRAND | UserRole.CREATOR | UserRole.ADMIN;
 }

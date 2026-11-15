@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 import { I18nManager } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '../../theme/tokens';
+import i18n from '../../i18n';
 
 type ColorRole = keyof typeof colors;
 export type IconName = ComponentProps<typeof Feather>['name'];
@@ -23,7 +24,8 @@ interface Props {
  * @expo/vector-icons; do not mix icon families elsewhere.
  */
 export function Icon({ name, size = 20, color = 'ink', directional = false }: Props) {
-  const shouldFlip = directional && I18nManager.isRTL;
+  const isRtl = i18n.language === 'ar' || I18nManager.isRTL;
+  const shouldFlip = directional && isRtl;
   return (
     <Feather
       name={name}

@@ -22,6 +22,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { DeliverablesModule } from './modules/deliverables/deliverables.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { StorageModule } from './modules/storage/storage.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { StorageModule } from './modules/storage/storage.module';
     DeliverablesModule,
     MessagesModule,
     StorageModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [],

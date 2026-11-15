@@ -47,6 +47,11 @@ export async function initI18n(): Promise<{ locale: AppLocale }> {
 /** EDGE-P1-005: caller decides whether the change requires a reload. */
 export function applyLayoutDirection(locale: AppLocale): void {
   const rtl = isRtl(locale);
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.dir = rtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = locale;
+    document.body?.setAttribute('dir', rtl ? 'rtl' : 'ltr');
+  }
   if (I18nManager.isRTL !== rtl) {
     I18nManager.allowRTL(rtl);
     I18nManager.forceRTL(rtl);

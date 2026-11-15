@@ -10,6 +10,11 @@ import {
 } from '../modules/users/entities/user.entity';
 import { Brand } from '../modules/brands/entities/brand.entity';
 import {
+  BrandMember,
+  BrandMemberRole,
+  BrandMemberStatus,
+} from '../modules/brands/entities/brand-member.entity';
+import {
   Creator,
   VettingStatus,
 } from '../modules/creators/entities/creator.entity';
@@ -104,6 +109,15 @@ async function seed() {
       country: 'EG',
     });
     await AppDataSource.manager.save(brand);
+
+    const brandMember = AppDataSource.manager.create(BrandMember, {
+      brandId: brand.id,
+      userId: brandUser.id,
+      role: BrandMemberRole.OWNER,
+      status: BrandMemberStatus.ACTIVE,
+      acceptedAt: new Date(),
+    });
+    await AppDataSource.manager.save(brandMember);
 
     // No mock campaigns, proposals, collaborations, transactions, or messages are seeded initially.
 

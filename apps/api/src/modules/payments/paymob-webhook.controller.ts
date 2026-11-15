@@ -11,8 +11,10 @@ import { ConfigService } from '@nestjs/config';
 import type { AppConfig } from '../../config/configuration';
 import { DomainErrorException } from '../../common/exceptions/domain-error.exception';
 import { CollaborationsService } from '../collaborations/collaborations.service';
+import { CampaignsService } from '../campaigns/campaigns.service';
 import type { PaymobWebhookPayload } from './dto/paymob-webhook.dto';
 import { isValidPaymobSignature } from './paymob-signature';
+import { decodeMerchantOrderId } from './merchant-order-id';
 
 /**
  * TASK-P1-005. nestjs skill: this is the one controller in this plan not
@@ -27,6 +29,7 @@ export class PaymobWebhookController {
   constructor(
     private readonly configService: ConfigService<AppConfig>,
     private readonly collaborationsService: CollaborationsService,
+    private readonly campaignsService: CampaignsService,
   ) {}
 
   @Post()
@@ -50,9 +53,35 @@ export class PaymobWebhookController {
       );
     }
 
-    // H1: pass every signed field the fraud/correctness check needs -
-    // amount/currency and the refund/void/pending/error flags - not just
-    // order id + success.
+    const merchantOrderId = transaction.order?.merchant_order_id;
+    const decoded = merchantOrderId
+      ? decodeMerchantOrderId(merchantOrderId)
+      : null;
+
+    const sourcePan = transaction.source_data?.pan;
+    const subType = transaction.source_data?.sub_type;
+    const paymentMethodLabel = sourcePan
+      ? `${subType ? subType.toUpperCase() + ' ' : ''}•• ${sourcePan.slice(-4)}`
+      : null;
+
+    // Route based on decoded intent
+    if (decoded?.intent === 'campaign_escrow') {
+      await this.campaignsService.applyEscrowWebhook({
+        paymobOrderId: String(transaction.order.id),
+        paymobTransactionId: String(transaction.id),
+        success: transaction.success,
+        amountCents: transaction.amount_cents,
+        currency: transaction.currency,
+        isRefunded: transaction.is_refunded,
+        isVoided: transaction.is_voided,
+        pending: transaction.pending,
+        errorOccured: transaction.error_occured,
+        paymentMethodLabel,
+      });
+      return;
+    }
+
+    // Default to collaboration top up / legacy path
     await this.collaborationsService.applyPaymentWebhook({
       paymobOrderId: String(transaction.order.id),
       paymobTransactionId: String(transaction.id),

@@ -14,25 +14,19 @@ export function useRequestUploadUrl() {
 /**
  * Uploads a local file (e.g. from ImagePicker) directly to S3 via the presigned URL.
  * Bypasses the Axios client to stream the file natively using expo-file-system.
+ * Supports progress callback for real percent updates.
  */
 export async function uploadFileToPresignedUrl(
   localUri: string,
   presignedUrl: string,
   contentType: string,
+  onProgress?: (percent: number) => void,
 ): Promise<void> {
-  // DEV-ONLY: If we are pointing to the mock local-test-r2-account which doesn't actually exist
-  // in DNS, we bypass the actual upload so the user can continue testing the flow.
-  if (presignedUrl.includes('local-test-r2-account')) {
-    console.log('Skipping actual upload because S3 is mocked locally', presignedUrl);
-    // Simulate a network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return;
-  }
-
   if (Platform.OS === 'web') {
     // For web, we must fetch the local blob and PUT it directly
     const res = await fetch(localUri);
     const blob = await res.blob();
+    onProgress?.(50);
     const response = await fetch(presignedUrl, {
       method: 'PUT',
       headers: {
@@ -43,12 +37,41 @@ export async function uploadFileToPresignedUrl(
     if (!response.ok) {
       throw new Error(`Upload failed with status ${response.status}: ${response.statusText}`);
     }
+    onProgress?.(100);
+    return;
+  }
+
+  // Use createUploadTask if available for progress updates
+  if (typeof (FileSystem as any).createUploadTask === 'function') {
+    const uploadTask = (FileSystem as any).createUploadTask(
+      presignedUrl,
+      localUri,
+      {
+        httpMethod: 'PUT',
+        uploadType: (FileSystem.UploadType?.BINARY_CONTENT ?? 1) as any,
+        headers: {
+          'Content-Type': contentType,
+        },
+      },
+      (data: { totalBytesSent: number; totalBytesExpectedToSend: number }) => {
+        if (data.totalBytesExpectedToSend > 0) {
+          const percent = Math.round((data.totalBytesSent / data.totalBytesExpectedToSend) * 100);
+          onProgress?.(percent);
+        }
+      },
+    );
+
+    const result = await uploadTask.uploadAsync();
+    if (!result || result.status < 200 || result.status >= 300) {
+      throw new Error(`Upload failed with status ${result?.status ?? 'unknown'}: ${result?.body ?? ''}`);
+    }
+    onProgress?.(100);
     return;
   }
 
   const result = await FileSystem.uploadAsync(presignedUrl, localUri, {
     httpMethod: 'PUT',
-    uploadType: FileSystem.UploadType.BINARY_CONTENT as any,
+    uploadType: (FileSystem.UploadType?.BINARY_CONTENT ?? 1) as any,
     headers: {
       'Content-Type': contentType,
     },
@@ -57,4 +80,5 @@ export async function uploadFileToPresignedUrl(
   if (result.status < 200 || result.status >= 300) {
     throw new Error(`Upload failed with status ${result.status}: ${result.body}`);
   }
+  onProgress?.(100);
 }

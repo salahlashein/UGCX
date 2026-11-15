@@ -1,5 +1,11 @@
-# Design reference
-See DESIGN.md for design conventions. Read it before design or UI work.
+# Design reference & UI System (Brand C3 Sage)
+See `DESIGN.md` for design conventions. Read it before any design or UI work.
+
+The **Brand C3 Sage** design system is the single source of truth for all mobile UI across both Brand and Creator views:
+- **Theme tokens:** Always import colors, spacing, radius, and sizes from `apps/mobile/src/theme/tokens.ts`, typography from `apps/mobile/src/theme/typography.ts`, fonts from `apps/mobile/src/theme/fonts.ts`, and shadows from `apps/mobile/src/theme/elevation.ts`. Never hardcode hex colors, font sizes, or raw shadows.
+- **Core surfaces:** Page backgrounds use `colors.canvas` (`#eff2ed`). Content sits inside white elevated `<Card>` or `<PressableCard>` containers (`colors.surface` `#ffffff`, `radius.xl` 18px, `elevation.soft`), with `colors.primary` (`#2f5d46`) for primary actions and `colors.accentSoft` (`#e1ebe4`) for icon tiles.
+- **Reusable primitives:** Always build screens from `apps/mobile/src/components/ui/` (`AppText`, `Card`, `PressableCard`, `SignatureCard`, `Button`, `TextInput`, `FilterChip`, `StatusBadge`, `Icon`, `LoadingState`, `ErrorState`, `EmptyState`, `QueryStateView`, `AppBottomSheet`) and `apps/mobile/src/navigation/FloatingTabBar.tsx`.
+- **Reference screens:** Use `BrandDashboardScreen.tsx`, `BrandProfileScreen.tsx`, `MyBriefsScreen.tsx`, and `BrandBillingScreen.tsx` in `apps/mobile/src/screens/brand/` as the canonical layout templates for dashboards, profiles, lists, and ledgers.
 
 
 # Instructions

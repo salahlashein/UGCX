@@ -22,4 +22,18 @@ export const elevation = {
     },
     default: {},
   }),
+  // Soft, diffused shadow for white cards on the sage canvas.
+  soft: Platform.select({
+    ios: {
+      shadowColor: colors.surfaceDark,
+      shadowOpacity: 0.08,
+      shadowRadius: 14,
+      shadowOffset: { width: 0, height: 6 },
+    },
+    android: {
+      elevation: 2,
+      shadowColor: colors.surfaceDark,
+    },
+    default: {},
+  }),
 } as const;

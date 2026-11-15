@@ -15,6 +15,7 @@ import { parseApiError } from '../../services/apiError';
 import { LoadingState } from '../../components/ui/LoadingState';
 import { ErrorState } from '../../components/ui/ErrorState';
 import { Card } from '../../components/ui/Card';
+import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Button } from '../../components/ui/Button';
 import { FormTextInput } from '../../components/forms/FormTextInput';
 import { colors, spacing, typography } from '../../theme/tokens';
@@ -76,9 +77,10 @@ export function CollaborationDetailScreen({ route, navigation }: Props) {
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
         <Card style={styles.card}>
-          <Text style={styles.status}>
-            {t('brand.collaboration.status')}: {collaboration.status}
-          </Text>
+          <View style={styles.statusRow}>
+            <Text style={styles.status}>{t('brand.collaboration.status')}:</Text>
+            <StatusBadge status={collaboration.status} domain="collaboration" />
+          </View>
           <Text style={styles.amount}>
             {collaboration.totalAmount} {collaboration.currency}
           </Text>
@@ -114,24 +116,18 @@ export function CollaborationDetailScreen({ route, navigation }: Props) {
         {collaboration.status === 'delivered' && latestDeliverable && (
           <Card style={styles.card}>
             <Text style={styles.sectionTitle}>{t('brand.collaboration.reviewDeliverable')}</Text>
-            <Text style={styles.body}>{latestDeliverable.fileUrl}</Text>
-            <View style={styles.actions}>
-              <Button
-                title={t('brand.collaboration.approve')}
-                onPress={() => reviewAction('approve')}
-                loading={reviewDeliverable.isPending}
-              />
-              <Button
-                title={t('brand.collaboration.requestRevision')}
-                variant="secondary"
-                onPress={() => reviewAction('request_revision')}
-              />
-              <Button
-                title={t('brand.collaboration.decline')}
-                variant="secondary"
-                onPress={() => reviewAction('decline')}
-              />
-            </View>
+            <Text style={styles.body}>
+              {t('brand.collaboration.deliverableReady', 'Deliverable ready for review')}
+            </Text>
+            <Button
+              title={t('brand.collaboration.reviewDeliverableAction', 'Review Deliverable')}
+              onPress={() =>
+                navigation.navigate('ReviewDeliverable', {
+                  deliverableId: latestDeliverable.id,
+                  collaborationId,
+                })
+              }
+            />
           </Card>
         )}
 
@@ -149,6 +145,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.canvas },
   content: { padding: spacing.lg, gap: spacing.md },
   card: { marginBottom: spacing.md },
+  statusRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   status: { ...typography.subtitle, color: colors.ink },
   amount: { ...typography.body, color: colors.muted, marginTop: spacing.xxs },
   sectionTitle: { ...typography.subtitle, color: colors.ink, marginBottom: spacing.sm },

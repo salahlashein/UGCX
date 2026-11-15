@@ -14,6 +14,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/interfaces/auth-user.interface';
 import { UserRole } from '../users/entities/user.entity';
+import { BrandRoleGuard } from '../brands/guards/brand-role.guard';
+import { BrandRoles } from '../brands/decorators/brand-roles.decorator';
+import { BrandMemberRole } from '../brands/entities/brand-member.entity';
 import { DeliverablesService } from './deliverables.service';
 import { RegisterDeliverableDto } from './dto/register-deliverable.dto';
 import { ReviewDeliverableDto } from './dto/review-deliverable.dto';
@@ -54,9 +57,11 @@ export class DeliverablesController {
     return { data: deliverables };
   }
 
-  /** TASK-P1-008 */
+  /** TASK-P1-008, TASK-P3-02: brand owner or approver only */
   @Post('deliverables/:id/review')
   @Roles(UserRole.BRAND)
+  @UseGuards(BrandRoleGuard)
+  @BrandRoles(BrandMemberRole.OWNER, BrandMemberRole.APPROVER)
   async review(
     @CurrentUser() user: AuthUser,
     @Param('id') id: string,

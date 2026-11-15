@@ -1,337 +1,235 @@
-## Overview
+```yaml
+name: "UGCX C3 Sage Design System"
+description: "Unified mobile design system for Brand and Creator views on the C3 Sage palette."
 
-Airtable's marketing surfaces are quietly editorial. The base atmosphere is white canvas, dark ink type, generous whitespace, and a near-black pill CTA — nothing is fighting for attention until a section needs to. The brand voltage doesn't come from gradient washes or accent walls; it comes from **full-bleed signature cards** in `{colors.signature-coral}`, `{colors.signature-forest}`, and `{colors.surface-dark}` that punctuate long-scroll explainer pages every two or three screens. Between those signature bands, the page reads like a print magazine: a headline, supporting copy, a small image cluster, then breathing room.
+colors:
+  primary: "#2f5d46"
+  primary-active: "#244a37"
+  accent-soft: "#e1ebe4"
+  canvas: "#eff2ed"
+  surface: "#ffffff"
+  surface-soft: "#f6f8f5"
+  surface-strong: "#e1e7e2"
+  surface-dark: "#17241c"
+  surface-dark-elevated: "#1f3027"
+  hairline: "#dde3de"
+  ink: "#17241c"
+  body: "#2c3a31"
+  muted: "#5d6b62"
+  border-strong: "#93a097"
+  input-border: "#7f8c83"
+  on-primary: "#ffffff"
+  on-dark: "#ffffff"
+  danger: "#b3261e"
+  danger-surface: "#fdecea"
+  success: "#006400"
+  info: "#254fad"
 
-Type voice is Haas Grotesk at modest weights (400 for display, 500 for sub-titles and buttons). Display headlines never go bolder than 500 — emphasis comes from size and color contrast, not from weight. Body copy stays at 14px / 400 throughout. The pricing surface runs its own dialect: **Inter Display** at unusual mid-weights (475 / 575) and **pill-shaped buttons** (`{rounded.pill}`) that don't appear on any other page — a deliberate sub-system signaling "this page is about commercial precision."
+typography:
+  metric:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 38px
+    lineHeight: 46px
+    fontWeight: 500
+  displayLg:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 32px
+    lineHeight: 38px
+    fontWeight: 400
+  displayMd:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 28px
+    lineHeight: 34px
+    fontWeight: 400
+  titleLg:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 22px
+    lineHeight: 30px
+    fontWeight: 400
+  titleMd:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 20px
+    lineHeight: 28px
+    fontWeight: 400
+  titleSm:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 17px
+    lineHeight: 24px
+    fontWeight: 500
+  label:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 16px
+    lineHeight: 22px
+    fontWeight: 500
+  button:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 16px
+    lineHeight: 22px
+    fontWeight: 500
+  body:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 15px
+    lineHeight: 22px
+    fontWeight: 400
+  bodySm:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 13px
+    lineHeight: 19px
+    fontWeight: 400
+  caption:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 13px
+    lineHeight: 18px
+    fontWeight: 500
+  overline:
+    fontFamily: Inter / IBM Plex Sans Arabic
+    fontSize: 11px
+    lineHeight: 14px
+    fontWeight: 500
 
-**Key Characteristics:**
-- Primary CTA is `{colors.primary}` (near-black ink) with white text and a `{rounded.lg}` (12px) corner — it reads as confident and final, never decorative.
-- Secondary CTA is a `{colors.canvas}` button with `{colors.ink}` text and a hairline outline. The two together form Airtable's signature button pair.
-- Hero is white canvas. There is no atmospheric gradient, no mesh, no background flourish. The brand strength comes from the type and the buttons sitting in clean whitespace.
-- Brand voltage lives in **signature surface cards**: `{colors.signature-coral}`, `{colors.signature-forest}`, and `{colors.surface-dark}` carry full-bleed product callouts every few screens.
-- Demo-card grids carry product UI fragments on `{colors.signature-peach}`, `{colors.signature-mint}`, `{colors.signature-cream}` and other warm pastel surfaces.
-- Section rhythm: white canvas → coral signature card → white body → cream callout band → dark navy CTA → light gray CTA banner → footer. The canvas resets between every signature surface.
-- Border radius is hierarchical: `{rounded.lg}` (12px) for primary CTAs and large signature cards, `{rounded.md}` (10px) for content cards and demo grids, `{rounded.sm}` (6px) for inputs, `{rounded.full}` for icon buttons. Pricing buttons jump to `{rounded.pill}` to mark themselves as a separate dialect.
-- Vertical rhythm is `{spacing.section}` (96px) between major bands — universal across every page.
+rounded:
+  xs: 2px
+  sm: 6px
+  md: 10px
+  lg: 12px
+  xl: 18px
+  xxl: 22px
+  pill: 9999px
+  full: 9999px
 
-## Colors
+spacing:
+  xxs: 4px
+  xs: 8px
+  sm: 12px
+  md: 16px
+  lg: 24px
+  xl: 32px
+  xxl: 48px
+  section: 96px
+```
+
+# Design System: UGCX C3 Sage (Brand & Creator Unified Theme)
+
+## 1. Visual Theme & Atmosphere
+The Brand C3 Sage theme is the single design system for both Brand and Creator views. Every screen uses a warm tinted sage page background (`colors.canvas` `#eff2ed`) with elevated white surface cards (`colors.surface` `#ffffff`), deep forest sage primary actions (`colors.primary` `#2f5d46`), and soft sage icon tiles (`colors.accentSoft` `#e1ebe4`).
+
+All theme tokens live in `apps/mobile/src/theme/tokens.ts`, `apps/mobile/src/theme/typography.ts`, `apps/mobile/src/theme/fonts.ts`, and `apps/mobile/src/theme/elevation.ts`. Never hardcode hex values, font sizes, or raw shadows in screen files.
+
+## 2. Color Palette & Roles (`apps/mobile/src/theme/tokens.ts`)
 
 ### Brand & Accent
-- **Primary** (`{colors.primary}` — #181d26): The dominant brand color. Used for the primary CTA background, h1/h2 display type, and the `{component.surface-dark}` band. Not "blue, then black" — black IS the primary throughout the marketing system.
-- **Primary Active** (`{colors.primary-active}` — #0d1218): The press state on primary buttons.
-
-### Surface
-- **Canvas** (`{colors.canvas}` — #ffffff): The default page surface; the floor of every editorial body.
-- **Surface Soft** (`{colors.surface-soft}` — #f8fafc): Tabbed feature cards and the featured pricing tier.
-- **Surface Strong** (`{colors.surface-strong}` — #e0e2e6): The light gray "Start building with Airtable" CTA banner near the footer.
-- **Surface Dark** (`{colors.surface-dark}` — #181d26): The dark navy CTA cards used mid-page (for example "The path to 10× every person in your organization").
-- **Surface Dark Elevated** (`{colors.surface-dark-elevated}` — #1d1f25): The articles-page hero base behind the rainbow-stripe overlay.
-- **Hairline** (`{colors.hairline}` — #dddddd): The 1px border tone for input outlines, table dividers, secondary-button outlines.
-
-### Text
-- **Ink** (`{colors.ink}` — #181d26): The strongest text — h1/h2 display type and primary button text-on-light. Same hex as `{colors.primary}` because they are the same role expressed at type and button layers.
-- **Body** (`{colors.body}` — #333840): The default running-text color.
-- **Muted** (`{colors.muted}` — #41454d): Footer links, breadcrumbs, captions.
-- **Border Strong** (`{colors.border-strong}` — #9297a0): The 1px outline color on disabled secondary buttons.
-- **On Primary / On Dark** (`{colors.on-primary}` — #ffffff): The text color on primary buttons and dark surfaces.
-
-### Signature Card Surfaces
-These are the colors that carry Airtable's brand voltage. They appear as full-bleed, full-card surfaces — never as accents on a small element.
-- **Coral** (`{colors.signature-coral}` — #aa2d00): The largest signature card on the homepage ("Production apps in prototype speed"). Full-bleed dark coral with white type.
-- **Forest** (`{colors.signature-forest}` — #0a2e0e): A deep-green signature card used in the homepage demo-grid cluster.
-- **Cream** (`{colors.signature-cream}` — #f5e9d4): The cream callout band ("The path to 10× every person in your organization") — a soft beige surface holding dark type and product UI fragments.
-- **Peach** (`{colors.signature-peach}` — #fcab79), **Mint** (`{colors.signature-mint}` — #a8d8c4), **Yellow** (`{colors.signature-yellow}` — #f4d35e), **Mustard** (`{colors.signature-mustard}` — #d9a441): Demo-card surfaces that carry small product UI fragments inside the multi-card grid sections.
-
-### Semantic
-- **Link** (`{colors.link}` — #1b61c9): Inline body links and anchor text. Darker on press to `{colors.link-active}` (#1a3866). Despite the `--theme_button-background-primary` CSS-variable name, this color is **not** the primary button color — it is the link color.
-- **Info** (`{colors.info}` — #254fad) and **Info Border** (`{colors.info-border}` — #458fff): Inline info badges and focused-input outline.
-- **Success** (`{colors.success}` — #006400) and **Success Border** (`{colors.success-border}` — #39bf45): Confirmation states.
-
-## Typography
+- **Primary (`colors.primary` `#2f5d46`):** Primary buttons, active filter chips, primary quick-action tiles, brand/creator avatars, and links.
+- **Primary Active (`colors.primaryActive` `#244a37`):** Pressed state for primary buttons.
+- **Accent Soft (`colors.accentSoft` `#e1ebe4`):** Rounded icon tiles (`30x30` or `40x40` with `radius.md`), active tab pill inside `FloatingTabBar`, and subtle badge backgrounds.
+
+### Surfaces
+- **Canvas (`colors.canvas` `#eff2ed`):** Default screen background for every Brand and Creator screen.
+- **Surface (`colors.surface` `#ffffff`):** Default card background (`<Card />` and `<PressableCard />`), form inputs, icon buttons, and bottom sheets.
+- **Surface Soft (`colors.surfaceSoft` `#f6f8f5`):** Row press highlight and disabled input background.
+- **Surface Strong (`colors.surfaceStrong` `#e1e7e2`):** Segmented control track, skeleton placeholders, neutral status pills, and disabled button fill.
+- **Surface Dark (`colors.surfaceDark` `#17241c`):** Floating bottom tab bar (`FloatingTabBar`) and dark `<SignatureCard variant="dark" />` summary cards.
+- **Hairline (`colors.hairline` `#dde3de`):** `StyleSheet.hairlineWidth` row dividers inside grouped white cards. Never use `hairline` as a standalone card border on `canvas`.
+
+### Text & Borders
+- **Ink (`colors.ink` `#17241c`):** Headlines, card titles, primary values, and active labels.
+- **Body (`colors.body` `#2c3a31`):** Running body copy and form labels.
+- **Muted (`colors.muted` `#5d6b62`):** Secondary metadata, subtitles, section overlines, and timestamps.
+- **Border Strong (`colors.borderStrong` `#93a097`):** Unselected tab icons, trailing chevrons, and disabled button labels.
+- **Input Border (`colors.inputBorder` `#7f8c83`):** Form input outlines and unselected filter chip outlines (passes WCAG 1.4.11 3:1 contrast).
+- **On Primary / On Dark (`colors.onPrimary` `#ffffff`):** Text and icons on `colors.primary` and `colors.surfaceDark`.
+
+### Semantic & Signature Tones
+- **Success (`colors.success` `#006400`):** Positive ledger amounts, completed states, and verification checks.
+- **Danger (`colors.danger` `#b3261e`) & Danger Surface (`colors.dangerSurface` `#fdecea`):** Validation errors, upload failures, destructive actions, and danger icon tiles.
+- **Signature Pastels (`signatureMint`, `signatureYellow`, `signaturePeach`, `signatureMustard`, `signatureForest`, `signatureCoral`, `signatureCream`):** Used by `<StatusBadge />` and `<Card tone="..." />` when semantic status differentiation is required.
+
+## 3. Typography Rules (`apps/mobile/src/theme/typography.ts` & `AppText`)
+- **Font Families (`apps/mobile/src/theme/fonts.ts`):** `Inter` for Latin text and `IBM Plex Sans Arabic` for Arabic text.
+- **Allowed Weights:** `400` and `500` only. Never use `fontWeight: '600'` or `'700'`. Visual hierarchy comes from size, color contrast, and card surfaces.
+- **Arabic Line Height:** `AppText` automatically multiplies `lineHeight` by `1.15` when RTL/Arabic is active.
+- **Tabular Figures:** Always add `fontVariant: ['tabular-nums']` to money amounts, counts, and badge numbers.
+- **Role Scale (consume via `<AppText variant="..." color="...">`):**
+  - `metric` (38/46, weight 500): Hero money figures (monthly spend, withdrawable balance, escrow total).
+  - `displayLg` (32/38, weight 400): Large dark summary card figures.
+  - `displayMd` (28/34, weight 400): Top-level screen titles and bottom sheet headers.
+  - `titleLg` (22/30, weight 400): Major section titles.
+  - `titleMd` (20/28, weight 400): Identity card names and sub-headers.
+  - `titleSm` (17/24, weight 500): Section headers (`Active briefs`, `Work board`), stat values, and card titles.
+  - `label` (16/22, weight 500): List row primary titles, chip text, and inline emphasis.
+  - `button` (16/22, weight 500): Button labels.
+  - `body` (15/22, weight 400): Default paragraph text and settings row labels.
+  - `bodySm` (13/19, weight 400): Secondary row metadata, greetings, and quick-action labels.
+  - `caption` (13/18, weight 500): Input labels, timestamps, and small metadata.
+  - `overline` (11/14, weight 500, letterSpacing 0.8): Group headers, status badges, and count badges.
+
+## 4. Reusable UI Components (`apps/mobile/src/components/ui/`)
+Every new Brand or Creator screen must compose these shared components instead of raw React Native primitives:
+
+- **`<AppText variant="..." color="...">` (`Text.tsx`):** Required for all text rendering. Resolves locale font family and Arabic line height automatically.
+- **`<Card>` & `<PressableCard>` (`Card.tsx`):** Default `tone="canvas"` renders a white `colors.surface` container with `radius.xl` (18px), `spacing.md` (16px) padding, and `elevation.soft` shadow. `<PressableCard>` adds a `scale(0.97)` Reanimated press transition.
+- **`<SignatureCard variant="dark" | "coral" | "forest" | "cream">` (`SignatureCard.tsx`):** Full-bleed accent card for ledger totals or high-priority callouts.
+- **`<Button>` (`Button.tsx`):** Supports `variant="primary" | "secondary" | "secondaryOnDark" | "ghost" | "danger"`, `loading`, `disabled`, and `icon`. Uses `radius.lg` (12px) and `sizes.buttonHeight` (48px).
+- **`<TextInput>` (`TextInput.tsx`):** Standard text field with `label`, `error`, `hint`, `colors.surface` background, `colors.inputBorder` outline, and 2px `colors.primary` focus border.
+- **`<FilterChip>` (`FilterChip.tsx`):** Pill-shaped filter button (`colors.surface` unselected, `colors.primary` selected).
+- **`<StatusBadge domain="campaign" | "proposal" | "collaboration" | "deliverable" status="..." />` (`StatusBadge.tsx`):** Canonical pill badge for all domain statuses.
+- **`<Icon>` (`Icon.tsx`):** Feather icon wrapper bound to theme color roles and `directional` RTL mirroring.
+- **`<LoadingState>`, `<ErrorState>`, `<EmptyState>`, `<QueryStateView>`:** Standard async state views. Never render a bare `<ActivityIndicator>` without `<LoadingState>` or a centered container.
+- **`<AppBottomSheet>` (`BottomSheet.tsx`):** Standard modal sheet for proposals, payouts, and filters.
+- **`<FloatingTabBar>` (`navigation/FloatingTabBar.tsx`):** Floating `colors.surfaceDark` pill bar shared by `BrandTabNavigator` and `CreatorTabNavigator`.
+
+## 5. Standard Screen Layouts (Brand & Creator Parity)
+
+### A. Dashboard / Home Screen (`BrandDashboardScreen` & `CreatorHomeScreen`)
+- **Container:** `SafeAreaView` with `edges={['top']}` and `backgroundColor: colors.canvas`. `ScrollView` with `paddingHorizontal: spacing.md`, `gap: spacing.md`.
+- **Header Row:** `44x44` rounded avatar/logo tile (`borderRadius: 14`, `backgroundColor: colors.primary`, white initials in `AppText variant="label"`), middle column with greeting/location (`bodySm` `muted`) and display name (`titleSm` `ink`), trailing `44x44` white notification bell button (`borderRadius: 14`, `colors.surface`, `elevation.soft`).
+- **Hero Metric / Summary Card:** White `<Card>` with `borderRadius: radius.xxl` (22px), centered `paddingVertical: spacing.lg`, label in `bodySm` `muted`, figure in `metric` `ink` with `tabular-nums`, and a bottom meta row with a `14px` primary `<Icon>` + `bodySm` `muted` text.
+- **Quick Actions Row:** 4 `<PressableCard>` tiles (`56x56`, `borderRadius: radius.xl`), primary tile in `colors.primary`, secondary tiles in `colors.surface`, with optional top-end pill count badge.
+- **Grouped List Card:** `<Card style={{ padding: 0 }}>` containing pressable rows separated by `StyleSheet.hairlineWidth` (`colors.hairline`), each row leading with a `40x40` `colors.accentSoft` icon tile (`borderRadius: radius.md`), middle `label` + `bodySm` text, and trailing `<StatusBadge />` or chevron.
+
+### B. Profile & Settings Screen (`BrandProfileScreen` & `CreatorProfileScreen`)
+- **Identity Card:** White `<Card>` with `borderRadius: radius.xxl`, centered `64x64` avatar (`borderRadius: 20`, `colors.primary`), name row with verified icon (`check-circle`), subtitle (`bodySm` `muted`), pill outline Edit button (`borderRadius: radius.pill`, `borderColor: colors.hairline`), and a 3-column bottom stats strip separated by hairline borders.
+- **Grouped Settings Sections:** Section overline (`variant="overline" color="muted"`) above a `<Card style={{ padding: 0 }}>`. Each row (`minHeight: 52`, `paddingHorizontal: spacing.md`) has a `30x30` `colors.accentSoft` icon tile (`borderRadius: radius.md`), `body` label, optional `bodySm` `muted` value, and a directional `chevron-right` icon.
+
+### C. Discovery & List Screens (`MyBriefsScreen`, `CampaignDiscoveryScreen`, `MyProposalsScreen`)
+- **Header:** Screen title (`displayMd` or `titleLg` in `ink`) + optional action button.
+- **Filter Bar:** Horizontal row of `<FilterChip />` components.
+- **Cards:** White `<Card>` or `<PressableCard>` items on `colors.canvas` with `<StatusBadge />` pills and `colors.accentSoft` icon tiles or media thumbnails (`borderRadius: radius.md`).
+
+### D. Money & Ledger Screens (`BrandBillingScreen` & `PayoutsScreen`)
+- **Hero Balance Card:** White hero `<Card style={{ borderRadius: radius.xxl }}>` or `<SignatureCard variant="dark">` with `overline` kicker, `metric` or `displayLg` balance with `tabular-nums`, and primary `<Button>` CTA.
+- **Ledger Container:** Grouped white `<Card style={{ padding: 0 }}>` with hairline-divided rows, `label` title, `caption` `muted` metadata, and right-aligned tabular amount + status.
+
+## 6. RTL & Localization Rules
+1. Never use physical directional styles (`marginLeft`, `marginRight`, `paddingLeft`, `paddingRight`, `left`, `right`, `borderLeft*`, `borderRight*`). Always use logical properties (`marginStart`, `marginEnd`, `paddingStart`, `paddingEnd`, `start`, `end`, `borderStart*`, `borderEnd*`).
+2. Never set `textAlign: 'left'` or `'right'`. Let React Native follow the locale reading direction, or use `'center'`.
+3. Never use `flexDirection: 'row-reverse'`. Standard `flexDirection: 'row'` mirrors automatically under RTL.
+4. Pass `directional` to `<Icon>` for arrows, chevrons, and log-out icons so they mirror in Arabic.
+5. Run `npm --prefix apps/mobile run lint:rtl` to verify zero physical-direction regressions.
+
+## 7. Web Responsive Shell & C3 Sage CSS Mapping (`apps/web`)
+1. **CSS Custom Properties (`apps/web/src/app/globals.css`):** Expose all C3 Sage tokens as CSS variables (`--color-canvas: #eff2ed`, `--color-surface: #ffffff`, `--color-primary: #2f5d46`, `--color-primary-active: #244a37`, `--color-accent-soft: #e1ebe4`, `--color-surface-dark: #17241c`, `--color-hairline: #dde3de`, `--color-ink: #17241c`, `--color-body: #2c3a31`, `--color-muted: #5d6b62`) and TypeScript tokens (`apps/web/src/theme/tokens.ts`).
+2. **Responsive AppShell (`apps/web/src/components/layout/AppShell.tsx`):**
+   - **Desktop (`>= 768px`):** Fixed 260px left/inline-start navigation sidebar (`colors.surface` `#ffffff` or `colors.surfaceDark` `#17241c`) with active `colors.accentSoft` (`#e1ebe4`) and `colors.primary` (`#2f5d46`) pill items, paired with a centered max-width `1200px` multi-column content canvas (`#eff2ed`).
+   - **Mobile Web (`< 768px`):** Full-bleed `#eff2ed` canvas with the floating dark pill tab bar (`#17241c` `FloatingTabBar`) pinned to the bottom viewport edge.
+3. **Web Typography & Logical RTL:** Load `Inter` and `IBM Plex Sans Arabic` with weights `400` and `500` only via `next/font/google`. Toggle `<html lang="en|ar" dir="ltr|rtl">` dynamically and use logical CSS properties (`margin-inline-start`, `padding-inline-start`, `text-align: start`, Tailwind `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`).
+
+### 7.4 Ledger Mono Web Finish (`operations/specs/web_ledger_mono/`)
+1. **Web-only Scope:** Ledger Mono applies strictly to `apps/web`. Mobile `apps/mobile` retains original C3 Sage radii (`radius.xl` 18px).
+2. **Radius Scale (Web):**
+   - Card: 14px (`radius.card`)
+   - Hero Card: 16px (`radius.hero`)
+   - Button / Input: 10px (`radius.button`)
+   - Chip / Filter: 8px (`radius.chip`)
+   - Badge / Tag: 4px (`radius.badge`)
+   - XL: 18px (`radius.xl` retained for parity)
+3. **Typography & Mono Roles (Weights 400 and 500 only):**
+   - JetBrains Mono loaded via Google Fonts for numbers, references, overlines, badges, and table headers.
+   - Roles: `metricMono` (38/46), `metricMd` (28/34), `metricSm` (22/28), `overlineMono` (11/14), `badgeMono` (10/14), `tableHead` (10.5/14), `numeric` (15/22).
+4. **Surfaces & Rules:**
+   - Dashed line: `1px dashed #b9c4bc` (`--dash-line`, `colors.dashLine`).
+   - Hero grid paper: `background: var(--paper)` (graph lines with dark surface).
+5. **Arabic RTL Protection:**
+   - `:lang(ar) .mono-caps, :lang(ar) [data-mono-caps] { letter-spacing: 0; text-transform: none; }` prevents Arabic letter dissociation.
+   - Numbers and currency maintain LTR formatting (`dir="ltr"`).
 
-### Font Family
-The system runs **Haas / Haas Groot Disp** (Airtable's licensed display + text type). Haas Groot Disp covers display sizes (h1 / h2); Haas Grotesk covers everything 24px and below. The fallback stack walks `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif`.
 
-The pricing surface runs a separate **Inter Display** stack at mid-weights (475 / 575) — a deliberate sub-system signaling commercial precision.
-
-### Hierarchy
-
-| Token | Size | Weight | Line Height | Letter Spacing | Use |
-|---|---|---|---|---|---|
-| `{typography.display-xl}` | 48px | 500 | 1.1 | 0 | Articles page h2 — second-tier editorial headline |
-| `{typography.display-lg}` | 40px | 400 | 1.2 | 0 | Homepage h1 hero |
-| `{typography.display-md}` | 32px | 400 | 1.2 | 0 | Platform-page h2 — feature-section headlines |
-| `{typography.title-lg}` | 24px | 400 | 1.35 | 0.12px | Section titles |
-| `{typography.title-md}` | 20px | 400 | 1.5 | 0 | Sub-section titles in tabbed feature cards |
-| `{typography.title-sm}` | 18px | 500 | 1.4 | 0 | Article-card titles |
-| `{typography.label-md}` | 16px | 500 | 1.4 | 0 | Demo-card titles, list labels |
-| `{typography.button}` | 16px | 500 | 1.4 | 0 | Standard CTA button labels |
-| `{typography.body-md}` | 14px | 400 | 1.25 | 0 | Body copy, footer links, top-nav items |
-| `{typography.caption}` | 14px | 500 | 1.35 | 0.16px | Light captions and meta text |
-| `{typography.legal}` | 13.12px | 600 | 1.2 | 0 | Cookie/legal CTA buttons |
-| `{typography.pricing-display}` | 44.8px | 475 | 1.1 | 0 | Pricing-page h1 |
-| `{typography.pricing-section}` | 28px | 475 | 1.2 | 0 | Pricing-page section heads |
-| `{typography.pricing-card-title}` | 20px | 475 | 1.3 | 0 | Pricing tier card plan name |
-
-### Principles
-The Haas system prefers weight 400 for display sizes — a 40px h1 is **not** bold. Visual emphasis is delegated to size, color contrast, and the signature surface cards. Where the system does want weight, it pivots to 500 (sub-titles, buttons, article titles), never 600 or 700 in the editorial body. The only true bold (600) lives in `{typography.legal}` — a sign that boldness is reserved for terms-of-service surfaces, not marketing.
-
-The pricing-page sub-system uses Inter Display at `font-weight: 475` — a custom mid-weight between regular (400) and medium (500), shipped as a variable font.
-
-### Note on Font Substitutes
-If Haas Groot Disp and Haas Grotesk are unavailable, **Inter Display** (variable) is the closest open-source substitute for both — adjust line-height down by ~5% to match Haas's tighter cap-height. For the pricing sub-system, use Inter Display directly. On macOS / iOS, **system-ui** is sufficient; on Windows, the chain falls through to Segoe UI, which is a usable but slightly cooler substitute.
-
-## Layout
-
-### Spacing System
-- **Base unit:** 4px (all spacing snaps to 4-multiples).
-- **Tokens:** `{spacing.xxs}` 4px · `{spacing.xs}` 8px · `{spacing.sm}` 12px · `{spacing.md}` 16px · `{spacing.lg}` 24px · `{spacing.xl}` 32px · `{spacing.xxl}` 48px · `{spacing.section}` 96px.
-- **Section padding (vertical):** `{spacing.section}` (96px) is the universal vertical rhythm constant — every major editorial band on every page uses 96px top + 96px bottom internal padding.
-- **Card internal padding:** `{spacing.xl}` (32px) for tabbed feature cards and pricing tier cards; `{spacing.xxl}` (48px) inside signature coral / forest / dark cards; `{spacing.lg}` (24px) for cream callouts and demo-grid cards.
-- **Gutters:** `{spacing.lg}` (24px) between cards in 3-up grids; `{spacing.md}` (16px) inside denser logo strips and footer column gutters.
-
-### Grid & Container
-- **Max content width:** ~1280px centered, with `{spacing.xxl}` (48px) horizontal breathing room.
-- **Editorial body:** Single 8/12-column at large breakpoints, collapsing to single-column on mobile.
-- **Demo-card grids:** 3 or 4 columns at desktop, 2 at tablet, 1 at mobile. Card sizes are deliberately uneven within the grid to dodge a uniform "spec sheet" feel.
-- **Logo strip:** 6 monochrome partner logos in a single row at desktop; wraps to 3-up on mobile.
-
-### Whitespace Philosophy
-Airtable uses whitespace as the dominant atmospheric tool. Hero sections sit in 96px+ of pure whitespace above and below the headline + sub-headline pair, with no decoration in that whitespace. The hero is intentionally calm — there is no gradient, no aurora, no atmospheric mesh behind the type. The system trusts whitespace alone to do the framing.
-
-## Elevation & Depth
-
-| Level | Treatment | Use |
-|---|---|---|
-| Flat | No shadow, no border | Body sections, top nav, footer |
-| Soft hairline | 1px `{colors.hairline}` border | Inputs, sub-nav rails, comparison-table dividers, secondary buttons |
-| Button rest | Soft drop with subtle blue-tinted glow at low alpha | Primary CTA buttons (the blue tint is a holdover from the link color and reads as a faint accent under the dark button) |
-| Button focus | Outer 2px blue ring at higher alpha | Keyboard focus state on primary buttons |
-| Card flat | No shadow; relies on color contrast against the surface band | Signature coral / forest / dark cards, cream callouts, demo-grid cards |
-
-The elevation philosophy is **color-block first, shadow second**. Shadows are minimal; depth is delegated to the contrast between white canvas and signature surface cards. There is no soft-glow / atmospheric-shadow / heavy-elevation language anywhere in the marketing system.
-
-### Decorative Depth
-- **Vertical rainbow stripes** appear on the articles hero only — multi-color vertical bands sitting on `{colors.surface-dark-elevated}`. This is a single-page treatment, not a system-wide signature.
-- **Photography-as-depth** in the demo-card grid: every card carries a real product UI screenshot or mockup, contributing depth through legible artifact density rather than decorative effects.
-
-## Shapes
-
-### Border Radius Scale
-
-| Token | Value | Use |
-|---|---|---|
-| `{rounded.xs}` | 2px | Cookie-consent and legal CTA buttons — system-required surfaces |
-| `{rounded.sm}` | 6px | Text inputs, small inline buttons |
-| `{rounded.md}` | 10px | Secondary content cards, article cards, cream callouts |
-| `{rounded.lg}` | 12px | Primary CTA buttons, signature surface cards, tabbed feature cards |
-| `{rounded.pill}` | 9999px | Pricing-page CTA buttons (sub-system only) |
-| `{rounded.full}` | 9999px / 50% | Circular icon buttons, avatar surfaces |
-
-### Photography Geometry
-Product UI screenshots inside demo-card grids retain native aspect ratios (typically 4:3 or 16:10) and crop into `{rounded.md}` containers. Hero illustrations bleed full-width with no rounding. Article-card thumbnails use 16:9 with `{rounded.md}` corners. Avatars in testimonials use `{rounded.full}` (perfect circles). Pricing comparison table images stay rectangular with no rounding.
-
-## Components
-
-> **No hover states documented.** Per the global no-hover policy (Step 6), every component spec below documents only Default and Active/Pressed states. Variants live as separate entries in the `components:` front matter.
-
-**`top-nav`** — A 64px-tall white bar pinned to the top of every page. Airtable wordmark sits at left; primary horizontal menu (Platform, Solutions, Resources, Enterprise, Pricing) sits center-left in `{typography.body-md}`; the right cluster carries a "Book Demo" outline link, "Sign up for free" `{component.button-primary}`, and "Log In" text link. The nav stays light on every page — Airtable does not invert the nav over dark sections.
-
-### Buttons
-
-**`button-primary`** — The signature primary CTA. Background `{colors.primary}` (near-black), text `{colors.on-primary}`, type `{typography.button}`, padding 16px × 24px, rounded `{rounded.lg}` (12px). This is the "Get started for free" / "Sign up for free" button visible on every hero. It reads as confident and final — not decorative — which is why the system uses it sparingly (one per viewport).
-- Active state: `button-primary-active` darkens to `{colors.primary-active}` (#0d1218).
-
-**`button-secondary`** — White outline button (e.g. "Book demo"). Background `{colors.canvas}`, text `{colors.ink}`, type `{typography.button}`, rounded `{rounded.lg}` (12px), 1px hairline outline. Sits next to `{component.button-primary}` as the "less-committed" choice.
-
-**`button-secondary-on-dark`** — Same shape as `{component.button-secondary}` but used on signature coral / forest / dark surfaces. Background `{colors.canvas}`, text `{colors.ink}` — the white button stays white over dark surfaces because the system never inverts to a translucent on-dark style on the marketing site.
-
-**`button-pricing-pill`** — The pricing-page CTA family. Background `{colors.canvas}`, text `{colors.pricing-ink}`, rounded `{rounded.pill}` (9999px), padding 12px × 24px. The only place pill-shape appears in the marketing system. Treat it as part of the pricing sub-system signaling.
-
-**`button-legal`** — Cookie-consent and legal-banner CTAs. Background `{colors.link}`, text `{colors.on-primary}`, type `{typography.legal}` (13.12px / 600), rounded `{rounded.xs}` (2px), padding 12px × 10px. The 2px corner radius and 600 weight signal "this is a required system surface," not a designed brand surface.
-
-**`button-icon-circular`** — 40px × 40px circular button with `{colors.canvas}` background, hairline border, and `{colors.ink}` icon. Used for carousel controls, "share", and "back" affordances.
-
-**`text-link`** — Inline body links in `{colors.link}` (#1b61c9, the actual link blue). No underline by default. Type inherits `{typography.body-md}`.
-
-### Cards & Containers
-
-**`hero-band`** — The full-page-width white-canvas hero. No surface card, no border, no shadow, no atmospheric gradient — just the headline, sub-headline, and primary + secondary button pair sitting in 96px of whitespace. Vertical padding `{spacing.section}` (96px).
-
-**`signature-coral-card`** — The large full-bleed coral card on the homepage ("Production apps in prototype speed"). Background `{colors.signature-coral}` (#aa2d00, a dark coral / oxide red), text `{colors.on-primary}`, rounded `{rounded.lg}` (12px), internal padding `{spacing.xxl}` (48px). Carries an h2 in `{typography.display-md}`, supporting copy in `{typography.body-md}`, and `{component.button-secondary-on-dark}` as the CTA.
-
-**`signature-forest-card`** — A deep green signature card (`{colors.signature-forest}` — #0a2e0e) used as a demo-grid sibling to the coral card on the homepage.
-
-**`hero-card-dark`** — The dark navy mid-page CTA card (e.g. "The path to 10× every person in your organization"). Background `{colors.surface-dark}` (#181d26), text `{colors.on-dark}`, rounded `{rounded.lg}` (12px), internal padding `{spacing.xxl}` (48px). The same color as `{colors.primary}` because the system uses ink as both type color and signature dark surface.
-
-**`feature-card-tabbed`** — Light-cream cards (e.g. the "Coke / Pelosi / Conde Nast / Time Inc" tabbed feature card on the homepage). Background `{colors.surface-soft}`, rounded `{rounded.lg}` (12px), internal padding `{spacing.xl}` (32px). Left rail carries vertically-stacked tab labels in `{typography.title-md}`; right pane shows the active tab's content (illustration + body copy + small CTA).
-
-**`cream-callout-card`** — Beige callout cards (`{colors.signature-cream}`). Rounded `{rounded.md}` (10px), internal padding `{spacing.lg}` (24px). Carry product UI fragments or stat callouts — softer than the dark/coral signature cards but still a deliberate brand surface.
-
-**`demo-grid-card`** — Used in multi-card grids that punctuate every page. Background `{colors.canvas}` or one of the demo-grid surfaces (`{colors.signature-peach}`, `{colors.signature-mint}`, `{colors.signature-yellow}`, `{colors.signature-mustard}`), rounded `{rounded.md}` (10px), internal padding `{spacing.md}` (16px). Each card frames a product UI fragment. Card heights vary deliberately to dodge a uniform "spec sheet" feel.
-
-**`logo-strip`** — Horizontal monochrome partner-logo row (HBO, Netflix, Amazon, Time, Conde Nast). Logos render in `{colors.muted}`, surface is `{colors.canvas}`, vertical padding `{spacing.xl}` (32px). 6 logos at desktop, 3 at mobile.
-
-**`article-card`** — The trending-stories grid on the articles page. Background `{colors.canvas}`, rounded `{rounded.md}` (10px), internal padding `{spacing.md}` (16px). Each card carries a colorful illustrated thumbnail (16:9), a small uppercase category tag, an `{typography.title-sm}` title, and a meta line. 3-up at desktop.
-
-**`topic-filter-rail`** — The left rail on the articles page. 240px wide, `{colors.canvas}` background, `{typography.body-md}`, vertically grouped category headings ("Marketing", "Product", "Project management", "Operations") with sub-bullets. Active item carries a small numeric count badge.
-
-### Inputs & Forms
-
-**`text-input`** — Standard text input. Background `{colors.canvas}`, text `{colors.ink}`, type `{typography.body-md}`, rounded `{rounded.sm}` (6px), padding 12px × 16px, height 44px. 1px hairline border in `{colors.hairline}`.
-
-**`text-input-focus`** — Focus state. Border thickens or recolors to `{colors.info-border}`.
-
-### Pricing Sub-System
-
-**`pricing-tier-card`** — Standard tier card. Background `{colors.canvas}`, text `{colors.pricing-ink}`, type `{typography.pricing-card-title}` for the plan name, rounded `{rounded.md}` (10px), internal padding `{spacing.xl}` (32px). Carries the plan name, a price block in `{typography.pricing-display}` (44.8px / 475), feature checklist, and a `{component.button-pricing-pill}` at the bottom.
-
-**`pricing-tier-card-featured`** — The featured tier (typically "Team" or "Business"). Background shifts to `{colors.surface-soft}`. No accent border, no badge — the background tone shift is the only signal.
-
-**`pricing-comparison-row`** — Each row of the long comparison table at the bottom of the pricing page. Labels in the left column; checkmarks or values across 4 plan columns. 12px vertical padding per row, hairline divider between rows.
-
-### Navigation Variants
-
-**`footer`** — Light surface (`{colors.canvas}`), 6-column link list at desktop covering Platform / Solutions / Resources / Learn / Company sub-trees. Vertical padding `{spacing.section}` divided across upper link block and lower legal row. Type `{typography.body-md}`.
-
-**`cta-band-light`** — The light gray "Start building with Airtable" CTA strip near the footer. Background `{colors.surface-strong}` (#e0e2e6), text `{colors.ink}`, rounded `{rounded.lg}` (12px), padding `{spacing.xxl}` (48px). Carries an h2 in `{typography.display-md}` and a `{component.button-primary}`.
-
-### Signature Components
-
-**Articles Vertical Rainbow Stripe Hero** — The articles-page hero treatment. Multi-color vertical bands at varying widths sitting on `{colors.surface-dark-elevated}`. The h1 + sub-head + CTA cluster sits center-left on top of the stripes. This is a single-page hero treatment, not a system-wide signature — do not promote it to a multi-page pattern.
-
-## Do's and Don'ts
-
-### Do
-- Keep `{component.button-primary}` near-black. The brand's primary CTA is `{colors.primary}`, not the link blue. Mixing them up turns a confident hero into a confused one.
-- Reserve `{component.button-primary}` for one primary action per viewport. The system is designed for scarcity at the brand-action layer.
-- Use `{component.button-secondary}` (white with hairline outline) as the natural pair with `{component.button-primary}`. The two together form Airtable's signature button row.
-- Trust whitespace as the hero atmosphere. Hero bands are intentionally calm — no gradient, no mesh, no atmospheric backdrop. Going against this reads as off-brand.
-- Use `{component.signature-coral-card}`, `{component.signature-forest-card}`, and `{component.hero-card-dark}` to break editorial monotony. These are the brand's voltage moments.
-- Keep `{component.demo-grid-card}` heights uneven within a grid. Uniform heights feel like a spec sheet.
-- Treat the pricing surface as its own dialect: keep `{typography.pricing-display}`, `{typography.pricing-card-title}`, and `{component.button-pricing-pill}` together. Mixing them with Haas Grotesk button type breaks the sub-system's voice.
-- Anchor every editorial band with `{spacing.section}` (96px) vertical padding.
-
-### Don't
-- Don't make `{colors.link}` (#1b61c9) the primary button color. It is the link color. The primary button is `{colors.primary}` (#181d26, near-black). Treating link-blue as the brand action is the most common mistake when reading Airtable's CSS variables.
-- Don't add a gradient backdrop to the hero. Airtable's hero is white, full stop. Mesh, aurora, spotlight gradients all read as "another SaaS template" — not Airtable.
-- Don't bold display-weight type. `{typography.display-xl}` and `{typography.display-lg}` are intentionally weight 400 / 500 — going to 700 reads as marketing-page-template.
-- Don't use `{rounded.pill}` outside the pricing surface. It's a sub-system signal, not a general radius option.
-- Don't repeat the same surface mode in two consecutive bands. The editorial pacing depends on rhythm: white → signature card → white → cream → dark → white. Two whites in a row read as a typography blog.
-- Don't add hover state styling beyond what the system already encodes. The system documents Default and Active/Pressed only.
-- Don't introduce additional accent colors beyond the documented signature card palette. The system's voltage already uses coral, forest, dark navy, cream, peach, mint, yellow, and mustard.
-
-## Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | Key Changes |
-|---|---|---|
-| Mobile | < 768px | Single-column body; top nav collapses to hamburger; demo-grid drops to 1-up; signature cards stay full-bleed; logo strip wraps to 2 rows; footer collapses to single-column |
-| Tablet | 768–1024px | 2-up demo-grid; top nav stays horizontal but tightens; cream-callout cards stack 2-up; pricing comparison table becomes horizontally scrollable |
-| Desktop | 1024–1440px | 3-up demo-grid (and 4-up for tighter content); full top-nav with all menu items visible; pricing tier cards render 4-across |
-| Wide | > 1440px | Same as Desktop with more outer breathing room; max content width caps at ~1280px and the page adds outer margin rather than scaling type up |
-
-### Touch Targets
-- `{component.button-primary}` and siblings render at 48 × 48px minimum (16px vertical padding + 16px line-height) — comfortably above WCAG AAA's 44 × 44.
-- `{component.button-icon-circular}` is exactly 40 × 40px — slightly under WCAG's recommended 44, but the centered icon and dot-radius compensate visually.
-- `{component.text-input}` height is 44px.
-
-### Collapsing Strategy
-- Top nav collapses to a hamburger at < 768px; the menu opens as a full-screen sheet rather than a dropdown.
-- Card grids reduce columns rather than scaling cards down.
-- The `{component.feature-card-tabbed}` re-stacks the tab rail above the content pane on mobile.
-- The pricing comparison table converts to horizontally-scrollable swipe at < 1024px; the four plan headers stay visible while body rows scroll.
-
-### Image Behavior
-- Demo-card UI screenshots crop to fit their container rather than scaling up.
-- Hero illustrations bleed full-width on mobile, losing horizontal margin.
-- Signature card images (inside coral / forest / dark cards) compress to their card width without cropping.
-
-## Iteration Guide
-
-1. Focus on ONE component at a time. Reference its YAML key directly (`{component.button-primary}`, `{component.signature-coral-card}`).
-2. When adding a new component, decide first which sub-system it belongs to: the main editorial system (Haas, `{rounded.lg}`/`{rounded.md}`) or the pricing sub-system (Inter Display, `{rounded.pill}`).
-3. Variants of an existing component (`-active`, `-disabled`, `-focus`) live as separate entries in `components:` — never as nested state objects.
-4. Use `{token.refs}` everywhere prose mentions a color, a radius, a typography role, or a spacing value. Hex codes appear at most once next to the reference.
-5. Never document hover. The system documents Default and Active/Pressed states only.
-6. Run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
-7. When in doubt about emphasis: bigger type before bolder type, signature surface card before solid accent.
-
-## Mobile & RTL Addendum
-
-This section extends the system above to `apps/mobile`. The desktop marketing values stay the source of truth. This addendum records where the mobile port matches them exactly, and where a phone screen or Arabic text needs a different value. Every token named here lives in `apps/mobile/src/theme/`.
-
-### Type substitution
-
-Haas Grotesk and Haas Groot Disp are Airtable's licensed faces. They cannot ship in this app. The mobile port uses **Inter** for Latin text and **IBM Plex Sans Arabic** for Arabic text, both under the SIL Open Font License, at weights 400 and 500 only. Neither face carries the 600 weight this system reserves for `{typography.legal}`, because the mobile app has no legal-CTA surface. The pricing sub-system (`{typography.pricing-display}`, `{typography.pricing-card-title}`, `{component.button-pricing-pill}`) does not port to mobile. There is no pricing page in the app to host it, and Inter Display's 475/575 mid-weights are not selectable on React Native.
-
-### Mobile type scale
-
-A 40px hero and a 14px/1.25 body line fit a desktop reading measure, not a phone held at arm's length, and Arabic needs looser leading than Latin at the same size. The mobile scale steps every desktop role down and widens the body line height:
-
-| Desktop token | Desktop size | Mobile token | Mobile size | Mobile line height |
-|---|---|---|---|---|
-| `{typography.display-lg}` | 40px | `titleLg` role (mobile `displayLg`) | 32px | 38px |
-| `{typography.display-md}` | 32px | `displayMd` | 28px | 34px |
-| `{typography.title-lg}` | 24px | `titleLg` | 22px | 30px |
-| `{typography.title-md}` | 20px | `titleMd` | 20px | 28px |
-| `{typography.body-md}` | 14px / 1.25 | `body` | 15px | 22px (1.45) |
-
-Arabic text multiplies every mobile line height by 1.15, applied once inside the shared text component. Every mobile role carries `weight: 400 | 500` only, matching the desktop system's own preference for size and color over boldness.
-
-### Mobile spacing
-
-`{spacing.section}` (96px) is the desktop system's universal band rhythm. On a phone, 96px of vertical padding consumes close to a third of one screen. Mobile band separation uses `{spacing.xxl}` (48px) instead. The one exception is the auth role-selection screen, which keeps the full 96px for its hero's vertical centering, mirroring the desktop `{component.hero-band}` intent on the one mobile screen built the same way. Every other spacing token (`{spacing.xxs}` through `{spacing.xl}`) carries over unchanged.
-
-### New tokens: inputBorder and danger
-
-The desktop system specifies `{colors.hairline}` for input outlines and documents no error color.
-
-- `inputBorder` (`#8a8f99`) is a new token for form-control outlines. `{colors.hairline}` (1.36:1 against canvas) and `{colors.border-strong}` (2.93:1) both fail WCAG 1.4.11's 3:1 requirement for non-text UI that conveys state. `inputBorder` measures 3.25:1. `{colors.hairline}` stays reserved for decorative dividers and card outlines, where a state-conveying contrast requirement does not apply.
-- `danger` (`#b3261e`) and `dangerSurface` (`#fdecea`) are new tokens for validation and failure states. `{colors.signature-coral}` is a brand voltage surface, not an error tone, so it is never reused for errors.
-
-### Elevation
-
-The desktop system is color-block first, shadow second, and documents no shadow scale beyond a soft button glow. Mobile needs one elevation pair for its single raised surface (the bottom action bar):
-
-| Token | iOS | Android |
-|---|---|---|
-| `elevation.none` | no shadow | no elevation |
-| `elevation.raised` | `shadowColor: colors.ink`, `shadowOpacity: 0.06`, `shadowRadius: 8`, `shadowOffset: { width: 0, height: 2 }` | `elevation: 3` |
-
-`shadowOffset.width` stays 0, so this pair needs no mirroring in Arabic.
-
-### Chip and status badge specs
-
-The desktop system has no chip or badge component. Mobile adds two, both built from tokens already in this document:
-
-- **Chip** (filter and multi-select options): `{rounded.full}` corners, `{colors.canvas}` background with `{colors.inputBorder}` outline when unselected, `{colors.primary}` background with `{colors.on-primary}` label when selected.
-- **Status badge** (campaign, proposal, collaboration, and deliverable status): `{rounded.full}` pill, background drawn from the signature pastel surfaces (`{colors.signature-peach}`, `{colors.signature-mint}`, `{colors.signature-yellow}`, `{colors.signature-mustard}`) or `{colors.signature-forest}` for a terminal-positive status, with a neutral `{colors.surface-strong}` fallback for any status the badge does not recognize.
-
-`{rounded.pill}` is off-limits for buttons everywhere in this system (see Don'ts, above). Chips and badges are the one place mobile permits it, because they have no desktop equivalent and every mobile platform renders filter chips and status pills this way.
-
-### Tab bar spec
-
-The desktop system documents `{component.top-nav}` for the web header only. Mobile adds a bottom tab bar: `{colors.canvas}` background, a 1px `{colors.hairline}` top border (no shadow, matching the flat `{component.top-nav}` treatment), active label in `{colors.ink}`, inactive label in `{colors.muted}`, label type at the `overline` mobile role. The tab bar never animates a tab switch, matching this system's preference for calm, instant navigation over decorative motion.
-
-### RTL rules
-
-`DESIGN.md` was extracted from an LTR marketing site and documents no RTL guidance. Arabic is the mobile app's primary locale, so every rule below is normative for `apps/mobile`.
-
-1. Never write a physical-direction style (`marginLeft`/`marginRight`, `paddingLeft`/`paddingRight`, `left`/`right` positioning, `borderLeft*`/`borderRight*`). Use the logical equivalent (`marginStart`/`marginEnd`, `paddingStart`/`paddingEnd`, `start`/`end`, `borderStart*`/`borderEnd*`).
-2. Never set `textAlign: 'left'` or `'right'`. React Native's unset default already follows reading direction. `'center'` stays safe in both directions.
-3. `flexDirection: 'row'` mirrors on its own under RTL. Never add a conditional `row-reverse`.
-4. Directional icons (back chevrons, forward arrows, the send icon) flip under RTL. Icons with no inherent direction (search, user, a checkmark) never flip.
-5. Money and counts render Latin digits inside Arabic sentences, and live in their own text run, never concatenated into a translated string.
-6. Every wave of the mobile port ships a screenshot pair, English and Arabic, before it is considered done.
-
-## Known Gaps
-
-- The exact hex values of pastel demo-grid surfaces (`{colors.signature-peach}`, `{colors.signature-mint}`, `{colors.signature-yellow}`, `{colors.signature-mustard}`) are inferred from screenshot pixel sampling. Some product launches may swap these surfaces seasonally.
-- Hover behavior across all components is not documented (per global no-hover policy).
-- Animation and transition timings are not in scope.
-- Form validation states beyond `text-input-focus` are not extracted — error and success states for inputs would need a dedicated form page to confirm.
-- The pricing comparison table's checkmark glyph and column-divider widths are described structurally but not formalized as tokens.
-- The CSS variable `--theme_button-background-primary: #1b61c9` exists at `:root` but is not used as the primary CTA color anywhere on the marketing site. It maps to the link/info color role instead. Documented here so future extractions don't re-trip over the misleading variable name.
-ok

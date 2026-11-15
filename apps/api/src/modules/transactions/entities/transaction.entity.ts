@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Collaboration } from '../../collaborations/entities/collaboration.entity';
+import { Campaign } from '../../campaigns/entities/campaign.entity';
 import { User } from '../../users/entities/user.entity';
 
 export enum TransactionType {
@@ -53,13 +54,31 @@ export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index()
-  @Column({ name: 'collaboration_id' })
-  collaborationId: string;
+  @Index('idx_transactions_campaign_id')
+  @Column({ name: 'campaign_id', type: 'uuid', nullable: true })
+  campaignId: string | null;
 
-  @ManyToOne(() => Collaboration, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Campaign, { onDelete: 'CASCADE', nullable: true })
+  @JoinColumn({ name: 'campaign_id' })
+  campaign: Campaign | null;
+
+  @Index()
+  @Column({ name: 'collaboration_id', type: 'uuid', nullable: true })
+  collaborationId: string | null;
+
+  @ManyToOne(() => Collaboration, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'collaboration_id' })
-  collaboration: Collaboration;
+  collaboration: Collaboration | null;
+
+  @Column({ name: 'parent_transaction_id', type: 'uuid', nullable: true })
+  parentTransactionId: string | null;
+
+  @ManyToOne(() => Transaction, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'parent_transaction_id' })
+  parentTransaction: Transaction | null;
+
+  @Column({ name: 'payment_method_label', type: 'text', nullable: true })
+  paymentMethodLabel: string | null;
 
   @Column({
     type: 'enum',

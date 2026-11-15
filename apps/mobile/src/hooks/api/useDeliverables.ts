@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   Deliverable,
+  PlayUrlResponse,
   RegisterDeliverableRequest,
   RequestUploadUrlRequest,
   RequestUploadUrlResponse,
@@ -15,6 +16,16 @@ export function useCollaborationDeliverables(collaborationId: string | undefined
     queryKey: ['collaborations', collaborationId, 'deliverables'],
     queryFn: () => apiGet<Deliverable[]>(`/collaborations/${collaborationId}/deliverables`),
     enabled: !!collaborationId,
+  });
+}
+
+/** DES-P3-303 / SEC-303: signed read URL for playback */
+export function useDeliverablePlayUrl(deliverableId: string | undefined) {
+  return useQuery({
+    queryKey: ['deliverables', deliverableId, 'play-url'],
+    queryFn: () => apiGet<PlayUrlResponse>(`/deliverables/${deliverableId}/play-url`),
+    enabled: !!deliverableId,
+    staleTime: 1000 * 60 * 10, // 10 minutes (signed URL valid for 15)
   });
 }
 
@@ -39,7 +50,7 @@ export function useRegisterDeliverable(collaborationId: string) {
   });
 }
 
-/** TASK-P1-008 */
+/** TASK-P1-008 & TASK-P3-02 */
 export function useReviewDeliverable(collaborationId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -50,6 +61,8 @@ export function useReviewDeliverable(collaborationId: string) {
       queryClient.invalidateQueries({
         queryKey: ['collaborations', collaborationId, 'deliverables'],
       });
+      queryClient.invalidateQueries({ queryKey: ['campaigns', 'mine'] });
+      queryClient.invalidateQueries({ queryKey: ['brand', 'dashboard'] });
     },
   });
 }

@@ -9,3 +9,16 @@ export interface UpdatePushTokenRequest {
 export interface UpdatePushTokenResponse {
   registered: true;
 }
+
+export interface UserMeResponse {
+  id: string;
+  email: string | null;
+  role: 'brand' | 'creator' | 'admin';
+  displayName: string | null;
+  locale: 'en' | 'ar';
+}
+
+export interface UpdateMeRequest {
+  displayName?: string;
+  locale?: 'en' | 'ar';
+}

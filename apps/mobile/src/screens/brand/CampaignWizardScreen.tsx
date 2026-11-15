@@ -107,7 +107,7 @@ export function CampaignWizardScreen({ route, navigation }: Props) {
     const campaign = campaignQuery.data;
     if (campaign) {
       reset({
-        productId: campaign.productId,
+        productId: campaign.productId ?? '',
         niche: (campaign.niche ?? undefined) as FormValues['niche'],
         language: (campaign.language ?? undefined) as FormValues['language'],
         videoType: (campaign.videoType ?? undefined) as FormValues['videoType'],
@@ -169,7 +169,7 @@ export function CampaignWizardScreen({ route, navigation }: Props) {
         },
       });
       await publishCampaign.mutateAsync(campaignIdRef.current);
-      navigation.navigate('CampaignsList');
+      navigation.navigate('MyBriefs');
     } catch (error) {
       const parsed = parseApiError(error);
       parsed.details?.forEach((detail) => {

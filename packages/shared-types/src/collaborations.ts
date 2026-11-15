@@ -26,15 +26,25 @@ export interface Collaboration {
   shipmentCarrier: string | null;
   shipmentTrackingNumber: string | null;
   shipmentConfirmedAt: string | null;
+  receivedAt: string | null;
+  revisionsUsed?: number;
+  revisionLimit?: number;
+  dueAt?: string | null;
+  approvedAt?: string | null;
+  paidAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
-/** POST /api/v1/proposals/{id}/accept */
+/** POST /api/v1/proposals/{id}/accept, CHANGED in Phase 2 */
 export interface AcceptProposalResponse {
   collaborationId: string;
-  status: Extract<CollaborationStatus, 'pending_payment'>;
-  checkoutUrl: string;
+  status: Extract<CollaborationStatus, 'funded' | 'pending_payment'>;
+  creatorPrice: string;
+  platformFee: string;
+  totalAmount: string;
+  currency: string;
+  checkoutUrl: string | null; // null on the normal path
 }
 
 /** POST /api/v1/collaborations/{id}/confirm-shipment */

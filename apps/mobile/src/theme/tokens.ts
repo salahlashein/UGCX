@@ -12,24 +12,28 @@
 
 import { StyleSheet } from 'react-native';
 
+// 2026-10-03: "C3 Sage" palette, chosen by the user for the whole app.
+// Page background is a tinted sage, cards sit on white `surface`.
 export const colors = {
   // Brand & accent
-  primary: '#181d26',
-  primaryActive: '#0d1218',
+  primary: '#2f5d46', // 7.6:1 with onPrimary
+  primaryActive: '#244a37',
+  accentSoft: '#e1ebe4', // icon tiles, selected chips
 
   // Surfaces
-  canvas: '#ffffff',
-  surfaceSoft: '#f8fafc',
-  surfaceStrong: '#e0e2e6',
-  surfaceDark: '#181d26',
-  surfaceDarkElevated: '#1d1f25',
-  hairline: '#dddddd', // decorative dividers + card outlines ONLY
+  canvas: '#eff2ed', // page background
+  surface: '#ffffff', // cards, inputs, sheets on top of canvas
+  surfaceSoft: '#f6f8f5',
+  surfaceStrong: '#e1e7e2',
+  surfaceDark: '#17241c',
+  surfaceDarkElevated: '#1f3027',
+  hairline: '#dde3de', // decorative dividers + card outlines ONLY
 
   // Text
-  ink: '#181d26',
-  body: '#333840',
-  muted: '#41454d', // note: darker than the old #6b7280 (9.4:1 vs 4.8:1)
-  borderStrong: '#9297a0',
+  ink: '#17241c',
+  body: '#2c3a31',
+  muted: '#5d6b62', // 5.6:1 on surface, 5.0:1 on canvas
+  borderStrong: '#93a097',
   onPrimary: '#ffffff',
   onDark: '#ffffff',
 
@@ -43,8 +47,8 @@ export const colors = {
   signatureMustard: '#d9a441',
 
   // Semantic
-  link: '#1b61c9',
-  linkActive: '#1a3866',
+  link: '#2f5d46',
+  linkActive: '#244a37',
   info: '#254fad',
   infoBorder: '#458fff',
   success: '#006400',
@@ -55,7 +59,7 @@ export const colors = {
   dangerSurface: '#fdecea',
   // invented: hairline (1.36:1) and borderStrong (2.93:1) both fail WCAG 1.4.11's 3:1
   // for non-text UI that conveys state. This is 3.25:1. (DES-P1-007)
-  inputBorder: '#8a8f99',
+  inputBorder: '#7f8c83', // 3.5:1 on surface
 } as const;
 
 export const spacing = {
@@ -76,6 +80,8 @@ export const radius = {
   sm: 6,
   md: 10,
   lg: 12,
+  xl: 18, // soft cards on the sage canvas
+  xxl: 22, // hero cards
   // pill/full: chips, filters, badges, avatars, progress tracks. NEVER buttons. (DES-P1-010)
   pill: 9999,
   full: 9999,

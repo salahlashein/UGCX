@@ -1,0 +1,525 @@
+{
+  "common": {
+    "appName": "UGCX",
+    "loading": "Loading",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "next": "Next",
+    "back": "Back",
+    "done": "Done",
+    "close": "Close",
+    "logout": "Log out",
+    "language": "Language",
+    "untitled": "Untitled brief",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "error": {
+      "title": "Something went wrong",
+      "generic": "Something went wrong. Please try again."
+    },
+    "empty": {
+      "title": "Nothing here yet",
+      "generic": "Nothing here yet."
+    },
+    "required": "This field is required",
+    "continue": "Continue",
+    "offline": "No connection. We will retry when you are back online."
+  },
+  "auth": {
+    "roleSelect": {
+      "title": "Who are you on UGCX?",
+      "subtitle": "Select your workspace role to continue.",
+      "brand": "I'm a brand",
+      "brandSubtitle": "Post briefs, buy video content",
+      "creator": "I'm a creator",
+      "creatorSubtitle": "Apply to briefs, film, get paid",
+      "haveAccount": "Already have an account? Log in"
+    },
+    "otp": {
+      "tab": "Phone OTP (+20)",
+      "phoneLabel": "Egyptian mobile number",
+      "phonePlaceholder": "+201000000002",
+      "sendCode": "Send verification code",
+      "codeLabel": "Verification code (OTP)",
+      "codeHint": "Use 0000 in local development",
+      "verify": "Verify & continue"
+    },
+    "demo": {
+      "title": "Instant Demo Access",
+      "brand": "Demo Brand Login",
+      "creator": "Demo Creator Login"
+    },
+    "register": {
+      "title": "Create your account",
+      "email": "Email",
+      "phone": "Phone number",
+      "password": "Password",
+      "locale": "Preferred language",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "login": "Log in"
+    },
+    "login": {
+      "title": "Log in",
+      "tab": "Email & Password",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "register": "Create one",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "briefs": "Briefs",
+    "proposals": "Proposals",
+    "chats": "Chats",
+    "billing": "Billing",
+    "campaigns": "Campaigns",
+    "products": "Products",
+    "profile": "Profile",
+    "home": "Home",
+    "discover": "Discover",
+    "work": "Work",
+    "earnings": "Earnings",
+    "browse": "Browse",
+    "myApplications": "My Proposals",
+    "myCollaborations": "My Collaborations",
+    "notifications": "Notifications",
+    "settings": "Settings"
+  },
+  "brand": {
+    "campaigns": {
+      "title": "Campaigns",
+      "empty": "You have not created a campaign yet.",
+      "createNew": "New campaign",
+      "status": { "draft": "Draft", "live": "Live" }
+    },
+    "wizard": {
+      "title": "Create campaign",
+      "stepProduct": "Product",
+      "stepDetails": "Details",
+      "stepScript": "Script",
+      "stepShipping": "Shipping",
+      "stepReview": "Review",
+      "selectProduct": "Select a product",
+      "createProduct": "Create a new product",
+      "niche": "Niche",
+      "language": "Video language",
+      "videoType": "Video type",
+      "durationSeconds": "Duration (seconds)",
+      "scriptMode": "Who writes the script?",
+      "scriptModeBrand": "The brand writes it",
+      "scriptModeCreator": "The creator writes it",
+      "script": "Script",
+      "talkingPoints": "Talking points",
+      "doNotSay": "Do not say",
+      "needsShipping": "This campaign requires shipping a product",
+      "slots": "Number of creator slots",
+      "publish": "Publish campaign",
+      "publishSuccess": "Campaign published",
+      "saveDraft": "Save draft"
+    },
+    "proposals": {
+      "title": "Proposals",
+      "empty": "No proposals yet for this campaign.",
+      "shortlist": "Shortlist",
+      "decline": "Decline",
+      "accept": "Accept",
+      "status": {
+        "applied": "Applied",
+        "shortlisted": "Shortlisted",
+        "declined": "Declined",
+        "accepted": "Accepted"
+      },
+      "overview": {
+        "empty": "No proposals yet. They appear here when creators apply to your open briefs.",
+        "rowLabel": "{{title}}, {{count}} proposals",
+        "waiting": "{{count}} waiting for your review"
+      }
+    },
+    "acceptProposal": {
+      "title": "Complete payment",
+      "waiting": "Confirming payment…",
+      "timeout": "Payment still processing — check back shortly.",
+      "funded": "Funded",
+      "failed": "Payment failed. No funds were held in escrow.",
+      "openPaymentHint": "Open the payment page in a new tab to complete checkout, then come back here.",
+      "openPayment": "Open payment page"
+    },
+    "products": {
+      "title": "Products",
+      "empty": "You have not added a product yet.",
+      "addNew": "New product",
+      "name": "Product name",
+      "description": "Description",
+      "valueProps": "Value propositions"
+    },
+    "collaboration": {
+      "title": "Collaboration",
+      "status": "Status",
+      "confirmShipment": "Confirm shipment",
+      "carrier": "Carrier",
+      "trackingNumber": "Tracking number",
+      "reviewDeliverable": "Review deliverable",
+      "approve": "Approve",
+      "requestRevision": "Request revision",
+      "decline": "Decline",
+      "feedback": "Feedback",
+      "openChat": "Chat with creator"
+    },
+    "profile": {
+      "title": "Brand profile",
+      "companyName": "Company name",
+      "country": "Country",
+      "teamMembers": "Team members",
+      "paymentMethods": "Payment methods",
+      "billingHistory": "Billing history",
+      "verified": "Verified",
+      "edit": "Edit profile",
+      "statTeam": "Team",
+      "statProducts": "Products",
+      "statSpent": "EGP spent",
+      "groupWorkspace": "Workspace",
+      "groupMoney": "Money",
+      "groupPreferences": "Preferences",
+      "getVerified": "Get verified",
+      "restartForDirection": "Text direction updated."
+    },
+    "team": {
+      "title": "Team",
+      "invite": "Invite",
+      "roles": {
+        "owner": "Owner",
+        "approver": "Can approve deliverables",
+        "viewer": "View only"
+      },
+      "invitedSuffix": "invited",
+      "inviteSheetTitle": "Invite teammate",
+      "email": "Email address",
+      "role": "Role",
+      "sendInvite": "Send invite",
+      "changeRole": "Change role",
+      "removeMember": "Remove from team",
+      "removeConfirm": "Are you sure you want to remove this member?",
+      "you": "You"
+    },
+    "setup": {
+      "title": "Set up your brand",
+      "subtitle": "Creators see this before they apply.",
+      "uploadLogo": "Upload logo",
+      "brandName": "Brand name",
+      "category": "Category",
+      "businessDocument": "Business registration (optional)",
+      "businessDocumentHint": "Upload for a verified badge",
+      "continue": "Continue",
+      "uploadFailed": "Upload failed"
+    },
+    "verify": {
+      "title": "Verify your number",
+      "subtitle": "We sent a code to {{phone}}",
+      "resendIn": "Resend code in {{seconds}}",
+      "resend": "Resend code",
+      "continue": "Continue"
+    },
+    "brief": {
+      "title": "New brief",
+      "header": "New brief",
+      "fieldTitle": "Title",
+      "deliverable": "Deliverable",
+      "length": "Length",
+      "language": "Language",
+      "budgetRange": "Budget range (EGP)",
+      "minBudget": "Min",
+      "maxBudget": "Max",
+      "shipping": "Ships product to creator",
+      "reviewAndFund": "Review & fund escrow",
+      "errors": {
+        "title": "Title must be between 3 and 140 characters",
+        "deliverable": "Please select a deliverable type",
+        "length": "Length must be between 5 and 600 seconds",
+        "language": "Please select a language",
+        "budgetMin": "Minimum budget must be at least 100 EGP",
+        "budgetMax": "Maximum budget must be at least the minimum budget"
+      },
+      "types": {
+        "talking_head": "Talking head",
+        "try_on": "Try-on",
+        "unboxing": "Unboxing"
+      },
+      "languages": {
+        "ar": "Egyptian Arabic",
+        "en": "English"
+      },
+      "niche": "Category",
+      "steps": {
+        "stepOf": "Step {{step}} of {{total}}",
+        "basicsTitle": "What is this brief about?",
+        "basicsHint": "Creators see the title first.",
+        "titlePlaceholder": "Iced latte unboxing",
+        "wizardLink": "Need a product, script or more slots? Use the full wizard",
+        "videoTitle": "What kind of video do you need?",
+        "videoHint": "Pick the format, length and language.",
+        "typeHints": {
+          "talking_head": "Creator speaks to the camera",
+          "try_on": "Creator wears or uses it on camera",
+          "unboxing": "Creator opens it and reacts"
+        },
+        "seconds": "{{count}}s",
+        "budgetTitle": "What is your budget per video?",
+        "budgetHint": "Creators set their price inside this range. You fund escrow next.",
+        "shippingHint": "Turn on when creators need the product in hand.",
+        "reviewTitle": "Check your brief",
+        "reviewHint": "Tap Edit to change a step.",
+        "edit": "Edit",
+        "escrowEstimate": "Next you fund about EGP {{amount}} into escrow. Creators are paid only after you approve."
+      }
+    },
+    "briefs": {
+      "title": "My briefs",
+      "filters": {
+        "all": "All",
+        "draft": "Draft",
+        "open": "Open",
+        "completed": "Completed"
+      },
+      "empty": {
+        "title": "No briefs yet",
+        "message": "Post your first brief to start getting proposals.",
+        "action": "New brief"
+      },
+      "meta": {
+        "draft": "Not yet published",
+        "proposals": "{{count}} proposals",
+        "paidOut": "paid out"
+      },
+      "actions": {
+        "pause": "Pause",
+        "resume": "Resume",
+        "close": "Close brief & refund"
+      }
+    },
+    "fundEscrow": {
+      "title": "Fund escrow",
+      "subtitle": "Held until you approve the final deliverable. Released to the creator on approval.",
+      "totalKicker": "TOTAL TO FUND",
+      "budgetSub": "Budget · midpoint of {{range}}",
+      "paymentMethod": "Payment method",
+      "methodCard": "Corporate card •• 4471",
+      "methodBankTransfer": "Bank transfer",
+      "submit": "Fund & publish brief",
+      "chargeDeclinedTitle": "Charge declined",
+      "chargeDeclinedMessage": "Corporate card •• 4471 was declined. Try another method.",
+      "tryAgain": "Try again",
+      "stillProcessingTitle": "Still processing",
+      "stillProcessingMessage": "Your payment is taking longer than expected to confirm. You can refresh to check the status."
+    },
+    "dashboard": {
+      "welcome": "Brand Dashboard",
+      "thisMonth": "THIS MONTH",
+      "spent": "spent",
+      "deliverables": "deliverables",
+      "attentionProposals": "{{count}} briefs need proposal review",
+      "attentionDeliverables": "{{count}} deliverables awaiting review",
+      "activeBriefs": "Active briefs ({{count}})",
+      "greetingMorning": "Good morning",
+      "greetingAfternoon": "Good afternoon",
+      "greetingEvening": "Good evening",
+      "notifications": "Notifications",
+      "spentThisMonth": "Spent this month",
+      "deliverablesReceived": "{{count}} deliverables received",
+      "actionNewBrief": "New brief",
+      "actionProposals": "Proposals",
+      "actionReview": "Review",
+      "actionWallet": "Wallet",
+      "seeAll": "See all"
+    },
+    "review": {
+      "title": "Review deliverable",
+      "versionLine": "v{{version}} · submitted",
+      "previousFeedback": "v{{version}} feedback:",
+      "addNoteLabel": "Add a note (optional)",
+      "notePlaceholder": "Looks great, approved.",
+      "requestRevision": "Request revision",
+      "approveRelease": "Approve & release",
+      "successTitle": "Deliverable Approved",
+      "successMessage": "Payment released: {{amount}} {{currency}}",
+      "errors": {
+        "noteRequired": "Please provide feedback for the creator"
+      }
+    },
+    "escrow": {
+      "shortfallTitle": "Not enough escrow",
+      "shortfallMessage": "This brief holds less than the proposal costs. Add EGP {{amount}} to accept it.",
+      "topUpAction": "Add EGP {{amount}} to escrow"
+    },
+    "billing": {
+      "title": "Billing & Escrow Ledger",
+      "lifetimeSpend": "LIFETIME SPEND",
+      "empty": "No transactions yet. Fund a brief to see your escrow ledger."
+    }
+  },
+  "creator": {
+    "home": {
+      "title": "Creator Home",
+      "urgent": "Urgent tasks",
+      "upcoming": "Upcoming",
+      "emptyQueue": "You are all caught up! Browse live briefs to apply for new campaigns."
+    },
+    "browse": {
+      "title": "Browse campaigns",
+      "empty": "No campaigns match your niches right now.",
+      "filters": "Filters",
+      "clearFilters": "Clear filters"
+    },
+    "campaignDetail": {
+      "title": "Campaign details",
+      "apply": "Submit proposal",
+      "price": "Your price (EGP)",
+      "deliveryDays": "Delivery days",
+      "pitch": "Your pitch",
+      "applySuccess": "Application sent",
+      "alreadyApplied": "You already applied to this campaign"
+    },
+    "applications": {
+      "title": "My Proposals",
+      "empty": "You have not applied to any campaign yet."
+    },
+    "collaborations": {
+      "title": "Active Work",
+      "empty": "No collaborations yet.",
+      "openChat": "Chat with brand"
+    },
+    "upload": {
+      "title": "Upload deliverable",
+      "selectFile": "Select a video file (.mp4, .mov, .webm)",
+      "type": "Deliverable type",
+      "uploading": "Uploading…",
+      "registering": "Registering…",
+      "success": "Deliverable submitted",
+      "fileTooLarge": "This file is larger than the allowed size (250 MB)",
+      "unsupportedType": "This file type is not supported",
+      "failedBanner": "Upload failed. The connection dropped at {{percent}}%. Tap retry to upload again.",
+      "failedAt": "Failed at {{percent}}%",
+      "retryAction": "Retry upload",
+      "failedGeneric": "Upload failed. Check your connection and try again."
+    },
+    "profile": {
+      "title": "Creator profile",
+      "displayName": "Display name",
+      "city": "City",
+      "niches": "Niches",
+      "basePrice": "Base price (EGP)",
+      "portfolio": "Portfolio",
+      "addPortfolioItem": "Add portfolio item",
+      "mediaUrl": "Media URL",
+      "mediaType": "Media type"
+    },
+    "payout": {
+      "title": "Earnings & Payouts",
+      "clearedBalance": "AVAILABLE FOR PAYOUT",
+      "escrowBalance": "In escrow",
+      "pendingBalance": "Pending clearance",
+      "requestPayout": "Request payout",
+      "method": "Payout method",
+      "accountIdentifier": "Account identifier (IBAN / InstaPay / Wallet)",
+      "holderName": "Account holder name",
+      "saved": "Payout details saved"
+    }
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Type a message",
+    "send": "Send",
+    "empty": "No messages yet. Say hello!",
+    "notEligible": "Chat opens once this collaboration is funded.",
+    "system": {
+      "escrow_funded_brand": "Escrow funded · EGP {{total}}",
+      "escrow_funded_creator": "Escrow funded · EGP {{creatorPrice}}",
+      "shipment_confirmed": "📦 Shipment marked sent",
+      "deliverable_submitted_brand": "{{creatorName}} submitted v{{version}}",
+      "deliverable_submitted_creator": "You submitted v{{version}}",
+      "revision_requested_brand": "You requested a revision",
+      "revision_requested_creator": "{{brandName}} requested a revision",
+      "escrow_released_brand": "Escrow released · EGP {{total}}",
+      "escrow_released_creator": "Escrow released · EGP {{creatorPrice}}"
+    }
+  },
+  "niche": {
+    "beauty_personal_care": "Beauty & personal care",
+    "fashion": "Fashion",
+    "mom_baby": "Mom & baby",
+    "food_fmcg": "Food & FMCG",
+    "home_lifestyle": "Home & lifestyle",
+    "other": "Other"
+  },
+  "errors": {
+    "network": "Cannot reach the server. Check your connection.",
+    "unauthorized": "Your session expired. Please log in again.",
+    "duplicateProposal": "You already applied to this campaign."
+  },
+  "status": {
+    "campaign": {
+      "draft": "Draft",
+      "live": "Open",
+      "paused": "Paused",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "proposal": {
+      "applied": "Applied",
+      "shortlisted": "Shortlisted",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
+    "collaboration": {
+      "pending_payment": "Pending payment",
+      "funded": "Funded",
+      "shipped": "Shipped",
+      "in_progress": "In progress",
+      "delivered": "Delivered",
+      "approved": "Approved",
+      "paid": "Paid",
+      "payment_failed": "Payment failed",
+      "cancelled": "Cancelled",
+      "revision_requested": "Revision requested"
+    },
+    "deliverable": {
+      "submitted": "Submitted",
+      "revision_requested": "Revision requested",
+      "approved": "Approved",
+      "declined": "Declined"
+    }
+  },
+  "notif": {
+    "empty": {
+      "title": "Nothing new",
+      "message": "You will receive notifications here when there are updates on your briefs and collaborations."
+    },
+    "header": {
+      "markAllRead": "Mark all read"
+    },
+    "brand": {
+      "brief_published": "Brief \"{{title}}\" is live and accepting proposals",
+      "proposal_received": "{{count}} new proposal on \"{{title}}\"",
+      "escrow_funded": "Escrow of {{currency}} {{total}} funded for collaboration",
+      "deliverable_submitted": "{{creatorName}} submitted deliverable v{{version}} for \"{{title}}\"",
+      "escrow_released": "{{currency}} {{creatorPrice}} released to {{creatorName}}",
+      "message_received": "New message from {{senderName}}: {{preview}}"
+    },
+    "creator": {
+      "proposal_shortlisted": "{{brandName}} shortlisted your proposal for \"{{title}}\"",
+      "proposal_declined": "Your proposal for \"{{title}}\" was not selected",
+      "escrow_funded": "Escrow funded for \"{{title}}\". You can start creating!",
+      "shipment_confirmed": "Product shipped for \"{{title}}\"",
+      "revision_requested": "{{brandName}} requested changes on your deliverable",
+      "escrow_released": "{{currency}} {{creatorPrice}} released to your earnings",
+      "message_received": "New message from {{senderName}}: {{preview}}",
+      "payout_sent": "Payout of {{currency}} {{amount}} sent via {{method}}"
+    }
+  }
+}

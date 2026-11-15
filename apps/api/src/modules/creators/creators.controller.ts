@@ -1,8 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Put,
@@ -15,20 +19,38 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/interfaces/auth-user.interface';
 import { UserRole } from '../users/entities/user.entity';
 import { CreatorsService } from './creators.service';
+import { CreatorStatsService } from './creator-stats.service';
 import { UpdateCreatorDto } from './dto/update-creator.dto';
 import { CreatePortfolioItemDto } from './dto/create-portfolio-item.dto';
 import { UpsertPayoutDetailsDto } from './dto/upsert-payout-details.dto';
+import { RequestPayoutDto } from './dto/request-payout.dto';
 
 @Controller('creators')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CreatorsController {
-  constructor(private readonly creatorsService: CreatorsService) {}
+  constructor(
+    private readonly creatorsService: CreatorsService,
+    private readonly creatorStatsService: CreatorStatsService,
+  ) {}
 
   @Get('me')
   @Roles(UserRole.CREATOR)
   async getMe(@CurrentUser() user: AuthUser) {
     const creator = await this.creatorsService.findByUserId(user.userId);
     return { data: creator };
+  }
+
+  @Get('me/stats')
+  @Roles(UserRole.CREATOR)
+  async getMyStats(@CurrentUser() user: AuthUser) {
+    const creator = await this.creatorsService.findByUserId(user.userId);
+    const statsMap = await this.creatorStatsService.forCreators([creator.id]);
+    const stats = statsMap.get(creator.id) ?? {
+      jobsDone: 0,
+      approvalRate: 100,
+      averageRevisions: 0,
+    };
+    return { data: stats };
   }
 
   @Patch('me')
@@ -53,6 +75,16 @@ export class CreatorsController {
   ) {
     const item = await this.creatorsService.addPortfolioItem(user.userId, dto);
     return { data: item };
+  }
+
+  @Delete('me/portfolio-items/:id')
+  @Roles(UserRole.CREATOR)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePortfolioItem(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<void> {
+    await this.creatorsService.deletePortfolioItem(user.userId, id);
   }
 
   @Put('me/payout-details')
@@ -100,17 +132,20 @@ export class CreatorsController {
     return { data: ledger };
   }
 
+  @Get('me/payout-requests')
+  @Roles(UserRole.CREATOR)
+  async listPayoutRequests(@CurrentUser() user: AuthUser) {
+    const requests = await this.creatorsService.listPayoutRequests(user.userId);
+    return { data: requests };
+  }
+
   @Post('me/payout-requests')
   @Roles(UserRole.CREATOR)
   async requestPayout(
     @CurrentUser() user: AuthUser,
-    @Body() dto: { amount: string; method: string },
+    @Body() dto: RequestPayoutDto,
   ) {
-    const result = await this.creatorsService.requestPayout(
-      user.userId,
-      dto.amount,
-      dto.method,
-    );
+    const result = await this.creatorsService.requestPayout(user.userId, dto);
     return { data: result };
   }
 }

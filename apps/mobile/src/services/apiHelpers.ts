@@ -24,6 +24,11 @@ export async function apiPut<T>(url: string, body?: unknown): Promise<T> {
   return res.data.data;
 }
 
+export async function apiDelete<T = void>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  const res = await apiClient.delete<{ data: T }>(url, config);
+  return res.data?.data as T;
+}
+
 export async function apiPaginated<T>(
   url: string,
   params?: Record<string, unknown>,

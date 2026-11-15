@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.surface,
     borderTopWidth: sizes.hairlineWidth,
     borderTopColor: colors.hairline,
     padding: spacing.md,

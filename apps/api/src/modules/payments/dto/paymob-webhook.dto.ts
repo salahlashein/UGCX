@@ -20,7 +20,7 @@ export interface PaymobWebhookTransaction {
   is_refunded: boolean;
   is_standalone_payment: boolean;
   is_voided: boolean;
-  order: { id: number | string };
+  order: { id: number | string; merchant_order_id?: string };
   owner: number | string;
   pending: boolean;
   source_data?: { pan?: string; sub_type?: string; type?: string };

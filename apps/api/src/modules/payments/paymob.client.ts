@@ -66,6 +66,28 @@ export class PaymobClient {
     };
   }
 
+  /**
+   * REQ-210. Calls Paymob's void/refund endpoint against an existing
+   * transaction id. Wraps every failure in PaymentProviderError, matching
+   * the rest of this client.
+   */
+  async refundTransaction(
+    paymobTransactionId: string,
+    amountCents: number,
+  ): Promise<{ paymobRefundTransactionId: string }> {
+    const authToken = await this.requestAuthToken();
+    const body = (await this.post('/acceptance/void_refund/refund', {
+      auth_token: authToken,
+      transaction_id: paymobTransactionId,
+      amount_cents: amountCents,
+    })) as { id?: number | string };
+
+    if (body.id === undefined || body.id === null) {
+      throw new PaymentProviderError('Paymob refund response malformed');
+    }
+    return { paymobRefundTransactionId: String(body.id) };
+  }
+
   private async requestAuthToken(): Promise<string> {
     const apiKey = this.configService.get('paymob.apiKey', { infer: true });
     const body = (await this.post('/auth/tokens', { api_key: apiKey })) as {

@@ -16,8 +16,9 @@ const TONE_MAP: Record<StatusDomain, Record<string, StatusToneResult>> = {
   campaign: {
     draft: { background: 'surfaceStrong', text: 'body' },
     live: { background: 'signatureMint', text: 'ink' },
-    closed: { background: 'surfaceStrong', text: 'muted' },
-    archived: { background: 'surfaceStrong', text: 'muted' },
+    paused: { background: 'signatureYellow', text: 'ink' },
+    completed: { background: 'surfaceStrong', text: 'success' },
+    cancelled: { background: 'dangerSurface', text: 'danger' },
   },
   proposal: {
     applied: { background: 'signatureYellow', text: 'ink' },
@@ -31,6 +32,7 @@ const TONE_MAP: Record<StatusDomain, Record<string, StatusToneResult>> = {
     shipped: { background: 'signatureMint', text: 'ink' },
     in_progress: { background: 'signatureMint', text: 'ink' },
     delivered: { background: 'signaturePeach', text: 'ink' },
+    revision_requested: { background: 'signatureMustard', text: 'ink' },
     approved: { background: 'signatureForest', text: 'onPrimary' },
     payment_failed: { background: 'dangerSurface', text: 'danger' },
     cancelled: { background: 'dangerSurface', text: 'danger' },

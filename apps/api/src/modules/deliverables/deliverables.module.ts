@@ -4,10 +4,13 @@ import { Deliverable } from './entities/deliverable.entity';
 import { DeliverableFeedback } from './entities/deliverable-feedback.entity';
 import { DeliverablesService } from './deliverables.service';
 import { DeliverablesController } from './deliverables.controller';
-import { StorageModule } from '../storage/storage.module';
+import { R2StorageModule } from '../storage/r2-storage.module';
 import { CollaborationsModule } from '../collaborations/collaborations.module';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { BrandsModule } from '../brands/brands.module';
+import { CampaignsModule } from '../campaigns/campaigns.module';
+import { MessagesModule } from '../messages/messages.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -15,7 +18,10 @@ import { BrandsModule } from '../brands/brands.module';
     CollaborationsModule,
     TransactionsModule,
     BrandsModule,
-    StorageModule,
+    CampaignsModule,
+    R2StorageModule,
+    MessagesModule,
+    NotificationsModule,
   ],
   controllers: [DeliverablesController],
   providers: [DeliverablesService],

@@ -5,6 +5,7 @@ import { CreatorPortfolioItem } from './entities/creator-portfolio-item.entity';
 import { CreatorPayoutDetail } from './entities/creator-payout-detail.entity';
 import { PayoutRequest } from './entities/payout-request.entity';
 import { CreatorsService } from './creators.service';
+import { CreatorStatsService } from './creator-stats.service';
 import { CreatorsController } from './creators.controller';
 
 import { Collaboration } from '../collaborations/entities/collaboration.entity';
@@ -32,7 +33,7 @@ import { Brand } from '../brands/entities/brand.entity';
     ]),
   ],
   controllers: [CreatorsController],
-  providers: [CreatorsService],
-  exports: [CreatorsService],
+  providers: [CreatorsService, CreatorStatsService],
+  exports: [CreatorsService, CreatorStatsService],
 })
 export class CreatorsModule {}

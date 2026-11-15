@@ -1,27 +1,34 @@
 import { useMemo } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Proposal } from '@ugcx/shared-types';
-import type { BrandCampaignsStackParamList } from '../../navigation/types';
 import { useCampaignProposals, useUpdateProposalStatus } from '../../hooks/api/useProposals';
 import { useMyCollaborations } from '../../hooks/api/useCollaborations';
 import { QueryStateView } from '../../components/ui/QueryStateView';
 import { Card } from '../../components/ui/Card';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BrandCampaignsStackParamList } from '../../navigation/types';
+import { AppText } from '../../components/ui/Text';
 import { Button } from '../../components/ui/Button';
-import { colors, spacing, typography } from '../../theme/tokens';
+import { colors, radius, spacing } from '../../theme/tokens';
+import { initialsOf } from '../../utils/format';
 
-type Props = NativeStackScreenProps<BrandCampaignsStackParamList, 'ProposalsInbox'>;
+type Props = {
+  route?: { params?: { campaignId?: string } };
+  navigation: any;
+};
 
-/** TASK-P1-007 */
+/**
+ * TASK-P1-007, TASK-P2-13 (artboard 3d): Proposals inbox.
+ * Shows avatar with initials, display name, job count, clipped pitch, and price.
+ * Tapping a row opens CreatorProfilePreview.
+ */
 export function ProposalsInboxScreen({ route, navigation }: Props) {
-  const { campaignId } = route.params;
+  const campaignId = route?.params?.campaignId;
   const { t } = useTranslation();
   const query = useCampaignProposals(campaignId);
-  const updateStatus = useUpdateProposalStatus(campaignId);
-  // Backs the "View collaboration" action on an already-accepted proposal
-  // (feature_mobile_app_phase1 addendum: GET /collaborations/mine).
+  const updateStatus = useUpdateProposalStatus(campaignId ?? '');
   const collaborations = useMyCollaborations();
 
   const findCollaborationId = useMemo(() => {
@@ -39,7 +46,7 @@ export function ProposalsInboxScreen({ route, navigation }: Props) {
         error={query.error}
         data={query.data?.data}
         onRetry={query.refetch}
-        emptyMessage={t('brand.proposals.empty')}
+        emptyMessage={t('brand.proposals.empty', 'No proposals received yet.')}
       >
         {(proposals) => (
           <FlatList
@@ -50,13 +57,16 @@ export function ProposalsInboxScreen({ route, navigation }: Props) {
               <ProposalCard
                 proposal={item}
                 collaborationId={findCollaborationId(item.id)}
+                onOpenPreview={() =>
+                  navigation.navigate('CreatorProfilePreview', { proposalId: item.id })
+                }
                 onShortlist={() =>
                   updateStatus.mutate({ id: item.id, dto: { status: 'shortlisted' } })
                 }
                 onDecline={() => updateStatus.mutate({ id: item.id, dto: { status: 'declined' } })}
                 onAccept={() => navigation.navigate('AcceptProposal', { proposalId: item.id })}
-                onViewCollaboration={(collaborationId) =>
-                  navigation.navigate('CollaborationDetail', { collaborationId })
+                onViewCollaboration={(collabId) =>
+                  navigation.navigate('CollaborationDetail', { collaborationId: collabId })
                 }
               />
             )}
@@ -70,6 +80,7 @@ export function ProposalsInboxScreen({ route, navigation }: Props) {
 function ProposalCard({
   proposal,
   collaborationId,
+  onOpenPreview,
   onShortlist,
   onDecline,
   onAccept,
@@ -77,43 +88,88 @@ function ProposalCard({
 }: {
   proposal: Proposal;
   collaborationId: string | undefined;
+  onOpenPreview: () => void;
   onShortlist: () => void;
   onDecline: () => void;
   onAccept: () => void;
   onViewCollaboration: (collaborationId: string) => void;
 }) {
   const { t } = useTranslation();
+  const creatorName = proposal.creator?.displayName || t('creator.anonymous', 'Creator');
+
   return (
-    <Card style={styles.card}>
-      <Text style={styles.price}>
-        {proposal.price} {proposal.currency}
-      </Text>
-      <Text style={styles.meta}>{proposal.deliveryDays} days</Text>
-      <Text style={styles.pitch}>{proposal.pitch}</Text>
-      <Text style={styles.status}>{t(`brand.proposals.status.${proposal.status}`)}</Text>
+    <Card tone="canvas" style={styles.card}>
+      <Pressable onPress={onOpenPreview} style={styles.cardHeaderPressable}>
+        <View style={styles.avatar}>
+          <AppText variant="titleSm" color="ink">
+            {initialsOf(creatorName)}
+          </AppText>
+        </View>
+        <View style={styles.headerInfo}>
+          <View style={styles.topLine}>
+            <AppText variant="titleSm" color="ink">
+              {creatorName}
+            </AppText>
+            <AppText variant="titleSm" color="ink">
+              {proposal.currency} {proposal.price}
+            </AppText>
+          </View>
+          <AppText variant="caption" color="muted">
+            {proposal.deliveryDays} {t('common.days', 'days')} · {t(`brand.proposals.status.${proposal.status}`, proposal.status)}
+          </AppText>
+        </View>
+      </Pressable>
+
+      {proposal.pitch ? (
+        <Pressable onPress={onOpenPreview}>
+          <AppText variant="body" color="body" numberOfLines={2} style={styles.pitch}>
+            {proposal.pitch}
+          </AppText>
+        </Pressable>
+      ) : null}
 
       {proposal.status === 'applied' && (
         <View style={styles.actions}>
           <Button
-            title={t('brand.proposals.shortlist')}
+            title={t('brand.proposals.shortlist', 'Shortlist')}
             variant="secondary"
+            fullWidth={false}
             onPress={onShortlist}
           />
-          <Button title={t('brand.proposals.decline')} variant="secondary" onPress={onDecline} />
-          <Button title={t('brand.proposals.accept')} onPress={onAccept} />
+          <Button
+            title={t('brand.proposals.decline', 'Decline')}
+            variant="secondary"
+            fullWidth={false}
+            onPress={onDecline}
+          />
+          <Button
+            title={t('brand.proposals.accept', 'Accept')}
+            fullWidth={false}
+            onPress={onAccept}
+          />
         </View>
       )}
       {proposal.status === 'shortlisted' && (
         <View style={styles.actions}>
-          <Button title={t('brand.proposals.decline')} variant="secondary" onPress={onDecline} />
-          <Button title={t('brand.proposals.accept')} onPress={onAccept} />
+          <Button
+            title={t('brand.proposals.decline', 'Decline')}
+            variant="secondary"
+            fullWidth={false}
+            onPress={onDecline}
+          />
+          <Button
+            title={t('brand.proposals.accept', 'Accept')}
+            fullWidth={false}
+            onPress={onAccept}
+          />
         </View>
       )}
       {proposal.status === 'accepted' && collaborationId && (
         <View style={styles.actions}>
           <Button
-            title={t('brand.collaboration.title')}
+            title={t('brand.collaboration.title', 'View collaboration')}
             variant="secondary"
+            fullWidth={false}
             onPress={() => onViewCollaboration(collaborationId)}
           />
         </View>
@@ -123,12 +179,48 @@ function ProposalCard({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.canvas },
-  list: { padding: spacing.lg, gap: spacing.sm },
-  card: { marginBottom: spacing.sm },
-  price: { ...typography.subtitle, color: colors.ink },
-  meta: { ...typography.caption, color: colors.muted },
-  pitch: { ...typography.body, color: colors.body, marginTop: spacing.xs },
-  status: { ...typography.caption, color: colors.muted, marginTop: spacing.xs },
-  actions: { flexDirection: 'row', gap: spacing.xs, marginTop: spacing.sm, flexWrap: 'wrap' },
+  container: {
+    flex: 1,
+    backgroundColor: colors.canvas,
+  },
+  list: {
+    padding: spacing.lg,
+    gap: spacing.sm,
+  },
+  card: {
+    padding: spacing.md,
+    borderRadius: radius.md,
+    marginBottom: spacing.sm,
+  },
+  cardHeaderPressable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.signatureMint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerInfo: {
+    flex: 1,
+  },
+  topLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  pitch: {
+    marginTop: spacing.xs,
+    marginBottom: spacing.xs,
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+    flexWrap: 'wrap',
+  },
 });

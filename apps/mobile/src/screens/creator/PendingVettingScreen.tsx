@@ -1,15 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { CreatorHomeStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Icon } from '../../components/ui/Icon';
 import { colors, spacing, radius } from '../../theme/tokens';
 import { useCreatorProfile, usePortfolioItems, usePayoutDetails } from '../../hooks/api/useCreator';
 import { useLiveCampaigns } from '../../hooks/api/useCampaigns';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { CreatorHomeStackParamList } from '../../navigation/types';
+import { initialsOf } from '../../utils/format';
 
 type Props = NativeStackScreenProps<CreatorHomeStackParamList, 'PendingVetting'>;
 
 export function PendingVettingScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { data: profile } = useCreatorProfile();
   const { data: portfolio } = usePortfolioItems();
   const { data: payoutDetails } = usePayoutDetails(profile?.id);
@@ -22,219 +29,248 @@ export function PendingVettingScreen({ navigation }: Props) {
 
   const steps = [hasProfile, hasPortfolio, hasBasePrice, hasPayout];
   const completedSteps = steps.filter(Boolean).length;
-  const initials = profile?.displayName?.substring(0, 2).toUpperCase() || 'U';
+  const initials = profile?.displayName ? initialsOf(profile.displayName) : 'U';
 
   const formatNiche = (niche?: string) => {
-    switch (niche) {
-      case 'beauty_personal_care': return 'Beauty & Skincare';
-      case 'mom_baby': return 'Mom & baby';
-      case 'food_fmcg': return 'Food & FMCG';
-      case 'fashion': return 'Fashion';
-      case 'home_lifestyle': return 'Home & Lifestyle';
-      default: return niche || 'Niche';
-    }
+    if (!niche) return t('creator.profile.niches', 'Niche');
+    return t(`niche.${niche}`, niche);
   };
 
   const handleAddPayoutDetails = () => {
     // @ts-expect-error - Navigate across tabs or stacks
-    navigation.navigate('EarningsTab', { screen: 'PayoutDetails' });
+    navigation.navigate('EarningsTab', { screen: 'Earnings' });
   };
 
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl }}
-    >
-      <View style={styles.headerRow}>
-        <View style={styles.avatar}>
-          <AppText variant="label" style={styles.avatarText}>
-            {initials}
-          </AppText>
-        </View>
-        <View style={{ flex: 1 }}>
-          <AppText variant="label" color="ink">
-            {profile?.displayName || 'Creator'}
-          </AppText>
-          <AppText variant="caption" color="muted">
-            {profile?.city || 'City'} · {formatNiche(profile?.niches?.[0])}
-          </AppText>
-        </View>
-      </View>
-
-      <View style={styles.statusCard}>
-        <AppText style={styles.kicker}>UNDER REVIEW</AppText>
-        <AppText variant="displayMd" style={{ color: colors.onPrimary, marginBottom: 10 }}>
-          We're checking your profile
-        </AppText>
-        <AppText style={styles.statusBody}>
-          A real person reviews every creator. Most are approved within 48 hours — we'll notify you
-          either way.
-        </AppText>
-        <View style={styles.progressRow}>
-          {steps.map((filled, i) => (
-            <View key={i} style={[styles.progressSeg, { opacity: filled ? 1 : 0.3 }]} />
-          ))}
-        </View>
-        <AppText style={styles.progressLabel}>{completedSteps} of 4 steps done</AppText>
-      </View>
-
-      <View style={styles.checklist}>
-        {[
-          { label: 'Profile and niches', done: hasProfile },
-          { label: '3 portfolio videos', done: hasPortfolio },
-          { label: 'Base price set', done: hasBasePrice },
-        ].map(({ label, done }) => (
-          <View key={label} style={styles.checkRow}>
-            {done ? (
-              <View style={styles.checkDone}>
-                <AppText style={styles.checkmark}>✓</AppText>
-              </View>
-            ) : (
-              <View style={styles.checkTodo} />
-            )}
-            <AppText variant="body" color="ink" style={styles.checkText}>
-              {label}
+    <SafeAreaView style={styles.screen} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.headerRow}>
+          <View style={styles.avatar}>
+            <AppText variant="label" color="onPrimary">
+              {initials}
             </AppText>
           </View>
-        ))}
-        <View style={{ padding: 16 }}>
-          <View style={[styles.checkRow, { marginBottom: 14, borderBottomWidth: 0, padding: 0 }]}>
-            {hasPayout ? (
-              <View style={styles.checkDone}>
-                <AppText style={styles.checkmark}>✓</AppText>
-              </View>
-            ) : (
-              <View style={styles.checkTodo} />
+          <View style={{ flex: 1 }}>
+            <AppText variant="bodySm" color="muted">
+              {profile?.city || t('creator.profile.city', 'City')} · {formatNiche(profile?.niches?.[0])}
+            </AppText>
+            <AppText variant="titleSm" color="ink">
+              {profile?.displayName || t('creator.profile.title', 'Creator')}
+            </AppText>
+          </View>
+        </View>
+
+        <Card style={styles.statusCard}>
+          <View style={styles.statusIcon}>
+            <Icon name="shield" size={20} color="primary" />
+          </View>
+          <AppText variant="overline" color="primary">
+            {t('creator.vetting.badge', 'UNDER REVIEW')}
+          </AppText>
+          <AppText variant="titleLg" color="ink">
+            {t('creator.vetting.title', 'We are reviewing your profile')}
+          </AppText>
+          <AppText variant="body" color="body">
+            {t(
+              'creator.vetting.subtitle',
+              'A human checks every creator on UGCX so brands trust the pool. Most reviews finish within 24 hours.',
             )}
-            <View style={{ flex: 1 }}>
-              <AppText variant="label" color="ink">
-                Payout details
-              </AppText>
-              <AppText variant="caption" color="muted">
-                Needed before your first payment
+          </AppText>
+          <View style={styles.progressRow}>
+            {steps.map((filled, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.progressSeg,
+                  { backgroundColor: filled ? colors.primary : colors.surfaceStrong },
+                ]}
+              />
+            ))}
+          </View>
+          <AppText variant="caption" color="muted">
+            {t('creator.vetting.stepsDone', '{{completed}} of 4 steps done', {
+              completed: completedSteps,
+            })}
+          </AppText>
+        </Card>
+
+        <Card style={styles.checklist}>
+          {[
+            { label: t('creator.vetting.checkProfile', 'Profile and niches'), done: hasProfile },
+            { label: t('creator.vetting.checkPortfolio', '3 portfolio videos'), done: hasPortfolio },
+            { label: t('creator.vetting.checkBasePrice', 'Base price set'), done: hasBasePrice },
+          ].map(({ label, done }, index) => (
+            <View key={label} style={[styles.checkRow, index > 0 && styles.checkDivider]}>
+              {done ? (
+                <View style={styles.checkDone}>
+                  <AppText style={styles.checkmark}>✓</AppText>
+                </View>
+              ) : (
+                <View style={styles.checkTodo} />
+              )}
+              <AppText variant="body" color="ink" style={styles.checkText}>
+                {label}
               </AppText>
             </View>
+          ))}
+          <View style={[styles.payoutBlock, styles.checkDivider]}>
+            <View style={styles.payoutTop}>
+              {hasPayout ? (
+                <View style={styles.checkDone}>
+                  <AppText style={styles.checkmark}>✓</AppText>
+                </View>
+              ) : (
+                <View style={styles.checkTodo} />
+              )}
+              <View style={{ flex: 1 }}>
+                <AppText variant="label" color="ink">
+                  {t('creator.payout.title', 'Payout details')}
+                </AppText>
+                <AppText variant="bodySm" color="muted">
+                  {t('creator.vetting.payoutNeeded', 'Needed before your first payment')}
+                </AppText>
+              </View>
+            </View>
+            {!hasPayout && (
+              <Button
+                title={t('creator.vetting.addPayoutDetails', 'Add payout details')}
+                variant="primary"
+                onPress={handleAddPayoutDetails}
+              />
+            )}
           </View>
-          {!hasPayout && (
-            <Pressable style={styles.cta} onPress={handleAddPayoutDetails}>
-              <AppText variant="label" color="onPrimary">
-                Add payout details
-              </AppText>
-            </Pressable>
+        </Card>
+
+        <View style={styles.previewHeader}>
+          <AppText variant="titleSm" color="ink">
+            {t('creator.vetting.previewTitle', "Briefs you'll be able to apply to")}
+          </AppText>
+          <AppText variant="bodySm" color="muted">
+            {t('creator.vetting.previewSub', "Applying unlocks the moment you're approved.")}
+          </AppText>
+        </View>
+
+        <View style={styles.lockedList}>
+          {campaignsRes?.data?.map((campaign: any) => (
+            <Card key={campaign.id} style={styles.lockedRow}>
+              <View style={styles.lockedThumb}>
+                <Icon name="video" size={18} color="primary" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <AppText variant="label" color="ink">
+                  {campaign.brand?.companyName || t('creator.discover.featuredBrand', 'Brand')} ·{' '}
+                  {campaign.product?.name || t('creator.discover.ugcVideo', 'UGC Video')}
+                </AppText>
+                <AppText variant="bodySm" color="muted">
+                  {campaign.budget
+                    ? `EGP ${campaign.budget.min}–${campaign.budget.max}`
+                    : t('brand.editLiveBrief.fixedPrice', 'fixed price')}
+                </AppText>
+              </View>
+            </Card>
+          ))}
+          {(!campaignsRes?.data || campaignsRes.data.length === 0) && (
+            <AppText variant="bodySm" color="muted">
+              {t('creator.discover.emptyDefault', 'Check back soon for new brand campaigns.')}
+            </AppText>
           )}
         </View>
-      </View>
-
-      <AppText variant="titleLg" color="ink" style={{ marginBottom: 6 }}>
-        Briefs you'll be able to apply to
-      </AppText>
-      <AppText variant="caption" color="muted" style={{ marginBottom: 16 }}>
-        Applying unlocks the moment you're approved.
-      </AppText>
-
-      <View style={{ opacity: 0.45, gap: 12 }}>
-        {campaignsRes?.data?.map((campaign: any) => (
-          <View key={campaign.id} style={styles.lockedRow}>
-            <View style={styles.lockedThumb} />
-            <View style={{ flex: 1 }}>
-              <AppText variant="label" color="ink">
-                {campaign.brand?.companyName || 'Brand'} · {campaign.product?.name || 'Campaign'}
-              </AppText>
-              <AppText variant="caption" color="muted">
-                {campaign.budget ? `EGP ${campaign.budget.min}–${campaign.budget.max}` : 'Fixed price'}
-              </AppText>
-            </View>
-          </View>
-        ))}
-        {(!campaignsRes?.data || campaignsRes.data.length === 0) && (
-          <AppText variant="caption" color="muted">
-            Check back later for new briefs!
-          </AppText>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.canvas },
-  headerRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: spacing.md },
+  content: {
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xxl,
+    gap: spacing.md,
+  },
+  headerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.full,
-    backgroundColor: colors.surfaceStrong,
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: { color: colors.muted },
   statusCard: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
+    borderRadius: radius.xxl,
+    gap: spacing.xs,
   },
-  kicker: {
-    fontFamily: 'monospace',
-    fontSize: 11,
-    letterSpacing: 0.6,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 12,
-  },
-  statusBody: { fontSize: 15, color: 'rgba(255,255,255,0.85)', marginBottom: spacing.md },
-  progressRow: { flexDirection: 'row', gap: 6 },
-  progressSeg: { flex: 1, height: 4, borderRadius: radius.pill, backgroundColor: colors.onPrimary },
-  progressLabel: { fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 10 },
-  checklist: {
-    borderWidth: 1,
-    borderColor: colors.hairline,
+  statusIcon: {
+    width: 40,
+    height: 40,
     borderRadius: radius.md,
-    marginBottom: spacing.xl,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xxs,
+  },
+  progressRow: { flexDirection: 'row', gap: 6, marginTop: spacing.xs },
+  progressSeg: { flex: 1, height: 6, borderRadius: radius.pill },
+  checklist: {
+    padding: 0,
   },
   checkRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    padding: 16,
-    borderBottomWidth: 1,
-    borderColor: colors.hairline,
+    gap: spacing.sm,
+    minHeight: 52,
+    paddingHorizontal: spacing.md,
+  },
+  checkDivider: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.hairline,
   },
   checkDone: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderRadius: radius.full,
-    backgroundColor: colors.success,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkmark: { color: colors.onPrimary, fontSize: 11 },
   checkText: { flex: 1 },
   checkTodo: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderRadius: radius.full,
     borderWidth: 1,
     borderColor: colors.inputBorder,
   },
-  cta: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg,
-    paddingVertical: 16,
+  payoutBlock: {
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  payoutTop: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.sm,
+  },
+  previewHeader: {
+    paddingHorizontal: spacing.xxs,
+    gap: spacing.xxs,
+  },
+  lockedList: {
+    opacity: 0.6,
+    gap: spacing.sm,
   },
   lockedRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: radius.md,
-    padding: 16,
+    gap: spacing.sm,
   },
   lockedThumb: {
-    width: 56,
-    height: 56,
+    width: 44,
+    height: 44,
     borderRadius: radius.md,
-    backgroundColor: colors.signaturePeach,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -66,3 +66,59 @@ export interface VetCreatorRequest {
   status: Extract<VettingStatus, 'approved' | 'rejected'>;
   reason?: string;
 }
+
+export interface CreatorEarnings {
+  escrowBalance: string;
+  pendingBalance: string;
+  clearedBalance: string;
+  currency: string;
+}
+
+export type LedgerStatusToken = 'muted' | 'success';
+
+export interface CreatorLedgerEntry {
+  id: string;
+  title: string;
+  meta: string;
+  amount: string;
+  sign: '+' | '-' | '−' | '';
+  status: string;
+  statusToken: LedgerStatusToken;
+  createdAt?: string;
+  type?: 'hold' | 'release' | 'payout';
+  campaignTitle?: string | null;
+  reference?: string;
+}
+
+export interface PayoutRequestSummary {
+  id: string;
+  amount: string;
+  method: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface CreatorStats {
+  jobsDone: number;
+  approvalRate: number;
+  averageRevisions: number;
+}
+
+export type CreatorTaskKind =
+  | 'message'
+  | 'revision'
+  | 'delivery'
+  | 'shipment'
+  | 'awaiting_shipment';
+
+export interface CreatorTask {
+  id: string;
+  kind?: CreatorTaskKind;
+  dueAt?: string | null;
+  title: string;
+  description: string;
+  actionText: string;
+  actionUrl: string;
+  collaborationId: string;
+  theme: string;
+}

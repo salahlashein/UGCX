@@ -1,132 +1,159 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { CreatorWorkStackParamList } from '../../navigation/types';
 import { AppText } from '../../components/ui/Text';
+import { Card, PressableCard } from '../../components/ui/Card';
+import { StatusBadge } from '../../components/ui/StatusBadge';
+import { Icon } from '../../components/ui/Icon';
+import { LoadingState } from '../../components/ui/LoadingState';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { colors, spacing, radius } from '../../theme/tokens';
 import { useMyCollaborations } from '../../hooks/api/useCollaborations';
 import { useCreatorEarnings, useCreatorProfile } from '../../hooks/api/useCreator';
+import { formatAmount, initialsOf } from '../../utils/format';
 
-export function CollaborationStatusScreen() {
+type Props = NativeStackScreenProps<CreatorWorkStackParamList, 'WorkStatus'>;
+
+export function CollaborationStatusScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { data: collabRes, isLoading: isCollabLoading } = useMyCollaborations();
   const { data: earnings, isLoading: isEarningsLoading } = useCreatorEarnings();
   const { data: profile } = useCreatorProfile();
 
   if (isCollabLoading || isEarningsLoading) {
     return (
-      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
+      <SafeAreaView style={styles.screen} edges={['top']}>
+        <LoadingState />
+      </SafeAreaView>
     );
   }
 
   const collabs = collabRes?.data || [];
 
   const needsFilming = collabs.filter(
-    (c) => c.status === 'funded' || c.status === 'shipped' || c.status === 'delivered',
+    (c) =>
+      c.status === 'funded' ||
+      c.status === 'shipped' ||
+      c.status === 'delivered' ||
+      c.status === 'revision_requested',
   );
-  const inReview = collabs.filter((c) => c.status === 'approved'); // "approved" or revisions if we had it
-
-  const initials = profile?.displayName?.substring(0, 2).toUpperCase() || 'U';
+  const inReview = collabs.filter((c) => c.status === 'approved');
 
   const RAILS = [
     {
-      title: 'Needs filming',
+      title: t('creator.work.needsFilming', 'Needs filming'),
       count: needsFilming.length,
       cards: needsFilming.map((c) => ({
-        tag:
-          c.status === 'shipped' ? 'Shipment sent' : c.status === 'funded' ? 'Funded' : 'Due soon',
-        tagBg: c.status === 'shipped' ? colors.signatureYellow : colors.signaturePeach,
-        title: (c as any).campaign?.product?.name || 'Campaign',
-        meta: `EGP ${c.creatorPrice} held`,
+        id: c.id,
+        status: c.status,
+        title: (c as any).campaign?.product?.name || (c as any).campaign?.title || t('creator.discover.ugcVideo', 'UGC Video'),
+        meta: t('creator.work.amountHeld', 'EGP {{amount}} held', { amount: c.creatorPrice }),
       })),
     },
     {
-      title: 'In review / Completed',
+      title: t('creator.work.inReviewCompleted', 'In review / Completed'),
       count: inReview.length,
       cards: inReview.map((c) => ({
-        tag: c.status,
-        tagBg: colors.surfaceStrong,
-        title: (c as any).campaign?.product?.name || 'Campaign',
+        id: c.id,
+        status: c.status,
+        title: (c as any).campaign?.product?.name || (c as any).campaign?.title || t('creator.discover.ugcVideo', 'UGC Video'),
         meta: `EGP ${c.creatorPrice}`,
       })),
     },
   ].filter((r) => r.count > 0);
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: spacing.xxl }}>
-      <View style={styles.headerRow}>
+    <SafeAreaView style={styles.screen} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* Header Row */}
         <AppText variant="displayMd" color="ink">
-          My board
+          {t('creator.work.title', 'Collaborations')}
         </AppText>
-        <View style={styles.avatar}>
-          <AppText style={styles.avatarText}>{initials}</AppText>
-        </View>
-      </View>
-      <View style={styles.escrowCard}>
-        <AppText style={styles.escrowKicker}>ESCROW</AppText>
-        <View style={{ flexDirection: 'row', gap: 28 }}>
-          <View>
-            <AppText variant="displayMd" style={styles.escrowAmount}>
-              EGP {earnings?.escrowBalance || 0}
-            </AppText>
-            <AppText variant="caption" style={styles.escrowLabel}>
-              held for you
-            </AppText>
-          </View>
-          <View>
-            <AppText variant="displayMd" style={styles.escrowAmount}>
-              EGP {earnings?.pendingBalance || 0}
-            </AppText>
-            <AppText variant="caption" style={styles.escrowLabel}>
-              ready to withdraw
-            </AppText>
-          </View>
-        </View>
-      </View>
-      {RAILS.length === 0 ? (
-        <AppText
-          variant="body"
-          color="muted"
-          style={{ textAlign: 'center', marginTop: spacing.xl }}
-        >
-          You have no active collaborations.
-        </AppText>
-      ) : (
-        RAILS.map((rail) => (
-          <View key={rail.title} style={{ marginBottom: spacing.lg }}>
-            <View style={styles.railHeader}>
-              <AppText variant="titleLg" color="ink">
-                {rail.title}
+
+        {/* Hero Escrow & Withdrawable Card matching BrandDashboardScreen & BrandProfileScreen */}
+        <Card style={styles.escrowCard}>
+          <AppText variant="overline" color="muted" style={styles.escrowKicker}>
+            {t('creator.work.escrowSummary', 'ESCROW SUMMARY')}
+          </AppText>
+          <View style={styles.escrowRow}>
+            <View style={styles.escrowCol}>
+              <AppText variant="titleLg" color="ink" style={styles.tabular}>
+                EGP {formatAmount(earnings?.escrowBalance || 0)}
               </AppText>
-              <AppText style={styles.railCount}>{rail.count}</AppText>
+              <AppText variant="bodySm" color="muted">
+                {t('creator.work.heldForYou', 'held for you')}
+              </AppText>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {rail.cards.map((c, i) => (
-                <View key={i} style={[styles.card, (c as any).faded && { opacity: 0.5 }]}>
-                  <View style={[styles.tag, { backgroundColor: c.tagBg }]}>
-                    <AppText
-                      style={[
-                        styles.tagText,
-                        (c as any).tagColor ? { color: (c as any).tagColor } : undefined,
-                      ]}
-                    >
-                      {c.tag}
-                    </AppText>
-                  </View>
-                  <AppText variant="titleLg" color="ink" style={styles.cardTitle}>
-                    {c.title}
-                  </AppText>
-                  {c.meta ? (
-                    <AppText variant="caption" color="muted">
-                      {c.meta}
-                    </AppText>
-                  ) : null}
-                </View>
-              ))}
-            </ScrollView>
+            <View style={[styles.escrowCol, styles.escrowDivider]}>
+              <AppText variant="titleLg" color="ink" style={styles.tabular}>
+                EGP {formatAmount(earnings?.pendingBalance || 0)}
+              </AppText>
+              <AppText variant="bodySm" color="muted">
+                {t('creator.work.readyToWithdraw', 'ready to withdraw')}
+              </AppText>
+            </View>
           </View>
-        ))
-      )}
-    </ScrollView>
+        </Card>
+
+        {RAILS.length === 0 ? (
+          <EmptyState
+            icon="briefcase"
+            title={t('creator.work.emptyActive', 'No active collaborations.')}
+            message={t('creator.work.emptyHint', 'Apply to open briefs to start working with brands.')}
+          />
+        ) : (
+          RAILS.map((rail) => (
+            <View key={rail.title} style={styles.railSection}>
+              <View style={styles.railHeader}>
+                <AppText variant="titleSm" color="ink">
+                  {rail.title}
+                </AppText>
+                <View style={styles.railCountPill}>
+                  <AppText variant="overline" color="primary" style={styles.tabular}>
+                    {rail.count}
+                  </AppText>
+                </View>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.railScroll}
+              >
+                {rail.cards.map((c, i) => (
+                  <PressableCard
+                    key={c.id || i}
+                    style={[styles.card, (c as any).faded && { opacity: 0.5 }]}
+                    onPress={() => {
+                      if (c.id) {
+                        navigation.navigate('DeliverableUpload', { collaborationId: c.id });
+                      }
+                    }}
+                  >
+                    <View style={styles.cardHeader}>
+                      <View style={styles.cardIcon}>
+                        <Icon name="video" size={18} color="primary" />
+                      </View>
+                      <StatusBadge domain="collaboration" status={c.status} />
+                    </View>
+                    <AppText variant="titleSm" color="ink" style={styles.cardTitle} numberOfLines={2}>
+                      {c.title}
+                    </AppText>
+                    {c.meta ? (
+                      <AppText variant="bodySm" color="muted" style={styles.tabular}>
+                        {c.meta}
+                      </AppText>
+                    ) : null}
+                  </PressableCard>
+                ))}
+              </ScrollView>
+            </View>
+          ))
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -134,61 +161,82 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.canvas,
-    paddingHorizontal: spacing.lg,
+  },
+  content: {
+    paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  tabular: {
+    fontVariant: ['tabular-nums'],
+  },
+  escrowCard: {
+    borderRadius: radius.xxl,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
-    marginBottom: spacing.lg,
+    gap: spacing.sm,
   },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.full,
-    backgroundColor: colors.signatureMint,
+  escrowKicker: {
+    letterSpacing: 0.8,
+  },
+  escrowRow: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.hairline,
+    paddingTop: spacing.md,
+  },
+  escrowCol: {
+    flex: 1,
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
+  escrowDivider: {
+    borderStartWidth: StyleSheet.hairlineWidth,
+    borderStartColor: colors.hairline,
+  },
+  railSection: {
+    gap: spacing.sm,
+  },
+  railHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.xxs,
+  },
+  railCountPill: {
+    minWidth: 24,
+    height: 24,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accentSoft,
+    paddingHorizontal: spacing.xs,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: { fontSize: 13, fontWeight: '500', color: colors.signatureForest },
-  escrowCard: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.xl,
+  railScroll: {
+    gap: spacing.sm,
+    paddingVertical: spacing.xxs,
   },
-  escrowKicker: {
-    fontFamily: 'monospace',
-    fontSize: 11,
-    letterSpacing: 0.6,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 12,
-  },
-  escrowAmount: { color: colors.onPrimary },
-  escrowLabel: { color: 'rgba(255,255,255,0.75)' },
-  railHeader: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-    marginBottom: 10,
-  },
-  railCount: { fontFamily: 'monospace', fontSize: 13, color: colors.muted },
   card: {
-    width: 212,
-    borderWidth: 1,
-    borderColor: colors.hairline,
+    width: 224,
+    gap: spacing.xs,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xxs,
+  },
+  cardIcon: {
+    width: 36,
+    height: 36,
     borderRadius: radius.md,
-    padding: spacing.md,
-    marginEnd: spacing.sm, // Using marginEnd for RTL support
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  tag: {
-    alignSelf: 'flex-start',
-    borderRadius: radius.pill,
-    paddingVertical: 3,
-    paddingHorizontal: 9,
-    marginBottom: 12,
+  cardTitle: {
+    marginBottom: spacing.xxs,
   },
-  tagText: { fontSize: 12, fontWeight: '500', color: colors.ink },
-  cardTitle: { marginBottom: 8 },
 });

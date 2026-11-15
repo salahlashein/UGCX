@@ -24,24 +24,80 @@ export class TransactionsService {
     private readonly transactionsRepository: Repository<Transaction>,
   ) {}
 
-  /** REQ-002: recorded once the webhook confirms Paymob's charge succeeded. */
-  async recordHold(
-    collaborationId: string,
+  /** REQ-205: recorded once a webhook confirms a campaign funding charge. */
+  async recordCharge(
+    campaignId: string,
     amount: string,
     currency: string,
     paymobReference: string,
     manager: EntityManager,
+    paymentMethodLabel?: string | null,
+  ): Promise<Transaction> {
+    return this.insert(
+      manager,
+      {
+        campaignId,
+        type: TransactionType.CHARGE,
+        amount,
+        currency,
+        paymobReference,
+        paymentMethodLabel: paymentMethodLabel ?? null,
+      },
+      null,
+      campaignId,
+    );
+  }
+
+  /** REQ-210: recorded once Paymob confirms a refund of unallocated escrow. */
+  async recordRefund(
+    campaignId: string,
+    amount: string,
+    currency: string,
+    paymobReference: string,
+    parentTransactionId: string,
+    manager: EntityManager,
+    paymentMethodLabel?: string | null,
+  ): Promise<Transaction> {
+    return this.insert(
+      manager,
+      {
+        campaignId,
+        type: TransactionType.REFUND,
+        amount,
+        currency,
+        paymobReference,
+        parentTransactionId,
+        paymentMethodLabel: paymentMethodLabel ?? null,
+      },
+      null,
+      campaignId,
+    );
+  }
+
+  /**
+   * REQ-207: a hold now carries the campaign as well as the collaboration.
+   * paymobReference is nullable for the campaign escrow allocation path.
+   */
+  async recordHold(
+    collaborationId: string,
+    amount: string,
+    currency: string,
+    paymobReference: string | null,
+    manager: EntityManager,
+    campaignId?: string | null,
   ): Promise<Transaction> {
     return this.insert(
       manager,
       {
         collaborationId,
+        campaignId: campaignId ?? null,
         type: TransactionType.HOLD,
         amount,
         currency,
         paymobReference,
       },
       collaborationId,
+      campaignId ?? null,
     );
   }
 
@@ -104,14 +160,15 @@ export class TransactionsService {
   private async insert(
     manager: EntityManager,
     fields: Partial<Transaction>,
-    collaborationId: string,
+    collaborationId: string | null,
+    campaignId?: string | null,
   ): Promise<Transaction> {
     const repository = manager.getRepository(Transaction);
     const transaction = repository.create(fields);
     const saved = await repository.save(transaction);
     // LOG-02: one structured line per Transaction insert.
     this.logger.log(
-      `Transaction recorded: collaborationId=${collaborationId} type=${saved.type} amount=${saved.amount} correlationId=${randomUUID()}`,
+      `Transaction recorded: collaborationId=${collaborationId} campaignId=${campaignId ?? saved.campaignId} type=${saved.type} amount=${saved.amount} correlationId=${randomUUID()}`,
     );
     return saved;
   }
@@ -125,5 +182,22 @@ export class TransactionsService {
       ? manager.getRepository(Transaction)
       : this.transactionsRepository;
     return repository.findOne({ where: { paymobReference } });
+  }
+
+  /** REQ-210: finds the newest charge row for a campaign to refund against. */
+  async findLatestChargeForCampaign(
+    campaignId: string,
+    manager?: EntityManager,
+  ): Promise<Transaction | null> {
+    const repository = manager
+      ? manager.getRepository(Transaction)
+      : this.transactionsRepository;
+    return repository.findOne({
+      where: {
+        campaignId,
+        type: TransactionType.CHARGE,
+      },
+      order: { createdAt: 'DESC' },
+    });
   }
 }

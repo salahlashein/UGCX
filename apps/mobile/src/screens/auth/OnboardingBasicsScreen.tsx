@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator, Alert, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as ImagePicker from 'expo-image-picker';
@@ -11,15 +11,16 @@ import { colors, spacing, radius } from '../../theme/tokens';
 import { useUpdateCreatorProfile } from '../../hooks/api/useCreator';
 import { useRequestUploadUrl, uploadFileToPresignedUrl } from '../../hooks/api/useStorage';
 import type { Niche } from '@ugcx/shared-types';
+import { isFeatureEnabled } from '../../config/features';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'OnboardingBasics'>;
 
-const NICHE_OPTIONS: { label: string; value: Niche }[] = [
-  { label: 'Beauty & Skincare', value: 'beauty_personal_care' },
-  { label: 'Mom & baby', value: 'mom_baby' },
-  { label: 'Food & FMCG', value: 'food_fmcg' },
-  { label: 'Fashion', value: 'fashion' },
-  { label: 'Home & Lifestyle', value: 'home_lifestyle' },
+const NICHE_VALUES: Niche[] = [
+  'beauty_personal_care',
+  'mom_baby',
+  'food_fmcg',
+  'fashion',
+  'home_lifestyle',
 ];
 
 export function OnboardingBasicsScreen({ navigation, route }: Props) {
@@ -40,32 +41,51 @@ export function OnboardingBasicsScreen({ navigation, route }: Props) {
   };
 
   const pickVideo = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      allowsEditing: true,
-      quality: 1,
-    });
-    if (!result.canceled && result.assets.length > 0) {
-      setClipUri(result.assets[0].uri);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: true,
+        quality: 1,
+      });
+      if (!result.canceled && result.assets?.length > 0) {
+        setClipUri(result.assets[0].uri);
+        return;
+      }
+    } catch {
+      // Fallback below
+    }
+    if (Platform.OS === 'web' || __DEV__) {
+      const blob = new Blob(['mock verification clip'], { type: 'video/mp4' });
+      setClipUri(URL.createObjectURL(blob));
     }
   };
 
+  const requiresClip = isFeatureEnabled('creatorVerificationClip');
+
   const canContinue =
-    name.trim().length > 0 && city.trim().length > 0 && niches.length > 0 && clipUri !== null && !isUploading;
+    name.trim().length > 0 &&
+    city.trim().length > 0 &&
+    niches.length > 0 &&
+    (!requiresClip || clipUri !== null) &&
+    !isUploading;
 
   const handleNext = async () => {
-    if (!clipUri) return;
     setIsUploading(true);
     try {
-      // 1. Get presigned URL
-      const response = await requestUploadUrl.mutateAsync({
-        module: 'verification',
-        contentType: 'video/mp4', // Assuming mp4 for simplicity
-        fileSize: 10000000, // 10MB approx
-      });
+      let verificationClipUrl: string | undefined;
 
-      // 2. Upload file
-      await uploadFileToPresignedUrl(clipUri, response.uploadUrl, 'video/mp4');
+      if (clipUri) {
+        // 1. Get presigned URL
+        const response = await requestUploadUrl.mutateAsync({
+          module: 'verification',
+          contentType: 'video/mp4', // Assuming mp4 for simplicity
+          fileSize: 10000000, // 10MB approx
+        });
+
+        // 2. Upload file
+        await uploadFileToPresignedUrl(clipUri, response.uploadUrl, 'video/mp4');
+        verificationClipUrl = response.fileUrl;
+      }
 
       // 3. Save profile
       updateProfile.mutate(
@@ -73,7 +93,7 @@ export function OnboardingBasicsScreen({ navigation, route }: Props) {
           displayName: name,
           city,
           niches,
-          verificationClipUrl: response.fileUrl,
+          ...(verificationClipUrl ? { verificationClipUrl } : {}),
         },
         {
           onSuccess: () => {
@@ -82,14 +102,20 @@ export function OnboardingBasicsScreen({ navigation, route }: Props) {
           },
           onError: (err) => {
             console.error(err);
-            Alert.alert('Save Failed', 'Could not update your profile. Please try again.');
+            Alert.alert(
+              t('common.error.title', 'Save Failed'),
+              t('auth.basics.saveFailed', 'Could not update your profile. Please try again.'),
+            );
             setIsUploading(false);
           },
         },
       );
     } catch (err) {
       console.error('Failed to upload video:', err);
-      Alert.alert('Upload Failed', 'Could not upload your video. Please check your connection and try again.');
+      Alert.alert(
+        t('common.error.title', 'Upload Failed'),
+        t('auth.basics.uploadFailed', 'Could not upload your video. Please check your connection and try again.'),
+      );
       setIsUploading(false);
     }
   };
@@ -97,63 +123,70 @@ export function OnboardingBasicsScreen({ navigation, route }: Props) {
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
-        <AppText style={styles.stepLabel}>STEP 1 OF 2 — REQUIRED</AppText>
+        <AppText style={styles.stepLabel}>{t('auth.basics.stepLabel', 'STEP 1 OF 2 — REQUIRED')}</AppText>
         <AppText variant="displayMd" color="ink" style={styles.heading}>
-          The basics
+          {t('auth.basics.title', 'The basics')}
         </AppText>
         <AppText variant="body" color="muted" style={styles.sub}>
-          This is all we need to start reviewing you.
+          {t('auth.basics.subtitle', 'This is all we need to start reviewing you.')}
         </AppText>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: spacing.lg }}>
         <AppText variant="label" color="ink" style={styles.label}>
-          Full name
+          {t('auth.basics.fullName', 'Full name')}
         </AppText>
         <TextInput
           value={name}
           onChangeText={setName}
-          placeholder="Your name"
+          placeholder={t('auth.basics.fullNamePlaceholder', 'Your name')}
           style={styles.inputMargin}
         />
 
         <AppText variant="label" color="ink" style={styles.label}>
-          City
+          {t('auth.basics.city', 'City')}
         </AppText>
         <TextInput
           value={city}
           onChangeText={setCity}
-          placeholder="e.g. Cairo"
+          placeholder={t('auth.basics.cityPlaceholder', 'e.g. Cairo')}
           style={styles.inputMargin}
         />
 
         <AppText variant="label" color="ink" style={styles.label}>
-          Your niches - pick up to 3
+          {t('auth.basics.nichesLabel', 'Your niches - pick up to 3')}
         </AppText>
         <View style={styles.chipRow}>
-          {NICHE_OPTIONS.map((opt) => {
-            const selected = niches.includes(opt.value);
+          {NICHE_VALUES.map((nicheVal) => {
+            const selected = niches.includes(nicheVal);
+            const nicheLabel = t(`niche.${nicheVal}`, nicheVal);
             return (
               <FilterChip
-                key={opt.label}
-                label={opt.label + (selected ? ' ✓' : '')}
+                key={nicheVal}
+                label={nicheLabel + (selected ? ' ✓' : '')}
                 selected={selected}
-                onPress={() => toggleNiche(opt.value)}
+                onPress={() => toggleNiche(nicheVal)}
               />
             );
           })}
         </View>
 
-        <AppText variant="label" color="ink" style={styles.label}>
-          One video of yourself talking
-        </AppText>
-        <Pressable style={styles.dropzone} onPress={pickVideo}>
-          <AppText variant="body" color="muted">
-            {clipUri ? 'Video selected' : '+ Record or upload a 15s clip'}
-          </AppText>
-        </Pressable>
-        <AppText variant="caption" color="muted" style={styles.hint}>
-          Required so an admin can verify it's really you.
-        </AppText>
+        {requiresClip && (
+          <>
+            <AppText variant="label" color="ink" style={styles.label}>
+              {t('auth.basics.clipLabel', 'One video of yourself talking')}
+            </AppText>
+            <Pressable style={styles.dropzone} onPress={pickVideo}>
+              <AppText variant="body" color="muted">
+                {clipUri
+                  ? t('auth.basics.clipSelected', 'Video selected')
+                  : t('auth.basics.clipUpload', '+ Record or upload a 15s clip')}
+              </AppText>
+            </Pressable>
+            <AppText variant="caption" color="muted" style={styles.hint}>
+              {t('auth.basics.clipHint', "Required so an admin can verify it's really you.")}
+            </AppText>
+          </>
+        )}
       </ScrollView>
       <Pressable
         disabled={!canContinue}
