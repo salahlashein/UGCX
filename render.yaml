@@ -26,6 +26,13 @@ services:
         value: smtp-relay.brevo.com
       - key: SMTP_PORT
         value: "587"
+      # Cloudflare R2 bucket for uploads. These three values are not secret.
+      - key: R2_ACCOUNT_ID
+        value: cb9affdf1f83e5cc7adedf6330257397
+      - key: R2_BUCKET_NAME
+        value: reelpal-deliverables
+      - key: R2_PUBLIC_BASE_URL
+        value: https://pub-45705041a89d434ca03843b65f60d440.r2.dev
       # Secrets: Render asks for these values when you create the Blueprint.
       - key: DATABASE_URL
         sync: false
@@ -35,13 +42,7 @@ services:
         sync: false
       - key: EMAIL_FROM
         sync: false
-      - key: R2_ACCOUNT_ID
-        sync: false
       - key: R2_ACCESS_KEY_ID
         sync: false
       - key: R2_SECRET_ACCESS_KEY
-        sync: false
-      - key: R2_BUCKET_NAME
-        sync: false
-      - key: R2_PUBLIC_BASE_URL
         sync: false
