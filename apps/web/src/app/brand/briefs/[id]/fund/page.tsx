@@ -30,6 +30,12 @@ import { extractErrorMessage } from '../../../../../services/apiHelpers';
 import { formatMoney } from '../../../../../utils/format';
 import { centsToAmount, toCents } from '../../../../../utils/money';
 import { fundTotalCents } from '../../../../../utils/fundTotal';
+import {
+  availableManualMethods,
+  manualPayees,
+  paymobEnabled,
+  type ManualMethod,
+} from '../../../../../config/payments';
 
 export default function FundEscrowPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: campaignId } = use(params);
@@ -42,8 +48,13 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
   const campaign = campaignQuery.data;
   const brand = brandProfileQuery.data;
 
-  const [paymentType, setPaymentType] = useState<'card' | 'manual'>('card');
-  const [manualMethod, setManualMethod] = useState<'instapay' | 'vodafone_cash'>('instapay');
+  const [paymentType, setPaymentType] = useState<'card' | 'manual'>(
+    paymobEnabled ? 'card' : 'manual',
+  );
+  const [manualMethod, setManualMethod] = useState<ManualMethod>(
+    availableManualMethods[0] ?? 'instapay',
+  );
+  const [payeeCopied, setPayeeCopied] = useState(false);
   const [txRef, setTxRef] = useState('');
   const [senderAccount, setSenderAccount] = useState('');
   const [manualSubmitted, setManualSubmitted] = useState(false);
@@ -306,32 +317,34 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
                     {locale === 'ar' ? 'طريقة الدفع' : 'Payment Method'}
                   </AppText>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <RadioCard
-                      selected={paymentType === 'card'}
-                      title={locale === 'ar' ? 'بطاقة بنكية (Paymob)' : 'Card (Paymob)'}
-                      description={
-                        locale === 'ar'
-                          ? 'تفعيل فوري عبر فيزا أو ماستركارد'
-                          : 'Instant activation via credit/debit card'
-                      }
-                      icon="credit-card"
-                      onSelect={() => setPaymentType('card')}
-                    />
-                    <RadioCard
-                      selected={paymentType === 'manual'}
-                      title={
-                        locale === 'ar' ? 'إنستاباي أو فودافون كاش' : 'InstaPay or Vodafone Cash'
-                      }
-                      description={
-                        locale === 'ar'
-                          ? 'تحويل يدوي ومراجعة المشرف'
-                          : 'Manual bank or wallet transfer'
-                      }
-                      icon="wallet"
-                      onSelect={() => setPaymentType('manual')}
-                    />
-                  </div>
+                  {paymobEnabled && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <RadioCard
+                        selected={paymentType === 'card'}
+                        title={locale === 'ar' ? 'بطاقة بنكية (Paymob)' : 'Card (Paymob)'}
+                        description={
+                          locale === 'ar'
+                            ? 'تفعيل فوري عبر فيزا أو ماستركارد'
+                            : 'Instant activation via credit/debit card'
+                        }
+                        icon="credit-card"
+                        onSelect={() => setPaymentType('card')}
+                      />
+                      <RadioCard
+                        selected={paymentType === 'manual'}
+                        title={
+                          locale === 'ar' ? 'إنستاباي أو فودافون كاش' : 'InstaPay or Vodafone Cash'
+                        }
+                        description={
+                          locale === 'ar'
+                            ? 'تحويل يدوي ومراجعة المشرف'
+                            : 'Manual bank or wallet transfer'
+                        }
+                        icon="wallet"
+                        onSelect={() => setPaymentType('manual')}
+                      />
+                    </div>
+                  )}
 
                   {paymentType === 'card' && (
                     <div className="flex flex-col gap-3 pt-2">
@@ -353,21 +366,77 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
                     </div>
                   )}
 
-                  {paymentType === 'manual' && (
+                  {paymentType === 'manual' && availableManualMethods.length === 0 && (
+                    <Card variant="outlined" padding="lg">
+                      <AppText variant="body" tone="muted">
+                        {locale === 'ar'
+                          ? 'الدفع اليدوي غير متاح حاليًا. تواصل مع فريق ريل بال لتفعيل الموجز.'
+                          : 'Manual payment is not available right now. Contact the ReelPal team to activate your brief.'}
+                      </AppText>
+                    </Card>
+                  )}
+
+                  {paymentType === 'manual' && availableManualMethods.length > 0 && (
                     <Card variant="outlined" padding="lg">
                       <form onSubmit={handleManualPaymentSubmit} className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-1.5">
+                        {availableManualMethods.length > 1 && (
+                          <div className="flex flex-col gap-1.5">
+                            <AppText variant="caption" tone="muted">
+                              {locale === 'ar' ? 'وسيلة التحويل' : 'Transfer Channel'}
+                            </AppText>
+                            <SegmentedControl
+                              value={manualMethod}
+                              onChange={(val) => {
+                                setManualMethod(val as ManualMethod);
+                                setPayeeCopied(false);
+                              }}
+                              options={availableManualMethods.map((method) => ({
+                                value: method,
+                                label: method === 'instapay' ? 'InstaPay' : 'Vodafone Cash',
+                              }))}
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex flex-col gap-2 p-4 rounded-lg bg-neutral-50 border border-neutral-200">
                           <AppText variant="caption" tone="muted">
-                            {locale === 'ar' ? 'وسيلة التحويل' : 'Transfer Channel'}
+                            {locale === 'ar'
+                              ? `حوّل ${formatMoney(totalAmountStr)} على ${manualMethod === 'instapay' ? 'إنستاباي' : 'فودافون كاش'}:`
+                              : `Send ${formatMoney(totalAmountStr)} by ${manualMethod === 'instapay' ? 'InstaPay' : 'Vodafone Cash'} to:`}
                           </AppText>
-                          <SegmentedControl
-                            value={manualMethod}
-                            onChange={(val) => setManualMethod(val as 'instapay' | 'vodafone_cash')}
-                            options={[
-                              { value: 'instapay', label: 'InstaPay' },
-                              { value: 'vodafone_cash', label: 'Vodafone Cash' },
-                            ]}
-                          />
+                          <div className="flex items-center justify-between gap-3 flex-wrap">
+                            <span
+                              dir="ltr"
+                              className="font-medium text-lg select-all break-all"
+                              style={{ fontVariantNumeric: 'tabular-nums' }}
+                            >
+                              {manualPayees[manualMethod]}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => {
+                                navigator.clipboard
+                                  ?.writeText(manualPayees[manualMethod])
+                                  .then(() => setPayeeCopied(true))
+                                  .catch(() => setPayeeCopied(false));
+                              }}
+                            >
+                              {payeeCopied
+                                ? locale === 'ar'
+                                  ? 'اتنسخ'
+                                  : 'Copied'
+                                : locale === 'ar'
+                                  ? 'نسخ'
+                                  : 'Copy'}
+                            </Button>
+                          </div>
+                          <AppText variant="caption" tone="muted">
+                            {locale === 'ar'
+                              ? 'بعد التحويل، اكتب رقم العملية تحت.'
+                              : 'After you send it, enter the transaction reference below.'}
+                          </AppText>
                         </div>
 
                         <TextInput
