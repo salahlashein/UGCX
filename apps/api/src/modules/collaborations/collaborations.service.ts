@@ -20,6 +20,7 @@ import { ProposalStatus } from '../proposals/entities/proposal.entity';
 import { ProposalsService } from '../proposals/proposals.service';
 import { BrandsService } from '../brands/brands.service';
 import { CreatorsService } from '../creators/creators.service';
+import { CreatorPayoutDetail } from '../creators/entities/creator-payout-detail.entity';
 import { UsersService } from '../users/users.service';
 import { TransactionsService } from '../transactions/transactions.service';
 import { PaymobClient } from '../payments/paymob.client';
@@ -32,7 +33,10 @@ import type { AuthUser } from '../auth/interfaces/auth-user.interface';
 import { UserRole } from '../users/entities/user.entity';
 import { ConfirmShipmentDto } from './dto/confirm-shipment.dto';
 import { computeDueAt } from './due-at';
-import { Deliverable, DeliverableStatus } from '../deliverables/entities/deliverable.entity';
+import {
+  Deliverable,
+  DeliverableStatus,
+} from '../deliverables/entities/deliverable.entity';
 import {
   Transaction,
   TransactionType,
@@ -439,7 +443,10 @@ export class CollaborationsService {
     userId: string,
     collaborationId: string,
   ): Promise<Collaboration> {
-    const collaboration = await this.findOwnedByCreator(userId, collaborationId);
+    const collaboration = await this.findOwnedByCreator(
+      userId,
+      collaborationId,
+    );
     if (collaboration.status !== CollaborationStatus.SHIPPED) {
       throw new DomainErrorException(
         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -582,27 +589,44 @@ export class CollaborationsService {
     return manager.getRepository(Collaboration).save(collaboration);
   }
 
-  /** TASK-P1-010: the admin payout queue. */
+  /**
+   * TASK-P1-010: the admin payout queue. Each row carries the creator, the
+   * creator's payout account (creator.payoutDetail), and the brief title,
+   * because the admin sends the money by hand. Only admin routes call this.
+   */
   async listApprovedAwaitingPayout(
     page: number,
     perPage: number,
   ): Promise<[Collaboration[], number]> {
-    return this.collaborationsRepository
-      .createQueryBuilder('collaboration')
-      .leftJoin(
-        'transactions',
-        'payout',
-        'payout.collaboration_id = collaboration.id AND payout.type = :payoutType',
-        { payoutType: 'payout' },
-      )
-      .where('collaboration.status = :status', {
-        status: CollaborationStatus.APPROVED,
-      })
-      .andWhere('payout.id IS NULL')
-      .orderBy('collaboration.updated_at', 'ASC')
-      .skip((page - 1) * perPage)
-      .take(perPage)
-      .getManyAndCount();
+    return (
+      this.collaborationsRepository
+        .createQueryBuilder('collaboration')
+        .leftJoinAndSelect('collaboration.creator', 'creator')
+        .leftJoinAndMapOne(
+          'creator.payoutDetail',
+          CreatorPayoutDetail,
+          'payoutDetail',
+          'payoutDetail.creatorId = creator.id',
+        )
+        .leftJoin('collaboration.campaign', 'campaign')
+        .addSelect(['campaign.id', 'campaign.title'])
+        .leftJoin(
+          'transactions',
+          'payout',
+          'payout.collaboration_id = collaboration.id AND payout.type = :payoutType',
+          { payoutType: 'payout' },
+        )
+        .where('collaboration.status = :status', {
+          status: CollaborationStatus.APPROVED,
+        })
+        .andWhere('payout.id IS NULL')
+        // A property path, not a column name: with joins, skip/take runs a
+        // DISTINCT subquery that resolves the order by property.
+        .orderBy('collaboration.updatedAt', 'ASC')
+        .skip((page - 1) * perPage)
+        .take(perPage)
+        .getManyAndCount()
+    );
   }
 
   async findById(id: string): Promise<Collaboration> {
@@ -674,7 +698,12 @@ export class CollaborationsService {
 
     const [items, total] = await this.collaborationsRepository.findAndCount({
       where,
-      relations: { brand: true, creator: true, campaign: { product: true }, proposal: true },
+      relations: {
+        brand: true,
+        creator: true,
+        campaign: { product: true },
+        proposal: true,
+      },
       order: { updatedAt: 'DESC' },
       skip: (page - 1) * perPage,
       take: perPage,
@@ -697,7 +726,10 @@ export class CollaborationsService {
     try {
       if (typeof this.dataSource?.getRepository === 'function') {
         const deliverableRepo = this.dataSource.getRepository(Deliverable);
-        if (deliverableRepo && typeof deliverableRepo.createQueryBuilder === 'function') {
+        if (
+          deliverableRepo &&
+          typeof deliverableRepo.createQueryBuilder === 'function'
+        ) {
           const revRows = await deliverableRepo
             .createQueryBuilder('d')
             .select('d.collaboration_id', 'collaborationId')
@@ -714,7 +746,10 @@ export class CollaborationsService {
         }
 
         const transactionRepo = this.dataSource.getRepository(Transaction);
-        if (transactionRepo && typeof transactionRepo.createQueryBuilder === 'function') {
+        if (
+          transactionRepo &&
+          typeof transactionRepo.createQueryBuilder === 'function'
+        ) {
           const txRows = await transactionRepo
             .createQueryBuilder('t')
             .select('t.collaboration_id', 'collaborationId')

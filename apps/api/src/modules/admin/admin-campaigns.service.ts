@@ -30,6 +30,9 @@ export class AdminCampaignsService {
     // verifyEscrow rejects it.
     const [items, total] = await this.campaignsRepository
       .createQueryBuilder('campaign')
+      // The admin matches the transfer to the brand that sent it.
+      .leftJoin('campaign.brand', 'brand')
+      .addSelect(['brand.id', 'brand.companyName'])
       .where('campaign.fundingPaymobOrderId LIKE :prefix', {
         prefix: MANUAL_PAYMENT_PREFIX + '%',
       })

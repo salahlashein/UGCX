@@ -44,6 +44,23 @@ export function middleware(request: NextRequest) {
       if (userRole === 'creator') {
         return NextResponse.redirect(new URL('/creator/home', request.url));
       }
+      if (userRole === 'admin') {
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
+    }
+    return NextResponse.next();
+  }
+
+  // Protect /admin. Only an admin opens it. The API also checks the role.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (userRole !== 'admin') {
+      const home = userRole === 'brand' ? '/brand/dashboard' : '/creator/home';
+      return NextResponse.redirect(new URL(home, request.url));
     }
     return NextResponse.next();
   }
@@ -78,5 +95,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/brand/:path*', '/creator/:path*', '/login'],
+  matcher: ['/brand/:path*', '/creator/:path*', '/admin', '/admin/:path*', '/login'],
 };

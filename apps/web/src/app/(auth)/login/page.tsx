@@ -62,6 +62,8 @@ export default function LoginPage() {
   const navigateForRole = (resolvedRole: UserRole) => {
     if (resolvedRole === 'brand') {
       router.push('/brand/dashboard');
+    } else if (resolvedRole === 'admin') {
+      router.push('/admin');
     } else {
       router.push('/creator/home');
     }
