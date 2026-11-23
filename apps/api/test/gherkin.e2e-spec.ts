@@ -43,6 +43,29 @@ describe('Backend core domain (e2e)', () => {
     await app.close();
   });
 
+  /** Admins are created out of band (self sign-up cannot make one). */
+  async function createAdminToken(
+    label: string,
+    phone: string,
+  ): Promise<string> {
+    const dataSource = app.get(DataSource);
+    const email = `${label}-admin-${runId}@example.com`;
+    const passwordHash = await bcrypt.hash('AdminPass1', 4);
+    await dataSource.getRepository(User).save(
+      dataSource.getRepository(User).create({
+        email,
+        phone,
+        passwordHash,
+        role: UserRole.ADMIN,
+        locale: UserLocale.EN,
+      }),
+    );
+    const login = await request(app.getHttpServer())
+      .post('/api/v1/auth/login')
+      .send({ email, password: 'AdminPass1' });
+    return login.body.data.accessToken;
+  }
+
   describe('Feature: Registration and login', () => {
     const email = `brand-${runId}@example.com`;
 
@@ -102,6 +125,15 @@ describe('Backend core domain (e2e)', () => {
         });
       creatorToken = creatorRes.body.data.accessToken;
 
+      // A brand must verify its email or phone before it creates a brief
+      // (CampaignsService.create). Password sign-up does not verify, and the
+      // OTP route is rate-limited, so the test marks the email verified.
+      await app
+        .get(DataSource)
+        .query('UPDATE users SET email_verified_at = now() WHERE email = $1', [
+          brandEmail,
+        ]);
+
       const productRes = await request(app.getHttpServer())
         .post('/api/v1/products')
         .set('Authorization', `Bearer ${brandToken}`)
@@ -125,23 +157,51 @@ describe('Backend core domain (e2e)', () => {
       );
     });
 
-    it('publishes once all required fields are set', async () => {
-      await request(app.getHttpServer())
+    it('rejects publish while escrow is not funded, even with all fields set', async () => {
+      const patch = await request(app.getHttpServer())
         .patch(`/api/v1/campaigns/${campaignId}`)
         .set('Authorization', `Bearer ${brandToken}`)
         .send({
+          title: 'Gherkin test brief',
+          budgetMin: 200,
+          budgetMax: 400,
           niche: 'fashion',
           language: 'en',
           videoType: 'demo',
           durationSeconds: 20,
         });
+      expect(patch.status).toBe(200);
 
       const res = await request(app.getHttpServer())
         .post(`/api/v1/campaigns/${campaignId}/publish`)
         .set('Authorization', `Bearer ${brandToken}`);
 
-      expect(res.status).toBe(200);
-      expect(res.body.data.status).toBe('live');
+      expect(res.status).toBe(422);
+      expect(res.body.error.details).toEqual([
+        expect.objectContaining({ field: 'escrow' }),
+      ]);
+    });
+
+    it('goes live when an admin confirms the manual payment (V1 flow)', async () => {
+      const submit = await request(app.getHttpServer())
+        .post(`/api/v1/campaigns/${campaignId}/escrow/manual-payment`)
+        .set('Authorization', `Bearer ${brandToken}`)
+        .send({
+          method: 'instapay',
+          transactionReference: `IP-GHERKIN-${runId}`,
+          amount: 300,
+        });
+      expect(submit.status).toBe(200);
+
+      const adminToken = await createAdminToken('pub', '+201000000015');
+      const verify = await request(app.getHttpServer())
+        .post(`/api/v1/admin/campaigns/${campaignId}/verify-escrow`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ approved: true });
+
+      expect(verify.status).toBe(201);
+      expect(verify.body.data.status).toBe('live');
+      expect(verify.body.data.fundedAmount).toBe('300.00');
     });
 
     it('rejects a second proposal from the same creator to the same campaign', async () => {
