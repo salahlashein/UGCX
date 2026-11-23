@@ -1,0 +1,47 @@
+# Render Blueprint for the ReelPal API (free plan). See apps/api/DEPLOY.md.
+services:
+  - type: web
+    name: reelpal-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: launch-v1
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://reelpal.vercel.app
+      - key: PLATFORM_FEE_RATE
+        value: "0.10"
+      - key: CAMPAIGN_DEFAULT_OPEN_DAYS
+        value: "14"
+      - key: REPORTING_TIME_ZONE
+        value: Africa/Cairo
+      - key: SMTP_HOST
+        value: smtp-relay.brevo.com
+      - key: SMTP_PORT
+        value: "587"
+      # Secrets: Render asks for these values when you create the Blueprint.
+      - key: DATABASE_URL
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        sync: false
+      - key: R2_PUBLIC_BASE_URL
+        sync: false

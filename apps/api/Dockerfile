@@ -34,4 +34,9 @@ COPY --from=build /repo/apps/api/dist apps/api/dist
 WORKDIR /repo/apps/api
 USER node
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
+# Apply pending migrations, then start the API. The Render free plan has
+# no pre-deploy step. If a migration fails, the container stops, the
+# health check fails, and Render keeps the old version. Each migration
+# runs in its own transaction, because an enum value that one migration
+# adds must commit before a later migration uses it.
+CMD ["sh", "-c", "node node_modules/typeorm/cli.js migration:run -d dist/config/data-source.js --transaction each && exec node dist/main.js"]
