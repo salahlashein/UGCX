@@ -46,7 +46,11 @@ export interface BriefListItem extends Campaign {
   totalProposals: number;
   lowestPrice: string | null;
   hiredCount: number;
-  hired: Array<{ creatorId: string; displayName: string | null; initials: string }>;
+  hired: Array<{
+    creatorId: string;
+    displayName: string | null;
+    initials: string;
+  }>;
   fundedAt: string | null;
 }
 
@@ -426,7 +430,9 @@ export class CampaignsService {
   /** REQ-007, TASK-W4-05: only live campaigns, optionally filtered by niche/country/language/minBudget/maxBudget/q/duration/shipping/sort. */
   async listLive(
     query: QueryCampaignDto,
-  ): Promise<[Campaign[], number, { niches: { value: string; count: number }[] }]> {
+  ): Promise<
+    [Campaign[], number, { niches: { value: string; count: number }[] }]
+  > {
     if (query.sort === 'match') {
       throw new BadRequestException('sort=match is not supported');
     }
@@ -440,10 +446,9 @@ export class CampaignsService {
       if (query.q && query.q.trim().length > 0) {
         const trimmed = query.q.trim();
         const escaped = trimmed.replace(/[%_\\]/g, '\\$&');
-        qb.andWhere(
-          '(campaign.title ILIKE :q OR brand.companyName ILIKE :q)',
-          { q: `%${escaped}%` },
-        );
+        qb.andWhere('(campaign.title ILIKE :q OR brand.companyName ILIKE :q)', {
+          q: `%${escaped}%`,
+        });
       }
 
       if (query.language) {
@@ -484,15 +489,16 @@ export class CampaignsService {
     // 1. Niche facets query (ignoring niche filter, DEC-W406)
     let niches: { value: string; count: number }[] = [];
     const facetQb = this.campaignsRepository.createQueryBuilder('campaign');
-    if (typeof facetQb.select === 'function' && typeof facetQb.groupBy === 'function') {
+    if (
+      typeof facetQb.select === 'function' &&
+      typeof facetQb.groupBy === 'function'
+    ) {
       facetQb
         .leftJoin('campaign.brand', 'brand')
         .select('campaign.niche', 'value')
         .addSelect('COUNT(*)::int', 'count');
       applyCommonFilters(facetQb);
-      facetQb
-        .andWhere('campaign.niche IS NOT NULL')
-        .groupBy('campaign.niche');
+      facetQb.andWhere('campaign.niche IS NOT NULL').groupBy('campaign.niche');
 
       try {
         const facetRows = await facetQb.getRawMany();
@@ -879,9 +885,13 @@ export class CampaignsService {
         throw error;
       }
 
-      campaign.fundingPaymobOrderId = null;
-      campaign.fundingRequestedAmount = null;
-      await repository.save(campaign);
+      // Update only the two funding columns. `campaign` was read before
+      // applyFunding raised escrow_funded_amount, so save(campaign) would
+      // write the old balance back and the paid escrow would read 0.00.
+      await repository.update(campaign.id, {
+        fundingPaymobOrderId: null,
+        fundingRequestedAmount: null,
+      });
       this.logger.log(`Campaign ${campaign.id} escrow funded`);
     });
   }
@@ -1069,9 +1079,28 @@ export class CampaignsService {
     }
 
     const amountStr = Number(dto.amount).toFixed(2);
+    const reference = `manual:${dto.method}:${dto.transactionReference}`;
+
+    // One transfer funds one brief. A reference that already funded a
+    // brief, or waits on another brief, is refused with a clear error.
+    const duplicate = new DomainErrorException(
+      HttpStatus.CONFLICT,
+      'duplicate_transaction_reference',
+      'This transaction reference was already submitted. Check the reference and try again.',
+    );
+    if (await this.transactionsService.findByPaymobReference(reference)) {
+      throw duplicate;
+    }
+
     campaign.fundingRequestedAmount = amountStr;
-    campaign.fundingPaymobOrderId = `manual:${dto.method}:${dto.transactionReference}`;
-    await this.campaignsRepository.save(campaign);
+    campaign.fundingPaymobOrderId = reference;
+    try {
+      await this.campaignsRepository.save(campaign);
+    } catch (error) {
+      // uq_campaigns_funding_order: another brief waits on this reference.
+      if (this.isUniqueViolation(error)) throw duplicate;
+      throw error;
+    }
 
     return {
       success: true,

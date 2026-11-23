@@ -96,14 +96,27 @@ export class AdminCampaignsService {
       const reference =
         dto.reference || (campaign.fundingPaymobOrderId as string);
 
-      await this.escrowService.applyFunding(
-        campaign.id,
-        amountToFund,
-        campaign.currency,
-        reference,
-        manager,
-        'manual_instapay_vodafone',
-      );
+      try {
+        await this.escrowService.applyFunding(
+          campaign.id,
+          amountToFund,
+          campaign.currency,
+          reference,
+          manager,
+          'manual_instapay_vodafone',
+        );
+      } catch (error) {
+        // idx_transactions_paymob_reference: this transfer already funded
+        // a brief. Count it once only.
+        if ((error as { code?: string })?.code === '23505') {
+          throw new DomainErrorException(
+            HttpStatus.CONFLICT,
+            'transaction_reference_already_used',
+            'This transaction reference already funded a brief',
+          );
+        }
+        throw error;
+      }
 
       const updatedCampaign = await campaignRepo.findOneOrFail({
         where: { id: campaign.id },
