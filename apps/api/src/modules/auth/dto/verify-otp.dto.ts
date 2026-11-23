@@ -13,7 +13,9 @@ export class VerifyOtpDto {
   @IsString()
   otp: string;
 
+  // Self sign-up creates brand and creator accounts only, the same as
+  // RegisterDto. An admin account is created with the create-admin script.
   @IsOptional()
-  @IsIn([UserRole.BRAND, UserRole.CREATOR, UserRole.ADMIN])
-  role?: UserRole.BRAND | UserRole.CREATOR | UserRole.ADMIN;
+  @IsIn([UserRole.BRAND, UserRole.CREATOR])
+  role?: UserRole.BRAND | UserRole.CREATOR;
 }

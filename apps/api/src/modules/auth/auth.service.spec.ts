@@ -413,6 +413,26 @@ describe('AuthService', () => {
       );
     });
 
+    it('rejects the fixed code 000000 for a demo account in production', async () => {
+      configService.get.mockImplementation((key: string) => {
+        if (key === 'nodeEnv') return 'production';
+        if (key === 'jwt.secret') return 'test-secret';
+        return undefined;
+      });
+      authOtpCodesRepository.findOne.mockResolvedValue(null);
+      usersService.findByEmail.mockResolvedValue({
+        id: 'user-demo-brand',
+        email: 'brand@example.com',
+        role: UserRole.BRAND,
+        emailVerifiedAt: new Date(),
+      });
+
+      await expect(
+        service.verifyOtp({ email: 'brand@example.com', otp: '000000' }),
+      ).rejects.toThrow(UnauthorizedException);
+      expect(usersService.findByEmail).not.toHaveBeenCalled();
+    });
+
     it('accepts fixed 6-digit mock code 000000 for demo email brand@example.com', async () => {
       const email = 'brand@example.com';
       usersService.findByEmail.mockResolvedValue({

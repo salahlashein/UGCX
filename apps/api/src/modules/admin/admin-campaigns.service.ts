@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import {
@@ -6,7 +6,11 @@ import {
   CampaignStatus,
 } from '../campaigns/entities/campaign.entity';
 import { EscrowService } from '../escrow/escrow.service';
+import { DomainErrorException } from '../../common/exceptions/domain-error.exception';
 import { VerifyEscrowDto } from './dto/verify-escrow.dto';
+
+/** CampaignsService.submitManualPayment stores `manual:<method>:<ref>`. */
+export const MANUAL_PAYMENT_PREFIX = 'manual:';
 
 @Injectable()
 export class AdminCampaignsService {
@@ -21,12 +25,15 @@ export class AdminCampaignsService {
     page = 1,
     perPage = 20,
   ): Promise<{ items: Campaign[]; total: number }> {
+    // Only manual submissions wait for an admin. A pending Paymob checkout
+    // also sets fundingRequestedAmount, but its webhook settles it, and
+    // verifyEscrow rejects it.
     const [items, total] = await this.campaignsRepository
       .createQueryBuilder('campaign')
       .where('campaign.fundingPaymobOrderId LIKE :prefix', {
-        prefix: 'manual:%',
+        prefix: MANUAL_PAYMENT_PREFIX + '%',
       })
-      .orWhere('campaign.fundingRequestedAmount IS NOT NULL')
+      .andWhere('campaign.fundingRequestedAmount IS NOT NULL')
       .orderBy('campaign.createdAt', 'DESC')
       .skip((page - 1) * perPage)
       .take(perPage)
@@ -55,6 +62,21 @@ export class AdminCampaignsService {
         throw new NotFoundException('Campaign not found');
       }
 
+      // Fund only a manual payment that the brand submitted and that no
+      // admin has verified yet. Without this check, a verify on a brief
+      // with no submission, or a second verify, funds escrow with money
+      // that nobody paid.
+      const pendingManual =
+        !!campaign.fundingRequestedAmount &&
+        !!campaign.fundingPaymobOrderId?.startsWith(MANUAL_PAYMENT_PREFIX);
+      if (!pendingManual) {
+        throw new DomainErrorException(
+          HttpStatus.CONFLICT,
+          'no_pending_manual_payment',
+          'This brief has no manual payment waiting for verification',
+        );
+      }
+
       if (!dto.approved) {
         campaign.fundingPaymobOrderId = null;
         campaign.fundingRequestedAmount = null;
@@ -67,12 +89,9 @@ export class AdminCampaignsService {
         };
       }
 
-      const amountToFund =
-        campaign.fundingRequestedAmount || campaign.budgetMin || '1000.00';
+      const amountToFund = campaign.fundingRequestedAmount as string;
       const reference =
-        dto.reference ||
-        campaign.fundingPaymobOrderId ||
-        `manual-admin-${Date.now()}`;
+        dto.reference || (campaign.fundingPaymobOrderId as string);
 
       await this.escrowService.applyFunding(
         campaign.id,

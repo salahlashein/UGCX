@@ -258,12 +258,12 @@ export class AuthService {
         throw new UnauthorizedException('Invalid OTP');
       }
     } else if (email) {
+      // The fixed code is for local development and tests only. In
+      // production it would let anyone sign in to any account, the demo
+      // accounts included, without the emailed code.
       const isDevOrTest = nodeEnv === 'development' || nodeEnv === 'test';
-      const isDemoAccount =
-        email === 'brand@example.com' || email === 'creator@example.com';
       const isFixedCode =
-        (isDevOrTest || isDemoAccount) &&
-        (dto.otp === '0000' || dto.otp === '000000');
+        isDevOrTest && (dto.otp === '0000' || dto.otp === '000000');
 
       if (!isFixedCode) {
         const record = await this.authOtpCodesRepository.findOne({
