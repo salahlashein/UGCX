@@ -35,8 +35,11 @@ export class MailerService {
         host,
         port,
         secure: port === 465,
+        // Port 587 upgrades with STARTTLS. Require it, and keep the default
+        // certificate check, so the SMTP password never travels unencrypted
+        // or to a server that only claims to be the mail provider.
+        requireTLS: port !== 465,
         auth: { user, pass },
-        tls: { rejectUnauthorized: false },
       });
       this.logger.log(
         `SMTP Mailer initialized via ${host}:${port} for ${user}`,
