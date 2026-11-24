@@ -757,7 +757,11 @@ export default function CampaignProposalsInboxPage({
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={() => router.push(`/brand/briefs/${campaignId}/fund`)}
+                            onClick={() =>
+                              router.push(
+                                `/brand/briefs/${campaignId}/fund?topup=${encodeURIComponent(proposalQuote.shortfall)}`,
+                              )
+                            }
                             style={{ alignSelf: 'flex-start' }}
                           >
                             {locale === 'ar' ? 'شحن رصيد الضمان' : 'Top up escrow'}

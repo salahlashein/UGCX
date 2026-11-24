@@ -38,8 +38,19 @@ import {
   type ManualMethod,
 } from '../../../../../config/payments';
 
-export default function FundEscrowPage({ params }: { params: Promise<{ id: string }> }) {
+export default function FundEscrowPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ topup?: string }>;
+}) {
   const { id: campaignId } = use(params);
+  // ?topup=15.00 comes from the proposals inbox when escrow is short for a
+  // proposal. The brand then sends only the shortfall, not the full deposit.
+  const { topup } = use(searchParams);
+  const topupCents = topup && /^\d+(\.\d{1,2})?$/.test(topup) ? toCents(topup) : 0;
+  const isTopup = topupCents > 0;
   const router = useRouter();
   const { t, locale } = useTranslation();
   const { can, role: memberRole } = useBrandRole();
@@ -69,12 +80,17 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
   const escrowQuery = useEscrowBalance(campaignId, { poll: polling });
 
   const slots = campaign?.slots ?? 1;
-  const { singleMidpointCents, singleFeeCents, totalCents } = fundTotalCents(
+  const {
+    singleMidpointCents,
+    singleFeeCents,
+    totalCents: depositCents,
+  } = fundTotalCents(
     campaign?.budgetMin || '0.00',
     campaign?.budgetMax || '0.00',
     slots,
     platformFeeRate,
   );
+  const totalCents = isTopup ? topupCents : depositCents;
   const feePercent = Math.round(platformFeeRate * 100);
   const totalAmountStr = centsToAmount(totalCents);
 
@@ -270,34 +286,55 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
                     </AppText>
                   </div>
                 }
-                lines={[
-                  [
-                    locale === 'ar' ? 'طبيعة المحتوى' : 'Format',
-                    `${campaign.videoType || 'Product showcase'} · ${campaign.durationSeconds || 30}s · ${campaign.language || 'Arabic'}`,
-                  ],
-                  [
-                    locale === 'ar' ? 'نطاق الميزانية' : 'Budget range',
-                    `${formatMoney(campaign.budgetMin)} - ${formatMoney(campaign.budgetMax)}`,
-                  ],
-                  [
-                    locale === 'ar' ? 'سعر المنشئ التقديري' : 'Estimated creator price',
-                    formatMoney(centsToAmount(singleMidpointCents)),
-                  ],
-                  [
-                    locale === 'ar'
-                      ? `رسوم المنصة (${feePercent}%)`
-                      : `Platform fee (${feePercent}%)`,
-                    formatMoney(centsToAmount(singleFeeCents)),
-                  ],
-                  [
-                    locale === 'ar' ? 'عدد المنشئين المطلوب' : 'Creator slots',
-                    `${slots} ${slots === 1 ? (locale === 'ar' ? 'منشئ' : 'creator') : locale === 'ar' ? 'منشئين' : 'creators'}`,
-                  ],
-                ]}
+                lines={
+                  isTopup
+                    ? [
+                        [
+                          locale === 'ar' ? 'نوع الدفعة' : 'Payment',
+                          locale === 'ar' ? 'شحن رصيد الضمان' : 'Escrow top-up',
+                        ],
+                        [
+                          locale === 'ar' ? 'السبب' : 'Reason',
+                          locale === 'ar'
+                            ? 'الرصيد لا يكفي لقبول العرض'
+                            : 'Escrow is short for a proposal',
+                        ],
+                      ]
+                    : [
+                        [
+                          locale === 'ar' ? 'طبيعة المحتوى' : 'Format',
+                          `${campaign.videoType || 'Product showcase'} · ${campaign.durationSeconds || 30}s · ${campaign.language || 'Arabic'}`,
+                        ],
+                        [
+                          locale === 'ar' ? 'نطاق الميزانية' : 'Budget range',
+                          `${formatMoney(campaign.budgetMin)} - ${formatMoney(campaign.budgetMax)}`,
+                        ],
+                        [
+                          locale === 'ar' ? 'سعر المنشئ التقديري' : 'Estimated creator price',
+                          formatMoney(centsToAmount(singleMidpointCents)),
+                        ],
+                        [
+                          locale === 'ar'
+                            ? `رسوم المنصة (${feePercent}%)`
+                            : `Platform fee (${feePercent}%)`,
+                          formatMoney(centsToAmount(singleFeeCents)),
+                        ],
+                        [
+                          locale === 'ar' ? 'عدد المنشئين المطلوب' : 'Creator slots',
+                          `${slots} ${slots === 1 ? (locale === 'ar' ? 'منشئ' : 'creator') : locale === 'ar' ? 'منشئين' : 'creators'}`,
+                        ],
+                      ]
+                }
                 total={
                   <div className="flex items-center justify-between w-full py-1">
                     <AppText variant="body" weight={500}>
-                      {locale === 'ar' ? 'المبلغ الإجمالي للإيداع' : 'Total deposit required'}
+                      {isTopup
+                        ? locale === 'ar'
+                          ? 'مبلغ الشحن'
+                          : 'Top-up required'
+                        : locale === 'ar'
+                          ? 'المبلغ الإجمالي للإيداع'
+                          : 'Total deposit required'}
                     </AppText>
                     <AppText variant="body" weight={500} tone="primary">
                       {formatMoney(totalAmountStr)}
