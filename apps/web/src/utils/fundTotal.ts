@@ -2,15 +2,22 @@ import { toCents } from './money';
 
 /**
  * Calculates the total funding amount in cents for a campaign brief:
- * Midpoint of single creator budget range (rounded to nearest whole EGP),
- * multiplied by the number of creator slots.
+ * midpoint of the single-creator budget range (rounded to the nearest whole
+ * EGP), plus the platform fee on that price, multiplied by the number of
+ * creator slots.
+ *
+ * The fee is included because accepting a proposal reserves the creator
+ * price plus the platform fee from escrow. Without it, a brand that funds
+ * the midpoint cannot accept a proposal at the midpoint.
  */
 export function fundTotalCents(
   budgetMin: string | number,
   budgetMax: string | number,
   slots: number = 1,
+  feeRate: number = 0,
 ): {
   singleMidpointCents: number;
+  singleFeeCents: number;
   totalCents: number;
 } {
   const minCents = typeof budgetMin === 'number' ? Math.round(budgetMin * 100) : toCents(budgetMin);
@@ -19,7 +26,9 @@ export function fundTotalCents(
 
   // Exact API midpoint rule: Math.round((minCents + maxCents) / 2 / 100) * 100
   const singleMidpointCents = Math.round((minCents + maxCents) / 2 / 100) * 100;
-  const totalCents = singleMidpointCents * safeSlots;
+  // Same rounding as the API's calculateFeeCents.
+  const singleFeeCents = Math.round((singleMidpointCents * Math.round(feeRate * 10000)) / 10000);
+  const totalCents = (singleMidpointCents + singleFeeCents) * safeSlots;
 
-  return { singleMidpointCents, totalCents };
+  return { singleMidpointCents, singleFeeCents, totalCents };
 }

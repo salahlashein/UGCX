@@ -34,6 +34,7 @@ import {
   availableManualMethods,
   manualPayees,
   paymobEnabled,
+  platformFeeRate,
   type ManualMethod,
 } from '../../../../../config/payments';
 
@@ -68,11 +69,13 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
   const escrowQuery = useEscrowBalance(campaignId, { poll: polling });
 
   const slots = campaign?.slots ?? 1;
-  const { singleMidpointCents, totalCents } = fundTotalCents(
+  const { singleMidpointCents, singleFeeCents, totalCents } = fundTotalCents(
     campaign?.budgetMin || '0.00',
     campaign?.budgetMax || '0.00',
     slots,
+    platformFeeRate,
   );
+  const feePercent = Math.round(platformFeeRate * 100);
   const totalAmountStr = centsToAmount(totalCents);
 
   // Poll for card funding completion then publish brief
@@ -279,6 +282,12 @@ export default function FundEscrowPage({ params }: { params: Promise<{ id: strin
                   [
                     locale === 'ar' ? 'سعر المنشئ التقديري' : 'Estimated creator price',
                     formatMoney(centsToAmount(singleMidpointCents)),
+                  ],
+                  [
+                    locale === 'ar'
+                      ? `رسوم المنصة (${feePercent}%)`
+                      : `Platform fee (${feePercent}%)`,
+                    formatMoney(centsToAmount(singleFeeCents)),
                   ],
                   [
                     locale === 'ar' ? 'عدد المنشئين المطلوب' : 'Creator slots',

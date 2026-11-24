@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useState, useMemo } from 'react';
+import React, { use, useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '../../../../components/layout/AppShell';
 import {
@@ -44,6 +44,17 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
 
   const campaign = campaignQuery.data;
   const creator = profileQuery.data;
+
+  // Start the price at the brief's midpoint instead of a fixed 1500, which
+  // falls outside small budgets and fails validation before the creator
+  // has typed anything. Runs once per brief, so it never overwrites an edit.
+  const [priceSeededFor, setPriceSeededFor] = useState<string | null>(null);
+  useEffect(() => {
+    if (!campaign || priceSeededFor === campaign.id) return;
+    const mid = Math.round((toCents(campaign.budgetMin) + toCents(campaign.budgetMax)) / 2 / 100);
+    if (mid > 0) setPrice(String(mid));
+    setPriceSeededFor(campaign.id);
+  }, [campaign, priceSeededFor]);
 
   // Check if creator already submitted a proposal for this campaign
   const existingProposal = useMemo(() => {

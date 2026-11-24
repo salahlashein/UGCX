@@ -127,7 +127,8 @@ describe('CampaignsService', () => {
       }),
     };
     configService = {
-      get: jest.fn().mockReturnValue(14),
+      // Platform fee is 10%; every other numeric setting the service reads is 14.
+      get: jest.fn((key: string) => (key === 'platformFeeRate' ? 0.1 : 14)),
     };
     dataSource = {
       query: jest.fn().mockResolvedValue([]),
@@ -724,8 +725,8 @@ describe('CampaignsService', () => {
   });
 
   describe('fundEscrow and getEscrowBalance (TASK-P2-06)', () => {
-    it('1. fundEscrow with no amount uses the midpoint, rounded to the whole unit', async () => {
-      // 2500 to 4000: midpoint (2500+4000)/2 = 3250
+    it('1. fundEscrow with no amount uses the midpoint plus the platform fee', async () => {
+      // 2500 to 4000: midpoint (2500+4000)/2 = 3250, plus 10% fee = 3575
       const campaign = makeDraftCampaign({
         budgetMin: '2500.00',
         budgetMax: '4000.00',
@@ -734,9 +735,9 @@ describe('CampaignsService', () => {
 
       const result = await service.fundEscrow('user-1', 'campaign-1', {});
 
-      expect(result.amount).toBe('3250.00');
+      expect(result.amount).toBe('3575.00');
       expect(paymobClient.createCheckout).toHaveBeenCalledWith(
-        325000,
+        357500,
         'cmp_campaign-1',
         expect.any(Object),
       );
@@ -816,7 +817,7 @@ describe('CampaignsService', () => {
     });
 
     describe('BG-14 fund amount rules (TASK-W3-01)', () => {
-      it('1. slots = 1: budgetMax passes, budgetMax + 0.01 fails', async () => {
+      it('1. slots = 1: budgetMax plus fee passes, one cent more fails', async () => {
         const campaign = makeDraftCampaign({
           slots: 1,
           budgetMin: '2000.00',
@@ -824,17 +825,17 @@ describe('CampaignsService', () => {
         });
         campaignsRepository.findOne.mockResolvedValue(campaign);
 
-        const passRes = await service.fundEscrow('user-1', 'campaign-1', { amount: 3000.0 });
-        expect(passRes.amount).toBe('3000.00');
+        const passRes = await service.fundEscrow('user-1', 'campaign-1', { amount: 3300.0 });
+        expect(passRes.amount).toBe('3300.00');
 
         await expect(
-          service.fundEscrow('user-1', 'campaign-1', { amount: 3000.01 }),
+          service.fundEscrow('user-1', 'campaign-1', { amount: 3300.01 }),
         ).rejects.toMatchObject({
           response: expect.objectContaining({ code: 'validation_error' }),
         });
       });
 
-      it('2. slots = 3, range 2000 to 3000: 7500.00 passes, 9000.01 fails', async () => {
+      it('2. slots = 3, range 2000 to 3000: 7500.00 passes, 9900.01 fails', async () => {
         const campaign = makeDraftCampaign({
           slots: 3,
           budgetMin: '2000.00',
@@ -846,7 +847,7 @@ describe('CampaignsService', () => {
         expect(passRes.amount).toBe('7500.00');
 
         await expect(
-          service.fundEscrow('user-1', 'campaign-1', { amount: 9000.01 }),
+          service.fundEscrow('user-1', 'campaign-1', { amount: 9900.01 }),
         ).rejects.toMatchObject({
           response: expect.objectContaining({ code: 'validation_error' }),
         });
@@ -867,7 +868,7 @@ describe('CampaignsService', () => {
         });
       });
 
-      it('4. slots = 3, no amount: default is 2500 x 3 = 7500.00', async () => {
+      it('4. slots = 3, no amount: default is (2500 + 10% fee) x 3 = 8250.00', async () => {
         const campaign = makeDraftCampaign({
           slots: 3,
           budgetMin: '2000.00',
@@ -876,15 +877,15 @@ describe('CampaignsService', () => {
         campaignsRepository.findOne.mockResolvedValue(campaign);
 
         const result = await service.fundEscrow('user-1', 'campaign-1', {});
-        expect(result.amount).toBe('7500.00');
+        expect(result.amount).toBe('8250.00');
         expect(paymobClient.createCheckout).toHaveBeenCalledWith(
-          750000,
+          825000,
           'cmp_campaign-1',
           expect.any(Object),
         );
       });
 
-      it('5. slots = 1, no amount: default is old midpoint', async () => {
+      it('5. slots = 1, no amount: default is the midpoint plus the fee', async () => {
         const campaign = makeDraftCampaign({
           slots: 1,
           budgetMin: '2000.00',
@@ -893,9 +894,9 @@ describe('CampaignsService', () => {
         campaignsRepository.findOne.mockResolvedValue(campaign);
 
         const result = await service.fundEscrow('user-1', 'campaign-1', {});
-        expect(result.amount).toBe('2500.00');
+        expect(result.amount).toBe('2750.00');
         expect(paymobClient.createCheckout).toHaveBeenCalledWith(
-          250000,
+          275000,
           'cmp_campaign-1',
           expect.any(Object),
         );

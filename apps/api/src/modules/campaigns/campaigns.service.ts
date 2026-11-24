@@ -24,7 +24,11 @@ import { EscrowService } from '../escrow/escrow.service';
 import { TransactionsService } from '../transactions/transactions.service';
 import { PaymobClient } from '../payments/paymob.client';
 import { encodeMerchantOrderId } from '../payments/merchant-order-id';
-import { centsToAmount, toCents } from '../../common/utils/money';
+import {
+  calculateFeeCents,
+  centsToAmount,
+  toCents,
+} from '../../common/utils/money';
 import { usesMockPayments } from '../../common/utils/mock-payments';
 import { PaymentProviderError } from '../payments/payment-provider.error';
 import { FundEscrowDto } from './dto/fund-escrow.dto';
@@ -942,8 +946,13 @@ export class CampaignsService {
     }
 
     const slots = campaign.slots ?? 1;
+    // Accepting a proposal reserves the creator price plus the platform fee,
+    // so the brand funds the fee on top of the creator budget.
+    const feeRate = this.configService.get<number>('platformFeeRate') ?? 0.1;
+    const withFee = (cents: number) =>
+      cents + calculateFeeCents(cents, feeRate);
     const minCents = toCents(campaign.budgetMin);
-    const maxCents = toCents(campaign.budgetMax) * slots;
+    const maxCents = withFee(toCents(campaign.budgetMax)) * slots;
 
     let amountCents: number;
     if (dto.amount !== undefined && dto.amount !== null) {
@@ -962,10 +971,13 @@ export class CampaignsService {
         );
       }
     } else {
-      // Default: midpoint of single-slot budget range rounded to nearest whole unit, times slots
+      // Default: midpoint of the single-slot budget range rounded to the
+      // nearest whole unit, plus the platform fee, times slots. Matches the
+      // web's fundTotalCents.
       const singleMin = toCents(campaign.budgetMin);
       const singleMax = toCents(campaign.budgetMax);
-      amountCents = Math.round((singleMin + singleMax) / 2 / 100) * 100 * slots;
+      const midpoint = Math.round((singleMin + singleMax) / 2 / 100) * 100;
+      amountCents = withFee(midpoint) * slots;
     }
 
     if (campaign.fundingPaymobOrderId) {

@@ -20,4 +20,22 @@ describe('fundTotalCents (TASK-W3-08, BG-14)', () => {
     assert.equal(singleMidpointCents, 325000);
     assert.equal(totalCents, 325000);
   });
+
+  it('4. adds the platform fee per slot so a midpoint proposal can be accepted', () => {
+    const { singleMidpointCents, singleFeeCents, totalCents } = fundTotalCents(
+      '100.00',
+      '200.00',
+      1,
+      0.1,
+    );
+    assert.equal(singleMidpointCents, 15000);
+    assert.equal(singleFeeCents, 1500);
+    assert.equal(totalCents, 16500);
+  });
+
+  it('5. fee is added per slot, then multiplied', () => {
+    const { singleFeeCents, totalCents } = fundTotalCents('2000.00', '3000.00', 3, 0.1);
+    assert.equal(singleFeeCents, 25000);
+    assert.equal(totalCents, 825000);
+  });
 });

@@ -6,6 +6,16 @@ export type ManualMethod = 'instapay' | 'vodafone_cash';
 /** The V1 launch uses manual payments. Set to "true" only when Paymob is live. */
 export const paymobEnabled = process.env.NEXT_PUBLIC_PAYMOB_ENABLED === 'true';
 
+/**
+ * The platform fee added on top of the creator price. Must match the API's
+ * PLATFORM_FEE_RATE, or a funded brief comes up short when a proposal is
+ * accepted.
+ */
+export const platformFeeRate = (() => {
+  const rate = Number(process.env.NEXT_PUBLIC_PLATFORM_FEE_RATE ?? '0.10');
+  return Number.isFinite(rate) && rate >= 0 && rate < 1 ? rate : 0.1;
+})();
+
 /** The account a brand sends a manual payment to, per method. */
 export const manualPayees: Record<ManualMethod, string> = {
   instapay: (process.env.NEXT_PUBLIC_INSTAPAY_ADDRESS ?? '').trim(),
