@@ -83,6 +83,8 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
   const [declineReason, setDeclineReason] = useState('');
 
   const [approvedSuccess, setApprovedSuccess] = useState(false);
+  // Approving releases escrow to the creator, so it takes a second click.
+  const [confirmingApprove, setConfirmingApprove] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const deliverables = deliverablesQuery.data || [];
@@ -93,8 +95,9 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
 
   // Count revision requests
   const revisionsCount = useMemo(() => {
-    return deliverables.filter((d) => (d.status as string) === 'revision_requested' || !!d.feedback)
-      .length;
+    // Only versions the brand sent back count; an empty feedback list is
+    // truthy in JS and an approval note is not a revision.
+    return deliverables.filter((d) => (d.status as string) === 'revision_requested').length;
   }, [deliverables]);
 
   const toggleReason = (reason: string) => {
@@ -114,6 +117,7 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
         },
       });
       setApprovedSuccess(true);
+      setConfirmingApprove(false);
       deliverablesQuery.refetch();
       collabQuery.refetch();
     } catch (err) {
@@ -216,9 +220,13 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
             <AppText variant="caption" color={colors.textSecondary}>
               {creatorName
                 ? `${locale === 'ar' ? 'صانع المحتوى:' : 'Creator:'} ${creatorName}`
-                : locale === 'ar'
-                  ? 'جارٍ تحميل تفاصيل التعاون'
-                  : 'Loading collaboration details'}
+                : collabQuery.isLoading
+                  ? locale === 'ar'
+                    ? 'جارٍ تحميل تفاصيل التعاون'
+                    : 'Loading collaboration details'
+                  : locale === 'ar'
+                    ? 'صانع المحتوى'
+                    : 'Creator'}
             </AppText>
           </div>
         </div>
@@ -435,16 +443,49 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
                   numberOfLines={2}
                 />
 
-                {/* Approve Button */}
-                <Button
-                  variant="primary"
-                  fullWidth
-                  onClick={handleApprove}
-                  loading={reviewMutation.isPending}
-                >
-                  <Icon name="check" size={16} />
-                  <span>{locale === 'ar' ? 'اعتماد وإفراج عن الضمان' : 'Approve deliverable'}</span>
-                </Button>
+                {/* Approve Button: the first click asks, the second releases escrow */}
+                {confirmingApprove ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: spacing.sm,
+                      padding: spacing.md,
+                      borderRadius: radius.card,
+                      border: `1px solid ${colors.hairline}`,
+                    }}
+                  >
+                    <AppText variant="bodySmall" color={colors.textPrimary}>
+                      {locale === 'ar'
+                        ? `هيتحوّل ${collab?.creatorPrice ? formatMoney(collab.creatorPrice) : ''} للكريتور ومينفعش ترجع فيه. متأكد؟`
+                        : `This releases ${collab?.creatorPrice ? formatMoney(collab.creatorPrice) : 'the escrow'} to the creator and can't be undone. Approve?`}
+                    </AppText>
+                    <div style={{ display: 'flex', gap: spacing.sm }}>
+                      <Button
+                        variant="primary"
+                        onClick={handleApprove}
+                        loading={reviewMutation.isPending}
+                      >
+                        <Icon name="check" size={16} />
+                        <span>{locale === 'ar' ? 'أيوه، اعتمد' : 'Yes, approve'}</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setConfirmingApprove(false)}
+                        disabled={reviewMutation.isPending}
+                      >
+                        {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button variant="primary" fullWidth onClick={() => setConfirmingApprove(true)}>
+                    <Icon name="check" size={16} />
+                    <span>
+                      {locale === 'ar' ? 'اعتماد وإفراج عن الضمان' : 'Approve deliverable'}
+                    </span>
+                  </Button>
+                )}
 
                 {/* Request Revision Toggle */}
                 {!showRevisionSection ? (

@@ -85,7 +85,10 @@ function CreatorRow({ creator, locale }: { creator: AdminCreator; locale: Locale
     <Card padding="lg">
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-          <Field label={locale === 'ar' ? 'الاسم' : 'Name'} value={creator.displayName || '—'} />
+          <Field
+            label={locale === 'ar' ? 'الاسم' : 'Name'}
+            value={creator.displayName || creator.user?.email || '—'}
+          />
           <Field label={locale === 'ar' ? 'المدينة' : 'City'} value={creator.city || '—'} />
           <Field
             label={locale === 'ar' ? 'المجالات' : 'Niches'}
@@ -177,7 +180,7 @@ function PaymentRow({ payment, locale }: { payment: AdminPendingEscrow; locale: 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field
             label={locale === 'ar' ? 'البراند' : 'Brand'}
-            value={payment.brand?.companyName || '—'}
+            value={payment.brand?.companyName || payment.brand?.user?.email || '—'}
           />
           <Field label={locale === 'ar' ? 'الموجز' : 'Brief'} value={payment.title} />
           <Field label={locale === 'ar' ? 'المبلغ' : 'Amount'} value={amount} />
@@ -254,7 +257,7 @@ function PayoutRow({ payout, locale }: { payout: AdminPayout; locale: Locale }) 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field
             label={locale === 'ar' ? 'الكريتور' : 'Creator'}
-            value={payout.creator?.displayName || '—'}
+            value={payout.creator?.displayName || payout.creator?.user?.email || '—'}
           />
           <Field
             label={locale === 'ar' ? 'الموجز' : 'Brief'}

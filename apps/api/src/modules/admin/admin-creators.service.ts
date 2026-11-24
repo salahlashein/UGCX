@@ -26,12 +26,25 @@ export class AdminCreatorsService {
       where.vettingStatus = vettingStatus;
     }
 
-    return this.creatorsRepository.findAndCount({
+    const [items, total] = await this.creatorsRepository.findAndCount({
       where,
+      // The admin needs a way to tell creators apart before they fill in
+      // their profile, so each row carries its account email.
+      relations: { user: true },
       order: { createdAt: 'DESC' },
       skip: (page - 1) * perPage,
       take: perPage,
     });
+
+    // Send only the email, not the whole user row.
+    for (const creator of items) {
+      const user = creator.user as
+        { id: string; email: string | null } | undefined;
+      if (user) {
+        Object.assign(creator, { user: { id: user.id, email: user.email } });
+      }
+    }
+    return [items, total];
   }
 
   /**

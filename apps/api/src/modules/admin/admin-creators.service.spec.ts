@@ -41,6 +41,36 @@ describe('AdminCreatorsService', () => {
     service = module.get(AdminCreatorsService);
   });
 
+  describe('list', () => {
+    it('adds the account email and nothing else from the user row', async () => {
+      creatorsRepository.findAndCount.mockResolvedValue([
+        [
+          {
+            id: 'c1',
+            displayName: null,
+            user: {
+              id: 'u1',
+              email: 'new@creator.test',
+              phone: '+201000000000',
+              role: 'creator',
+            },
+          },
+          { id: 'c2', displayName: 'Mona' },
+        ],
+        2,
+      ]);
+
+      const [items, total] = await service.list(VettingStatus.PENDING, 1, 20);
+
+      expect(total).toBe(2);
+      expect(items[0].user).toEqual({ id: 'u1', email: 'new@creator.test' });
+      expect(items[1].user).toBeUndefined();
+      expect(creatorsRepository.findAndCount).toHaveBeenCalledWith(
+        expect.objectContaining({ relations: { user: true } }),
+      );
+    });
+  });
+
   describe('vet', () => {
     it('throws 404 for an unknown creator', async () => {
       creatorRepoFindOne.mockResolvedValue(null);

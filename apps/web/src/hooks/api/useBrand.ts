@@ -23,7 +23,12 @@ export function useUpdateBrandProfile() {
   return useMutation({
     mutationFn: (dto: UpdateBrandRequest) => apiPatch<Brand>('/brands/me', dto),
     onSuccess: (data) => {
-      queryClient.setQueryData(queryKeys.brand.me(), data);
+      // PATCH returns the brand without the caller's memberRole. Replacing the
+      // cached /brands/me with it dropped the role, so an owner saw the page
+      // as read-only (and lost Billing) until a refresh. Keep the role.
+      queryClient.setQueryData<BrandMe>(queryKeys.brand.me(), (old) =>
+        old ? { ...old, ...data, memberRole: old.memberRole } : (data as BrandMe),
+      );
       queryClient.invalidateQueries({ queryKey: queryKeys.brand.dashboard() });
     },
   });

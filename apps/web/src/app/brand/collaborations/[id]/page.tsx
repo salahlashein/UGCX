@@ -57,10 +57,17 @@ export default function BrandCollaborationDetailPage({
   const deliverables = deliverablesQuery.data || [];
   const latestDeliverable = deliverables[deliverables.length - 1];
 
+  // A version counts as a revision only when the brand asked for changes.
+  // An empty feedback list is truthy in JS, and an approval note is not a
+  // revision, so neither is checked here.
+  const isRevision = (d: (typeof deliverables)[number]) =>
+    (d.status as string) === 'revision_requested';
+
   const revisionsCount = useMemo(() => {
-    return deliverables.filter((d) => (d.status as string) === 'revision_requested' || !!d.feedback)
-      .length;
-  }, [deliverables]);
+    const fromServer = (collab as any)?.revisionsUsed;
+    return typeof fromServer === 'number' ? fromServer : deliverables.filter(isRevision).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deliverables, collab]);
 
   // Build vertical timeline steps
   const timelineSteps: TimelineStep[] = useMemo(() => {
@@ -132,7 +139,7 @@ export default function BrandCollaborationDetailPage({
         description: `${d.durationSeconds || 30}s ${locale === 'ar' ? 'فيديو' : 'video deliverable'}`,
       });
 
-      if (d.feedback) {
+      if (isRevision(d)) {
         steps.push({
           id: `revision-${d.id}`,
           title: locale === 'ar' ? `طلب تعديل النسخة ${vNum}` : `Revision requested for V${vNum}`,

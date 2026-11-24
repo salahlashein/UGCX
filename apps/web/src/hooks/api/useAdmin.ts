@@ -24,6 +24,8 @@ export interface AdminCreator {
   verificationClipUrl: string | null;
   vettingStatus: VettingStatus;
   createdAt: string;
+  /** Account email, shown when the creator has no display name yet. */
+  user?: { id: string; email: string | null } | null;
 }
 
 export interface AdminPendingEscrow {
@@ -34,7 +36,11 @@ export interface AdminPendingEscrow {
   /** `manual:<method>:<transaction reference>` */
   fundingPaymobOrderId: string;
   createdAt: string;
-  brand: { id: string; companyName: string | null } | null;
+  brand: {
+    id: string;
+    companyName: string | null;
+    user?: { id: string; email: string | null } | null;
+  } | null;
 }
 
 export interface AdminPayout {
@@ -46,6 +52,7 @@ export interface AdminPayout {
   creator: {
     id: string;
     displayName: string | null;
+    user?: { id: string; email: string | null } | null;
     payoutDetail: {
       method: CreatorPayoutMethod;
       accountIdentifier: string;

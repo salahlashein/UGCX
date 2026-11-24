@@ -33,6 +33,10 @@ export class AdminCampaignsService {
       // The admin matches the transfer to the brand that sent it.
       .leftJoin('campaign.brand', 'brand')
       .addSelect(['brand.id', 'brand.companyName'])
+      // A brand that has not set a company name is still identified by its
+      // account email.
+      .leftJoin('brand.user', 'brandUser')
+      .addSelect(['brandUser.id', 'brandUser.email'])
       .where('campaign.fundingPaymobOrderId LIKE :prefix', {
         prefix: MANUAL_PAYMENT_PREFIX + '%',
       })

@@ -608,6 +608,9 @@ export class CollaborationsService {
           'payoutDetail',
           'payoutDetail.creatorId = creator.id',
         )
+        // A creator without a display name is still identified by email.
+        .leftJoin('creator.user', 'creatorUser')
+        .addSelect(['creatorUser.id', 'creatorUser.email'])
         .leftJoin('collaboration.campaign', 'campaign')
         .addSelect(['campaign.id', 'campaign.title'])
         .leftJoin(

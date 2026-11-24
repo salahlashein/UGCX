@@ -346,9 +346,17 @@ export default function LoginPage() {
               style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}
             >
               <TextInput
-                label={locale === 'ar' ? 'البريد الإلكتروني للعمل' : 'Work email address'}
+                label={
+                  role === 'brand'
+                    ? locale === 'ar'
+                      ? 'إيميل الشغل'
+                      : 'Work email address'
+                    : locale === 'ar'
+                      ? 'الإيميل'
+                      : 'Email address'
+                }
                 type="email"
-                placeholder="name@company.com"
+                placeholder={role === 'brand' ? 'name@company.com' : 'name@gmail.com'}
                 value={email}
                 onChangeText={setEmail}
                 mono

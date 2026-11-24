@@ -49,7 +49,7 @@ const NICHES: Niche[] = [
 ];
 
 export default function BrandProfilePage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { role: memberRole } = useBrandRole();
   const isOwner = memberRole === 'owner';
 
@@ -265,6 +265,27 @@ export default function BrandProfilePage() {
                       <AppText variant="label" color="ink">
                         {t('brand.profile.logo', 'Brand Logo')}
                       </AppText>
+                      {logoUrl ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={logoUrl}
+                            alt={t('brand.profile.logo', 'Brand Logo')}
+                            width={48}
+                            height={48}
+                            style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8 }}
+                          />
+                          <AppText variant="caption" color="muted">
+                            {isOwner
+                              ? locale === 'ar'
+                                ? 'الـlogo الحالي. ارفع صورة جديدة لو عايز تغيّره.'
+                                : 'Current logo. Upload a new image to replace it.'
+                              : locale === 'ar'
+                                ? 'الـlogo الحالي'
+                                : 'Current logo'}
+                          </AppText>
+                        </div>
+                      ) : null}
                       {isOwner ? (
                         <Dropzone
                           accept={['image/png', 'image/jpeg', 'image/webp']}
@@ -275,9 +296,11 @@ export default function BrandProfilePage() {
                           error={uploadError}
                         />
                       ) : (
-                        <AppText variant="caption" color="muted">
-                          {logoUrl ? 'Logo configured' : 'No logo uploaded'}
-                        </AppText>
+                        !logoUrl && (
+                          <AppText variant="caption" color="muted">
+                            {locale === 'ar' ? 'مفيش logo' : 'No logo uploaded'}
+                          </AppText>
+                        )
                       )}
                     </div>
 
