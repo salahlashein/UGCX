@@ -306,6 +306,7 @@ export default function LoginPage() {
           {/* Role Segment */}
           <div>
             <SegmentedControl
+              fullWidth
               options={[
                 { label: locale === 'ar' ? 'علامة تجارية' : 'Brand', value: 'brand' },
                 { label: locale === 'ar' ? 'صانع محتوى' : 'Creator', value: 'creator' },

@@ -33,8 +33,8 @@ export class User {
   email: string | null;
 
   @Index({ unique: true })
-  @Column({ type: 'text' })
-  phone: string;
+  @Column({ type: 'text', nullable: true })
+  phone: string | null;
 
   // Never selected by default; every read must opt in explicitly so a
   // stray `find()` cannot leak a hash into a response body (SEC-002).
