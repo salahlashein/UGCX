@@ -39,6 +39,11 @@ export class MailerService {
         // certificate check, so the SMTP password never travels unencrypted
         // or to a server that only claims to be the mail provider.
         requireTLS: port !== 465,
+        // Fail fast instead of nodemailer's 2-minute default, so a blocked
+        // port shows up as an error and the sign-in button stops spinning.
+        connectionTimeout: 15_000,
+        greetingTimeout: 15_000,
+        socketTimeout: 30_000,
         auth: { user, pass },
       });
       this.logger.log(

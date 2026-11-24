@@ -24,8 +24,10 @@ services:
         value: Africa/Cairo
       - key: SMTP_HOST
         value: smtp-relay.brevo.com
+      # Render's free plan blocks outbound SMTP on ports 25, 465 and 587.
+      # Brevo also listens on 2525, which Render leaves open.
       - key: SMTP_PORT
-        value: "587"
+        value: "2525"
       # Cloudflare R2 bucket for uploads. These three values are not secret.
       - key: R2_ACCOUNT_ID
         value: cb9affdf1f83e5cc7adedf6330257397
