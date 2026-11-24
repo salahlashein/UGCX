@@ -51,7 +51,16 @@ describe('BrandsService', () => {
         },
         {
           provide: R2StorageClient,
-          useValue: { publicBaseUrl: 'https://r2.ugcx.test' },
+          // Logos live in the public assets bucket; business documents in
+          // the private one.
+          useValue: {
+            publicBaseUrl: 'https://r2.ugcx.test',
+            assetsBaseUrl: 'https://assets.ugcx.test',
+            isAssetUrl: (url: string) =>
+              url.startsWith('https://assets.ugcx.test/'),
+            isPrivateFileUrl: (url: string) =>
+              url.startsWith('https://r2.ugcx.test/'),
+          },
         },
         {
           provide: DataSource,
@@ -85,12 +94,14 @@ describe('BrandsService', () => {
       });
 
       const result = await service.updateByUserId('user-1', {
-        logoUrl: 'https://r2.ugcx.test/brand_logo/logo.png',
+        logoUrl: 'https://assets.ugcx.test/brand_logo/logo.png',
         category: BrandCategory.BEAUTY_PERSONAL_CARE,
         businessDocumentUrl: 'https://r2.ugcx.test/brand_document/reg.pdf',
       } as any);
 
-      expect(result.logoUrl).toBe('https://r2.ugcx.test/brand_logo/logo.png');
+      expect(result.logoUrl).toBe(
+        'https://assets.ugcx.test/brand_logo/logo.png',
+      );
       expect(result.category).toBe(BrandCategory.BEAUTY_PERSONAL_CARE);
       expect(result.businessDocumentUrl).toBe(
         'https://r2.ugcx.test/brand_document/reg.pdf',

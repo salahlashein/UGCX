@@ -105,6 +105,14 @@ class EnvironmentVariables {
   @IsString()
   R2_PUBLIC_BASE_URL?: string;
 
+  @IsOptional()
+  @IsString()
+  R2_ASSETS_BUCKET_NAME?: string;
+
+  @IsOptional()
+  @IsString()
+  R2_ASSETS_PUBLIC_BASE_URL?: string;
+
   // Comma-separated list of allowed browser origins for CORS. Native
   // mobile clients do not send an Origin header and are unaffected by
   // this; it only matters for a browser-based client (the Expo web

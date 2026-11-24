@@ -79,10 +79,7 @@ export class BrandsService {
   async updateByUserId(userId: string, dto: UpdateBrandDto): Promise<Brand> {
     const brand = await this.findByUserId(userId);
 
-    if (
-      dto.logoUrl &&
-      !dto.logoUrl.startsWith(this.r2StorageClient.publicBaseUrl)
-    ) {
+    if (dto.logoUrl && !this.r2StorageClient.isAssetUrl(dto.logoUrl)) {
       throw new DomainErrorException(
         HttpStatus.UNPROCESSABLE_ENTITY,
         'invalid_media_origin',
@@ -92,7 +89,7 @@ export class BrandsService {
 
     if (
       dto.businessDocumentUrl &&
-      !dto.businessDocumentUrl.startsWith(this.r2StorageClient.publicBaseUrl)
+      !this.r2StorageClient.isPrivateFileUrl(dto.businessDocumentUrl)
     ) {
       throw new DomainErrorException(
         HttpStatus.UNPROCESSABLE_ENTITY,

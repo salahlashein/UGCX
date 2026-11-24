@@ -27,6 +27,8 @@ export interface AppConfig {
     secretAccessKey: string;
     bucketName: string;
     publicBaseUrl: string;
+    assetsBucketName: string;
+    assetsPublicBaseUrl: string;
   };
   campaignDefaultOpenDays: number;
   reportingTimeZone: string;
@@ -71,6 +73,12 @@ export default (): AppConfig => ({
     // deliverable from; distinct from the private R2 S3 API endpoint used
     // to presign the upload.
     publicBaseUrl: process.env.R2_PUBLIC_BASE_URL ?? '',
+    // A second, public bucket for files anyone may see: brand logos,
+    // creator portfolio, product images. Deliverables, verification clips
+    // and business documents stay in the private bucket above. When unset,
+    // public assets fall back to the private bucket (local dev and tests).
+    assetsBucketName: process.env.R2_ASSETS_BUCKET_NAME ?? '',
+    assetsPublicBaseUrl: process.env.R2_ASSETS_PUBLIC_BASE_URL ?? '',
   },
   campaignDefaultOpenDays: parseInt(
     process.env.CAMPAIGN_DEFAULT_OPEN_DAYS ?? '14',

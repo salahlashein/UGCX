@@ -28,13 +28,21 @@ services:
       # Brevo also listens on 2525, which Render leaves open.
       - key: SMTP_PORT
         value: "2525"
-      # Cloudflare R2 bucket for uploads. These three values are not secret.
+      # Cloudflare R2. These values are not secret.
       - key: R2_ACCOUNT_ID
         value: cb9affdf1f83e5cc7adedf6330257397
+      # Private bucket: deliverables, verification clips, business documents.
+      # Its r2.dev access is off; files are read only through signed URLs.
+      # R2_PUBLIC_BASE_URL is now just the prefix stored on those file URLs.
       - key: R2_BUCKET_NAME
         value: reelpal-deliverables
       - key: R2_PUBLIC_BASE_URL
         value: https://pub-45705041a89d434ca03843b65f60d440.r2.dev
+      # Public bucket: brand logos, creator portfolio, product images.
+      - key: R2_ASSETS_BUCKET_NAME
+        value: reelpal-public
+      - key: R2_ASSETS_PUBLIC_BASE_URL
+        value: https://pub-aaf287afe7404cceb204ebbb2c0d683f.r2.dev
       # Secrets: Render asks for these values when you create the Blueprint.
       - key: DATABASE_URL
         sync: false
