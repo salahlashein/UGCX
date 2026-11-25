@@ -83,6 +83,8 @@ const DIRECTIONAL_ICONS = new Set<IconName>([
 export interface IconProps {
   name: IconName;
   size?: number;
+  /** Without a colour the icon follows the text colour around it, so an icon
+   *  inside a dark-green button is white like the label. */
   color?: ColorToken;
   directional?: boolean;
   className?: string;
@@ -439,7 +441,7 @@ function renderPaths(name: IconName): React.ReactNode {
   }
 }
 
-export function Icon({ name, size = 20, color = 'ink', directional, className = '' }: IconProps) {
+export function Icon({ name, size = 20, color, directional, className = '' }: IconProps) {
   const { isRTL } = useTranslation();
   const shouldFlip = isRTL && (directional ?? DIRECTIONAL_ICONS.has(name));
 
@@ -449,7 +451,7 @@ export function Icon({ name, size = 20, color = 'ink', directional, className = 
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      stroke={colors[color] ?? colors.ink}
+      stroke={color ? (colors[color] ?? colors.ink) : 'currentColor'}
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
