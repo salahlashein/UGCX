@@ -220,6 +220,8 @@ Three directions for the founder to pick from (**don't build before one is chose
 | **B** | *Production call sheet* | Condensed display (Barlow Condensed / Archivo Narrow) for titles and numbers, Plex Sans body, Plex Sans Arabic | Off-white `#f6f3ec`, ink `#1b1b1b`, gaffer-tape yellow `#f2c230` for the one primary action | Briefs rendered like a film call sheet: timecodes, shot list, "take V1/V2" | Made for creators, feels like a set |
 | **C** | *Nile & sun* | Bold grotesk display (e.g. Bricolage Grotesque) + Plex Sans/Plex Arabic | Nile blue `#0e4d64` base, sun orange `#f28c28` accent on white | Big bilingual numbers on money screens (escrow, earnings) | Confident, local, energetic |
 
+**Chosen (25 Nov 2026): A.** Fonts and canvas applied; the three moves below are still open.
+
 **Recommendation:** A now (it also fixes G11's font problem and costs a token change plus a font swap), B for the marketing landing page where personality matters most. Whatever is chosen, three moves apply in all directions:
 1. **Product-led screens:** show the video. Review, work detail, portfolio and proposal cards should lead with the thumbnail/player, not with stat tiles.
 2. **One dominant answer per screen:** the brand dashboard leads with "what needs your action" (it is currently below a mostly empty chart); the creator home leads with the next task or the best matching brief.

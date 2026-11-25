@@ -4,13 +4,13 @@
   --color-primary: #2f5d46;
   --color-primary-active: #244a37;
   --color-accent-soft: #e1ebe4;
-  --color-canvas: #eff2ed;
+  --color-canvas: #f7f6f2;
   --color-surface: #ffffff;
-  --color-surface-soft: #f6f8f5;
-  --color-surface-strong: #e1e7e2;
+  --color-surface-soft: #fbfaf7;
+  --color-surface-strong: #ebe8e1;
   --color-surface-dark: #17241c;
   --color-surface-dark-elevated: #1f3027;
-  --color-hairline: #dde3de;
+  --color-hairline: #e3e0d8;
   --color-ink: #17241c;
   --color-body: #2c3a31;
   --color-muted: #5d6b62;
@@ -29,10 +29,12 @@
   --color-signature-mint: #a8d8c4;
   --color-signature-yellow: #f4d35e;
   --color-signature-mustard: #d9a441;
-  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-arabic: 'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
-  --dash-line: 1px dashed #b9c4bc;
+  /* Visual direction A: one family for both scripts; mono for money only. */
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-inter: var(--font-sans);
+  --font-arabic: 'IBM Plex Sans Arabic', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+  --dash-line: 1px dashed #cfcbc0;
   --paper:
     linear-gradient(rgba(168, 216, 196, 0.07) 1px, transparent 1px) 0 0 / 22px 22px,
     linear-gradient(90deg, rgba(168, 216, 196, 0.07) 1px, transparent 1px) 0 0 / 22px 22px,
@@ -66,6 +68,13 @@
 :lang(ar) .mono-caps,
 :lang(ar) [data-mono-caps] {
   font-family: var(--font-arabic), var(--font-mono) !important;
+}
+
+/* Labels (table heads, chips, small caps) are set in the sans face; the
+   mono face is kept for money and numbers (visual direction A). */
+.mono-caps,
+[data-mono-caps] {
+  font-family: var(--font-sans) !important;
 }
 
 /* A money value keeps its own order inside a right to left line. */

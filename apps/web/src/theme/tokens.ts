@@ -9,14 +9,14 @@ export const colors = {
   primaryActive: '#244a37',
   accentSoft: '#e1ebe4',
 
-  // Surfaces
-  canvas: '#eff2ed',
+  // Surfaces. Warm paper instead of grey-green (visual direction A, UI audit).
+  canvas: '#f7f6f2',
   surface: '#ffffff',
-  surfaceSoft: '#f6f8f5',
-  surfaceStrong: '#e1e7e2',
+  surfaceSoft: '#fbfaf7',
+  surfaceStrong: '#ebe8e1',
   surfaceDark: '#17241c',
   surfaceDarkElevated: '#1f3027',
-  hairline: '#dde3de',
+  hairline: '#e3e0d8',
 
   // Text
   ink: '#17241c',
@@ -38,7 +38,7 @@ export const colors = {
   // Semantic
   link: '#2f5d46',
   linkActive: '#244a37',
-  dashLine: '#b9c4bc',
+  dashLine: '#cfcbc0',
   infoSurface: '#e3ebfb',
   info: '#254fad',
   infoBorder: '#458fff',
@@ -53,7 +53,7 @@ export const colors = {
   textSecondary: '#5d6b62',
   // 4.67:1 on the canvas and 5.27:1 on white (UI audit G4); was #93a097 at 2.7:1.
   textTertiary: '#626f66',
-  border: '#dde3de',
+  border: '#e3e0d8',
 } as const;
 
 export type ColorToken = keyof typeof colors;
