@@ -24,5 +24,5 @@
 - [x] C1 one status
 - [x] C2 deadline
 - [ ] W1 brief inline
-- [ ] W2 budget format
-- [ ] W3 link to work
+- [x] W2 budget format
+- [x] W3 link to work
