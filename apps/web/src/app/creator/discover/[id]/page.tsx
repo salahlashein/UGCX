@@ -153,7 +153,7 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                     size="sm"
                     onClick={() => router.push('/creator/discover')}
                   >
-                    ← {locale === 'ar' ? 'البريفات' : 'Discover'}
+                    {locale === 'ar' ? '→ البريفات' : '← Discover'}
                   </Button>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                     <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>

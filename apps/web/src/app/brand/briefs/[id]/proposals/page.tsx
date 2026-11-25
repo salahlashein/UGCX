@@ -194,7 +194,7 @@ export default function CampaignProposalsInboxPage({
                   size="sm"
                   onClick={() => router.push(`/brand/briefs/${campaignId}`)}
                 >
-                  ← {locale === 'ar' ? 'البريف' : 'Brief'}
+                  {locale === 'ar' ? '→ البريف' : '← Brief'}
                 </Button>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                   <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>

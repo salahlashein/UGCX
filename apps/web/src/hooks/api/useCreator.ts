@@ -13,11 +13,15 @@ import type {
 } from '@ugcx/shared-types';
 import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from '../../services/apiHelpers';
 import { queryKeys } from '../../services/queryKeys';
+import { useAuthStore } from '../../store/authStore';
 
 export function useCreatorProfile() {
+  // Skip the call for a brand user (UI audit G18).
+  const role = useAuthStore((s) => s.user?.role);
   return useQuery({
     queryKey: queryKeys.creator.me(),
     queryFn: () => apiGet<Creator>('/creators/me'),
+    enabled: role === 'creator' || role === 'admin',
   });
 }
 

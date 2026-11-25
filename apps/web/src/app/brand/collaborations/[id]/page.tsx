@@ -279,7 +279,7 @@ export default function BrandCollaborationDetailPage({
                       }
                     }}
                   >
-                    ← {locale === 'ar' ? 'البريف' : 'Brief'}
+                    {locale === 'ar' ? '→ البريف' : '← Brief'}
                   </Button>
                   <div>
                     <div

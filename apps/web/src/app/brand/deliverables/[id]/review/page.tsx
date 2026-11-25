@@ -206,7 +206,7 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
               }
             }}
           >
-            ← {locale === 'ar' ? 'التعاون' : 'Collaboration'}
+            {locale === 'ar' ? '→ التعاون' : '← Collaboration'}
           </Button>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
             <div

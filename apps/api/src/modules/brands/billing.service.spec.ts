@@ -120,9 +120,24 @@ describe('BillingService (TASK-W3-02, TASK-W3-03)', () => {
 
     it('4. equation holds across randomized amounts', async () => {
       const testCases = [
-        { charge: '10000.00', refund: '500.00', hold: '2000.00', release: '1000.00' },
-        { charge: '5000.00', refund: '0.00', hold: '3000.00', release: '3000.00' },
-        { charge: '8500.50', refund: '250.25', hold: '4000.00', release: '2500.00' },
+        {
+          charge: '10000.00',
+          refund: '500.00',
+          hold: '2000.00',
+          release: '1000.00',
+        },
+        {
+          charge: '5000.00',
+          refund: '0.00',
+          hold: '3000.00',
+          release: '3000.00',
+        },
+        {
+          charge: '8500.50',
+          refund: '250.25',
+          hold: '4000.00',
+          release: '2500.00',
+        },
       ];
 
       for (const tc of testCases) {
@@ -149,7 +164,9 @@ describe('BillingService (TASK-W3-02, TASK-W3-03)', () => {
         const allocatedCents = Math.round(parseFloat(totals.allocated) * 100);
         const availableCents = Math.round(parseFloat(totals.available) * 100);
 
-        expect(fundedCents - refundedCents - releasedCents - allocatedCents).toBe(availableCents);
+        expect(
+          fundedCents - refundedCents - releasedCents - allocatedCents,
+        ).toBe(availableCents);
       }
     });
 
@@ -203,6 +220,8 @@ describe('BillingService (TASK-W3-02, TASK-W3-03)', () => {
             campaignId: 'cmp-1',
             campaign: { id: 'cmp-1', title: 'Serum review' },
             creator: { displayName: 'Sara Creator' },
+            creatorPrice: '3200.00',
+            platformFee: '320.00',
           },
         },
       ];
@@ -241,7 +260,9 @@ describe('BillingService (TASK-W3-02, TASK-W3-03)', () => {
       expect(result.items[0].escrowAmount).toBe('3520.00');
 
       expect(result.items[1].direction).toBe('out');
-      expect(result.items[1].label).toBe('Released to Sara Creator (incl. fee)');
+      expect(result.items[1].label).toBe(
+        'EGP 3,200.00 to Sara Creator · EGP 320.00 ReelPal fee',
+      );
     });
 
     it('2. type=release filters only release rows', async () => {
@@ -276,9 +297,9 @@ describe('BillingService (TASK-W3-02, TASK-W3-03)', () => {
     });
 
     it('3. type=foo throws BadRequestException', async () => {
-      await expect(
-        service.list('user-1', 1, 20, 'foo'),
-      ).rejects.toBeInstanceOf(BadRequestException);
+      await expect(service.list('user-1', 1, 20, 'foo')).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
     });
 
     it('4. charge is negative, refund is positive', async () => {

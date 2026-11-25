@@ -249,7 +249,7 @@ export default function CreatorWorkspaceDetailPage({
                     size="sm"
                     onClick={() => router.push('/creator/work')}
                   >
-                    ← {locale === 'ar' ? 'المهام' : 'Work'}
+                    {locale === 'ar' ? '→ المهام' : '← Work'}
                   </Button>
                   <div>
                     <div

@@ -15,11 +15,11 @@ import { BrandsService } from './brands.service';
 import { centsToAmount, toCents } from '../../common/utils/money';
 
 export interface BrandMoneyTotals {
-  funded: string;      // sum of completed charge rows
-  refunded: string;    // sum of completed refund rows
-  released: string;    // sum of completed release rows (includes platform fee, DEC-W303)
-  allocated: string;   // sum of completed hold rows minus released
-  available: string;   // funded - refunded - (all holds)
+  funded: string; // sum of completed charge rows
+  refunded: string; // sum of completed refund rows
+  released: string; // sum of completed release rows (includes platform fee, DEC-W303)
+  allocated: string; // sum of completed hold rows minus released
+  available: string; // funded - refunded - (all holds)
   currency: string;
 }
 
@@ -34,13 +34,13 @@ export interface BillingLedgerItem {
   campaignId: string | null;
   campaignTitle: string | null;
   method: string;
-  amount: string;             // unchanged sign rule for charge and refund (DEC-W301)
+  amount: string; // unchanged sign rule for charge and refund (DEC-W301)
   currency: string;
   createdAt: Date;
-  direction: 'in' | 'out' | 'hold';  // escrow view
-  escrowAmount: string;              // always positive, two decimals
-  counterpartName: string | null;    // creator display name on hold and release rows
-  reference: string;                 // 'TX-' + first 8 hex of id, upper case
+  direction: 'in' | 'out' | 'hold'; // escrow view
+  escrowAmount: string; // always positive, two decimals
+  counterpartName: string | null; // creator display name on hold and release rows
+  reference: string; // 'TX-' + first 8 hex of id, upper case
 }
 
 const ALLOWED_TYPES = [
@@ -71,9 +71,12 @@ export class BillingService {
       .leftJoin('collab.campaign', 'collabCampaign')
       .select('tx.type', 'type')
       .addSelect('SUM(CAST(tx.amount AS numeric))', 'sum')
-      .where('(campaign.brand_id = :brandId OR collabCampaign.brand_id = :brandId)', {
-        brandId,
-      })
+      .where(
+        '(campaign.brand_id = :brandId OR collabCampaign.brand_id = :brandId)',
+        {
+          brandId,
+        },
+      )
       .andWhere('tx.status = :status', { status: TransactionStatus.COMPLETED })
       .andWhere('tx.type IN (:...types)', { types: ALLOWED_TYPES })
       .groupBy('tx.type');
@@ -152,15 +155,20 @@ export class BillingService {
       .leftJoinAndSelect('tx.collaboration', 'collab')
       .leftJoinAndSelect('collab.creator', 'creator')
       .leftJoinAndSelect('collab.campaign', 'collabCampaign')
-      .where('(campaign.brand_id = :brandId OR collabCampaign.brand_id = :brandId)', {
-        brandId: brand.id,
-      })
+      .where(
+        '(campaign.brand_id = :brandId OR collabCampaign.brand_id = :brandId)',
+        {
+          brandId: brand.id,
+        },
+      )
       .andWhere('tx.status = :status', { status: TransactionStatus.COMPLETED });
 
     if (typeFilter) {
       qb.andWhere('tx.type = :typeFilter', { typeFilter });
     } else {
-      qb.andWhere('tx.type IN (:...allowedTypes)', { allowedTypes: ALLOWED_TYPES });
+      qb.andWhere('tx.type IN (:...allowedTypes)', {
+        allowedTypes: ALLOWED_TYPES,
+      });
     }
 
     qb.orderBy('tx.createdAt', 'DESC')
@@ -209,9 +217,18 @@ export class BillingService {
         case TransactionType.RELEASE:
           direction = 'out';
           signedAmount = positiveAmount;
-          label = creatorName
-            ? `Released to ${creatorName} (incl. fee)`
-            : 'Released to creator (incl. fee)';
+          {
+            // Show the split, not "(incl. fee)" (UI audit brand-billing/W1).
+            const who = creatorName ?? 'creator';
+            const price = tx.collaboration?.creatorPrice;
+            const fee = tx.collaboration?.platformFee;
+            const egp = (v: string) =>
+              `EGP ${(toCents(v) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            label =
+              price != null && fee != null
+                ? `${egp(price)} to ${who} · ${egp(fee)} ReelPal fee`
+                : `Released to ${who} (incl. fee)`;
+          }
           break;
         default:
           direction = 'out';

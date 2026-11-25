@@ -10,11 +10,16 @@ import type {
 } from '@ugcx/shared-types';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../../services/apiHelpers';
 import { queryKeys } from '../../services/queryKeys';
+import { useAuthStore } from '../../store/authStore';
 
 export function useBrandProfile() {
+  // Shared pages (shell, settings, notifications) call this for both roles;
+  // a creator would get a 403 every time (UI audit G18).
+  const role = useAuthStore((s) => s.user?.role);
   return useQuery({
     queryKey: queryKeys.brand.me(),
     queryFn: () => apiGet<BrandMe>('/brands/me'),
+    enabled: role === 'brand' || role === 'admin',
   });
 }
 
