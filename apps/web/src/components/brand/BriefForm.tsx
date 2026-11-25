@@ -32,13 +32,13 @@ const NICHES: { key: Niche; labelEn: string; labelAr: string }[] = [
 ];
 
 const VIDEO_FORMATS: { key: VideoType; labelEn: string; labelAr: string; icon: string }[] = [
-  { key: 'unboxing', labelEn: 'Unboxing', labelAr: 'فتح الصندوق', icon: 'bag' },
+  { key: 'unboxing', labelEn: 'Unboxing', labelAr: 'فتح الصندوق', icon: 'package' },
   { key: 'testimonial', labelEn: 'Testimonial', labelAr: 'تجربة شخصية', icon: 'user' },
   { key: 'demo', labelEn: 'Product Demo', labelAr: 'استعراض المنتج', icon: 'play' },
   { key: 'tutorial', labelEn: 'Tutorial / How-To', labelAr: 'دليل استخدام', icon: 'file' },
   { key: 'talking_head', labelEn: 'Talking Head', labelAr: 'تحدث مباشر', icon: 'video' },
-  { key: 'try_on', labelEn: 'Try-On Haul', labelAr: 'تجربة ملابس', icon: 'star' },
-  { key: 'other', labelEn: 'Other', labelAr: 'أخرى', icon: 'film' },
+  { key: 'try_on', labelEn: 'Try-On Haul', labelAr: 'تجربة ملابس', icon: 'bag' },
+  { key: 'other', labelEn: 'Other', labelAr: 'أخرى', icon: 'more-horizontal' },
 ];
 
 interface BriefFormProps {

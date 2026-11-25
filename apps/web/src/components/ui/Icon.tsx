@@ -67,6 +67,9 @@ export type IconName =
   | 'file'
   | 'alert-triangle'
   | 'shield-check'
+  | 'more-horizontal'
+  | 'film'
+  | 'bag'
   | 'x';
 
 const DIRECTIONAL_ICONS = new Set<IconName>([
@@ -365,6 +368,70 @@ function renderPaths(name: IconName): React.ReactNode {
         <>
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
+        </>
+      );
+    // These names were used across the app but had no drawing, so they fell
+    // through to the default circle (UI audit G14).
+    case 'search':
+      return (
+        <>
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </>
+      );
+    case 'edit':
+      return (
+        <>
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </>
+      );
+    case 'clock':
+      return (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <polyline points="12 7 12 12 15 14" />
+        </>
+      );
+    case 'refresh-cw':
+      return (
+        <>
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </>
+      );
+    case 'star':
+      return (
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      );
+    case 'film':
+      return (
+        <>
+          <rect x="2" y="2" width="20" height="20" rx="2.18" />
+          <line x1="7" y1="2" x2="7" y2="22" />
+          <line x1="17" y1="2" x2="17" y2="22" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <line x1="2" y1="7" x2="7" y2="7" />
+          <line x1="2" y1="17" x2="7" y2="17" />
+          <line x1="17" y1="17" x2="22" y2="17" />
+          <line x1="17" y1="7" x2="22" y2="7" />
+        </>
+      );
+    case 'bag':
+      return (
+        <>
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </>
+      );
+    case 'more-horizontal':
+      return (
+        <>
+          <circle cx="12" cy="12" r="1" />
+          <circle cx="19" cy="12" r="1" />
+          <circle cx="5" cy="12" r="1" />
         </>
       );
     default:

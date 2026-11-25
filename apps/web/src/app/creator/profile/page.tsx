@@ -200,12 +200,14 @@ export default function CreatorProfilePage() {
 
             {/* 2-Column: Editor & Live Brand-View Preview */}
             <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1.4fr) minmax(320px, 1fr)',
-                gap: spacing.xl,
-                alignItems: 'start',
-              }}
+              className="ugcx-split"
+              style={
+                {
+                  gap: spacing.xl,
+                  ['--split-main' as string]: '1.4fr',
+                  ['--split-side-min' as string]: '320px',
+                } as React.CSSProperties
+              }
             >
               {/* Left Column: Form Fields and Portfolio Upload */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
@@ -227,13 +229,7 @@ export default function CreatorProfilePage() {
                     {locale === 'ar' ? 'البيانات الأساسية' : 'Basics'}
                   </AppText>
 
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gap: spacing.md,
-                    }}
-                  >
+                  <div className="ugcx-two-input-grid" style={{ gap: spacing.md }}>
                     <TextInput
                       label={locale === 'ar' ? 'الاسم المعروض' : 'Display name'}
                       value={displayName}
@@ -490,9 +486,8 @@ export default function CreatorProfilePage() {
 
                   {/* Creator Stats Row */}
                   <div
+                    className="ugcx-stats-row"
                     style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
                       gap: spacing.xs,
                       padding: spacing.sm,
                       borderRadius: radius.card,
@@ -573,13 +568,7 @@ export default function CreatorProfilePage() {
                     >
                       {locale === 'ar' ? 'معاينة أعمال المعرض' : 'Portfolio previews'}
                     </AppText>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: spacing.xs,
-                      }}
-                    >
+                    <div className="ugcx-thumb-row" style={{ gap: spacing.xs }}>
                       {portfolioItems.slice(0, 3).map((item) => (
                         <div
                           key={item.id}

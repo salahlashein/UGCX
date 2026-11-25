@@ -314,12 +314,14 @@ export default function BrandCollaborationDetailPage({
 
               {/* 2-Column Main Workspace */}
               <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1.4fr) minmax(300px, 1fr)',
-                  gap: spacing.xl,
-                  alignItems: 'start',
-                }}
+                className="ugcx-split"
+                style={
+                  {
+                    gap: spacing.xl,
+                    ['--split-main' as string]: '1.4fr',
+                    ['--split-side-min' as string]: '300px',
+                  } as React.CSSProperties
+                }
               >
                 {/* Left Column: Vertical Timeline & Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
@@ -385,13 +387,7 @@ export default function BrandCollaborationDetailPage({
                             </div>
                           )}
 
-                          <div
-                            style={{
-                              display: 'grid',
-                              gridTemplateColumns: 'repeat(2, 1fr)',
-                              gap: spacing.md,
-                            }}
-                          >
+                          <div className="ugcx-two-input-grid" style={{ gap: spacing.md }}>
                             <TextInput
                               label={locale === 'ar' ? 'شركة الشحن' : 'Carrier'}
                               placeholder="e.g. Bosta, Aramex"

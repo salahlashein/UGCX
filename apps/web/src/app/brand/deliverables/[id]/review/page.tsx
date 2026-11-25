@@ -250,12 +250,14 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
 
       {/* 2-Column Review Player & Decision Layout */}
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.4fr) minmax(320px, 1fr)',
-          gap: spacing.xl,
-          alignItems: 'start',
-        }}
+        className="ugcx-split"
+        style={
+          {
+            gap: spacing.xl,
+            ['--split-main' as string]: '1.4fr',
+            ['--split-side-min' as string]: '320px',
+          } as React.CSSProperties
+        }
       >
         {/* Left Column: Player & Version Switcher */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>

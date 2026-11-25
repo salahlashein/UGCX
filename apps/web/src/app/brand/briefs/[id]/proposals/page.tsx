@@ -532,9 +532,8 @@ export default function CampaignProposalsInboxPage({
                     {/* Creator Stats */}
                     {previewProfile && (
                       <div
+                        className="ugcx-stats-row"
                         style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(3, 1fr)',
                           gap: spacing.md,
                           padding: spacing.md,
                           backgroundColor: colors.surfaceSoft,
@@ -645,13 +644,7 @@ export default function CampaignProposalsInboxPage({
                         </span>
                       </div>
                       {previewProfile?.portfolio && previewProfile.portfolio.length > 0 ? (
-                        <div
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(4, 1fr)',
-                            gap: spacing.xs,
-                          }}
-                        >
+                        <div className="ugcx-thumb-row" style={{ gap: spacing.xs }}>
                           {previewProfile.portfolio.map((item: any) => (
                             <div
                               key={item.id}

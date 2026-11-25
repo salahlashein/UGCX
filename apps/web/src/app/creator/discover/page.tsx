@@ -150,14 +150,7 @@ function CreatorDiscoverContent() {
         </div>
 
         {/* 2-Column Discover Layout: Filter Panel at inline-start */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(240px, 280px) minmax(0, 1fr)',
-            gap: spacing.xl,
-            alignItems: 'start',
-          }}
-        >
+        <div className="ugcx-split ugcx-split--aside-first" style={{ gap: spacing.xl }}>
           {/* Filters Card */}
           <Card
             elevation="card"

@@ -203,12 +203,14 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
 
               {/* 2-Column Application and Live Brand Preview */}
               <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1.2fr) minmax(300px, 1fr)',
-                  gap: spacing.xl,
-                  alignItems: 'start',
-                }}
+                className="ugcx-split"
+                style={
+                  {
+                    gap: spacing.xl,
+                    ['--split-main' as string]: '1.2fr',
+                    ['--split-side-min' as string]: '300px',
+                  } as React.CSSProperties
+                }
               >
                 {/* Form or Already Applied State */}
                 <Card
@@ -522,9 +524,8 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
 
                     {/* Stats preview row */}
                     <div
+                      className="ugcx-stats-row"
                       style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: spacing.sm,
                         borderTop: `1px dashed ${colors.border}`,
                         paddingTop: spacing.sm,

@@ -48,7 +48,14 @@ export default function BrandLoading() {
         </div>
 
         {/* Hero Card Skeleton */}
-        <Card elevation="card" style={{ padding: spacing.xl, borderRadius: radius.card, backgroundColor: colors.surface }}>
+        <Card
+          elevation="card"
+          style={{
+            padding: spacing.xl,
+            borderRadius: radius.card,
+            backgroundColor: colors.surface,
+          }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
             <SkeletonBlock width={140} height={14} />
             <SkeletonBlock width={220} height={42} />
@@ -57,15 +64,27 @@ export default function BrandLoading() {
         </Card>
 
         {/* Grid Skeletons */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(260px, 1fr)', gap: spacing.lg }}>
-          <Card elevation="card" style={{ padding: spacing.lg, borderRadius: radius.card, minHeight: 200 }}>
+        <div
+          className="ugcx-split"
+          style={
+            {
+              gap: spacing.lg,
+              ['--split-main' as string]: '2fr',
+              ['--split-side-min' as string]: '260px',
+            } as React.CSSProperties
+          }
+        >
+          <Card
+            elevation="card"
+            style={{ padding: spacing.lg, borderRadius: radius.card, minHeight: 200 }}
+          >
             <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
               <SkeletonBlock width={160} height={20} />
               <SkeletonBlock width="100%" height={48} />
               <SkeletonBlock width="100%" height={48} />
             </div>
           </Card>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: spacing.md }}>
+          <div className="ugcx-two-input-grid" style={{ gap: spacing.md }}>
             <SkeletonBlock width="100%" height={90} borderRadius={radius.card} />
             <SkeletonBlock width="100%" height={90} borderRadius={radius.card} />
             <SkeletonBlock width="100%" height={90} borderRadius={radius.card} />

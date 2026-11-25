@@ -36,12 +36,14 @@ export default function CreatorHomePage() {
               locale={locale}
             />
             <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 2fr) minmax(300px, 1fr)',
-                gap: spacing.xl,
-                alignItems: 'start',
-              }}
+              className="ugcx-split"
+              style={
+                {
+                  gap: spacing.xl,
+                  ['--split-main' as string]: '2fr',
+                  ['--split-side-min' as string]: '300px',
+                } as React.CSSProperties
+              }
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
                 <QueueTaskSection

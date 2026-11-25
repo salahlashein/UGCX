@@ -36,7 +36,15 @@ export default function CreatorLoading() {
     <AppShell requiredRole="creator">
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.xl }}>
         {/* Header Skeleton */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: spacing.md }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: spacing.md,
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: spacing.md }}>
             <SkeletonBlock width={48} height={48} borderRadius={radius.card} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.xs }}>
@@ -52,12 +60,14 @@ export default function CreatorLoading() {
 
         {/* 2-Column Main Workspace Skeleton */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 2fr) minmax(300px, 1fr)',
-            gap: spacing.xl,
-            alignItems: 'start',
-          }}
+          className="ugcx-split"
+          style={
+            {
+              gap: spacing.xl,
+              ['--split-main' as string]: '2fr',
+              ['--split-side-min' as string]: '300px',
+            } as React.CSSProperties
+          }
         >
           {/* Left Column Skeletons */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>

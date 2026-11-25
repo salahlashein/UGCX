@@ -106,13 +106,29 @@ html[dir='rtl'] body {
   display: flex;
 }
 
-@media (min-width: 768px) {
+/*
+ * The sidebar appears from 1024px (UI audit G2). Between 768 and 1023 it
+ * left only ~508px for content and six screens scrolled sideways.
+ */
+@media (min-width: 1024px) {
   .ugcx-desktop-sidebar {
-    display: flex;
+    display: block;
   }
 
-  .ugcx-mobile-tabbar {
-    display: none;
+  .ugcx-mobile-tabbar,
+  .ugcx-mobile-only {
+    display: none !important;
+  }
+}
+
+/* Room under the content for the floating phone tab bar. */
+.ugcx-main {
+  padding-bottom: 112px;
+}
+
+@media (min-width: 1024px) {
+  .ugcx-main {
+    padding-bottom: 64px;
   }
 }
 
@@ -142,6 +158,49 @@ html[dir='rtl'] body {
   .ugcx-two-column-grid {
     grid-template-columns: minmax(0, 1fr) !important;
   }
+}
+
+/*
+ * Shared split layout (UI audit G1). One column on phones and tablets; two
+ * columns from 1100px, where the content area (viewport minus the 260px
+ * sidebar) has room for a 300px side column. Pages set the ratio through
+ * CSS variables instead of an inline gridTemplateColumns, which cannot
+ * respond to the screen width.
+ */
+.ugcx-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.ugcx-split > * {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .ugcx-split {
+    grid-template-columns:
+      minmax(0, var(--split-main, 1.4fr))
+      minmax(var(--split-side-min, 300px), var(--split-side, 1fr));
+  }
+
+  /* A side column that comes first (discover filters). */
+  .ugcx-split--aside-first {
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  }
+}
+
+/* Small stat rows (3 or 4 values) wrap instead of squeezing. */
+.ugcx-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+}
+
+/* Thumbnail rows (portfolio) wrap instead of squeezing. */
+.ugcx-thumb-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
 }
 
 /* Sticky sidebar for 2-column layouts on desktop */

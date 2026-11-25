@@ -290,23 +290,19 @@ export default function CreatorEarningsPage() {
 
             {/* 2-Column Hero & Payout Method Card */}
             <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1.4fr) minmax(280px, 1fr)',
-                gap: spacing.xl,
-                alignItems: 'start',
-              }}
+              className="ugcx-split"
+              style={
+                {
+                  gap: spacing.xl,
+                  ['--split-main' as string]: '1.4fr',
+                  ['--split-side-min' as string]: '280px',
+                } as React.CSSProperties
+              }
             >
               {/* Hero Balances and Equation */}
               <SignatureCard variant="hero" elevation="card">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gap: spacing.lg,
-                    }}
-                  >
+                  <div className="ugcx-two-input-grid" style={{ gap: spacing.lg }}>
                     <div>
                       <AppText variant="dataMonoCaps" color="rgba(255,255,255,0.7)">
                         {locale === 'ar' ? 'الرصيد المتاح' : 'Available'}
