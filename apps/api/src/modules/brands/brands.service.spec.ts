@@ -212,7 +212,7 @@ describe('BrandsService', () => {
       dataSource.query
         .mockResolvedValueOnce([{ count: 4 }])
         .mockResolvedValueOnce([{ count: 3 }])
-        .mockResolvedValueOnce([{ avg_days: '2.34' }]);
+        .mockResolvedValueOnce([{ avg_days: '2.34', payouts: 3 }]);
 
       const stats = await service.getBrandStats('user-owner');
       expect(stats).toEqual({
@@ -220,6 +220,22 @@ describe('BrandsService', () => {
         creatorsHired: 3,
         avgApprovalDays: 2.3,
       });
+    });
+
+    it('getBrandStats hides pay speed until the brand has 3 payouts', async () => {
+      const brand = { id: 'brand-1', companyName: 'Brand 1' } as Brand;
+      brandMembersRepository.findOne.mockResolvedValue({
+        brand,
+        role: BrandMemberRole.OWNER,
+        status: BrandMemberStatus.ACTIVE,
+      });
+      dataSource.query
+        .mockResolvedValueOnce([{ count: 1 }])
+        .mockResolvedValueOnce([{ count: 1 }])
+        .mockResolvedValueOnce([{ avg_days: '0.01', payouts: 1 }]);
+
+      const stats = await service.getBrandStats('user-owner');
+      expect(stats.avgApprovalDays).toBeNull();
     });
   });
 });

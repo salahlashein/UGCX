@@ -522,7 +522,12 @@ export default function CreatorProfilePage() {
                           marginTop: 2,
                         }}
                       >
-                        {statsQuery.data?.approvalRate ?? 100}%
+                        {/* No rate before the first job (UI audit G10). */}
+                        {(statsQuery.data?.jobsDone ?? 0) > 0
+                          ? `${statsQuery.data?.approvalRate ?? 0}%`
+                          : locale === 'ar'
+                            ? 'كريتور جديد'
+                            : 'New creator'}
                       </div>
                     </div>
                     <div>

@@ -75,6 +75,9 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
 
   const proposals = proposalsQuery.data?.data || [];
   const openProposalsCount = proposals.filter((p) => p.status === 'applied').length;
+  // Total plus waiting, the same numbers as the inbox and the briefs list
+  // (UI audit brand-brief-detail/C1).
+  const totalProposalsCount = proposalsQuery.data?.meta?.total ?? proposals.length;
   const hiredCount = campaignCollabs.filter(
     (c: any) => c.status !== 'cancelled' && c.status !== 'pending_payment',
   ).length;
@@ -161,7 +164,14 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: spacing.sm,
+                    flexWrap: 'wrap',
+                  }}
+                >
                   {can('editBrief') && (
                     <Button
                       variant="secondary"
@@ -179,7 +189,7 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                   >
                     <Icon name="inbox" size={16} />
                     <span>
-                      {locale === 'ar' ? 'صندوق العروض' : 'Proposals inbox'} ({openProposalsCount})
+                      {locale === 'ar' ? 'العروض' : 'Proposals'} ({totalProposalsCount})
                     </span>
                   </Button>
                 </div>
@@ -441,6 +451,10 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                       cells={[
                         {
                           label: locale === 'ar' ? 'عروض مقدمة' : 'Proposals',
+                          value: String(totalProposalsCount),
+                        },
+                        {
+                          label: locale === 'ar' ? 'مستنية ردك' : 'Waiting',
                           value: String(openProposalsCount),
                         },
                         {
@@ -449,16 +463,6 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                         },
                       ]}
                     />
-
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      fullWidth
-                      style={{ marginTop: spacing.md }}
-                      onClick={() => router.push(`/brand/briefs/${brief.id}/proposals`)}
-                    >
-                      {locale === 'ar' ? 'عرض كافة العروض' : 'View all proposals'}
-                    </Button>
                   </Card>
 
                   {/* Actions Bar. An empty card must never render. */}

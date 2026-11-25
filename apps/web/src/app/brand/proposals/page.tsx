@@ -157,7 +157,7 @@ export default function BrandProposalsOverviewPage() {
                         >
                           <div>
                             <AppText variant="dataMonoCaps" color={colors.textSecondary}>
-                              {locale === 'ar' ? 'أقل سعر' : 'Lowest'}
+                              {locale === 'ar' ? 'أقل عرض مفتوح' : 'Lowest open'}
                             </AppText>
                             <div
                               style={{
@@ -262,7 +262,20 @@ export default function BrandProposalsOverviewPage() {
                         subtitle={
                           c.creator?.displayName || (locale === 'ar' ? 'صانع محتوى' : 'Creator')
                         }
-                        tag={c.status === 'delivered' ? 'urgent' : 'pend'}
+                        // The shared status words, not raw tone names (UI audit brand-proposals/C1).
+                        tag={
+                          <StatusBadge
+                            status={c.status}
+                            domain="collaboration"
+                            label={
+                              c.status === 'delivered'
+                                ? locale === 'ar'
+                                  ? 'الفيديو جاهز للمراجعة'
+                                  : 'Video ready for review'
+                                : undefined
+                            }
+                          />
+                        }
                         action={
                           <div style={{ display: 'flex', alignItems: 'center', gap: spacing.md }}>
                             <span

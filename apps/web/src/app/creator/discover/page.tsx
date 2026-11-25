@@ -19,6 +19,8 @@ import {
 } from '../../../components/ui';
 import { colors, radius, spacing } from '../../../theme/tokens';
 import { useLiveCampaigns } from '../../../hooks/api/useCampaigns';
+import { useMyProposals } from '../../../hooks/api/useProposals';
+import { useMyCollaborations } from '../../../hooks/api/useCollaborations';
 import { useTranslation } from '../../../i18n';
 import { formatAmount, formatMoney } from '../../../utils/format';
 import { languageLabel, plural } from '../../../utils/labels';
@@ -36,6 +38,16 @@ function CreatorDiscoverContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t, locale } = useTranslation();
+  const myProposalsQuery = useMyProposals();
+  const myCollabsQuery = useMyCollaborations();
+  const myProposalByCampaign = useMemo(
+    () => new Map((myProposalsQuery.data?.data ?? []).map((p) => [p.campaignId, p])),
+    [myProposalsQuery.data?.data],
+  );
+  const myJobByCampaign = useMemo(
+    () => new Map((myCollabsQuery.data?.data ?? []).map((c) => [(c as any).campaignId, c])),
+    [myCollabsQuery.data?.data],
+  );
 
   // Read URL query parameters
   const qParam = searchParams.get('q') || '';
@@ -401,13 +413,54 @@ function CreatorDiscoverContent() {
                               >
                                 {formatMoney(b.budgetMin)} – {formatAmount(b.budgetMax)}
                               </span>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={() => router.push(`/creator/discover/${b.id}`)}
-                              >
-                                {locale === 'ar' ? 'تقديم عرض' : 'Apply'}
-                              </Button>
+                              {(() => {
+                                // The creator's own state on this brief (UI audit creator-discover/C1).
+                                const mine = myProposalByCampaign.get(b.id);
+                                if (mine?.status === 'accepted') {
+                                  const job = myJobByCampaign.get(b.id);
+                                  return (
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      onClick={() =>
+                                        router.push(
+                                          job
+                                            ? `/creator/work/${job.id}`
+                                            : `/creator/discover/${b.id}`,
+                                        )
+                                      }
+                                    >
+                                      {locale === 'ar' ? 'اتعينت · افتح الشغل' : 'Hired · open job'}
+                                    </Button>
+                                  );
+                                }
+                                if (mine) {
+                                  return (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => router.push(`/creator/discover/${b.id}`)}
+                                    >
+                                      {mine.status === 'declined'
+                                        ? locale === 'ar'
+                                          ? 'اترفض'
+                                          : 'Not selected'
+                                        : locale === 'ar'
+                                          ? `قدمت · ${formatAmount(mine.price).replace(/\.00$/, '')}`
+                                          : `Applied · ${formatAmount(mine.price).replace(/\.00$/, '')}`}
+                                    </Button>
+                                  );
+                                }
+                                return (
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => router.push(`/creator/discover/${b.id}`)}
+                                  >
+                                    {locale === 'ar' ? 'قدّم عرض' : 'Apply'}
+                                  </Button>
+                                );
+                              })()}
                             </div>
                           }
                         />

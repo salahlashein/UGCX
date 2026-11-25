@@ -53,6 +53,14 @@ describe('notifications helper', () => {
 
     assert.equal(
       getNotificationAmount({
+        event: 'escrow_released',
+        params: { total: '1760.00', creatorPrice: '1600.00' },
+      }),
+      '1600.00',
+    );
+
+    assert.equal(
+      getNotificationAmount({
         params: { irrelevant: 'abc' },
       }),
       null,

@@ -28,7 +28,13 @@ export function getNotificationCategory(event?: NotificationEvent): Notification
  */
 export function getNotificationAmount(notification: NotificationLike): string | null {
   const params = notification?.params || {};
-  const raw = params.total ?? params.creatorPrice ?? params.amount;
+  // A release goes to the creator, and its sentence names the creator's
+  // share, so the amount column shows that figure too (UI audit
+  // shared-notifications/C1). Other events lead with the total.
+  const raw =
+    notification?.event === 'escrow_released'
+      ? (params.creatorPrice ?? params.total ?? params.amount)
+      : (params.total ?? params.creatorPrice ?? params.amount);
   if (raw === undefined || raw === null || raw === '') {
     return null;
   }

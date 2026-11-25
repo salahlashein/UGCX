@@ -604,7 +604,9 @@ export default function BrandProfilePage() {
                       >
                         {brandStatsQuery.data?.avgApprovalDays != null
                           ? `${brandStatsQuery.data.avgApprovalDays}d`
-                          : '-'}
+                          : locale === 'ar'
+                            ? 'جديد على ReelPal'
+                            : 'New on ReelPal'}
                       </span>
                     </div>
                   </div>

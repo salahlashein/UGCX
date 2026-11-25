@@ -224,6 +224,37 @@ export default function BrandCollaborationDetailPage({
             creatorPreview?.displayName || (locale === 'ar' ? 'صانع المحتوى' : 'Creator');
           const campaignTitle = campaign?.title || (locale === 'ar' ? 'البريف' : 'Brief');
 
+          // Where the money is now, by status (UI audit brand-collaboration/C1).
+          const isAr = locale === 'ar';
+          const status = collaboration.status as string;
+          const paidOn = collaboration.paidAt ? formatDateShort(collaboration.paidAt, locale) : '';
+          const moneyStatus =
+            status === 'paid'
+              ? isAr
+                ? `اتدفعت للكريتور${paidOn ? ` يوم ${paidOn}` : ''}`
+                : `paid to creator${paidOn ? ` on ${paidOn}` : ''}`
+              : status === 'approved'
+                ? isAr
+                  ? 'اتوافق عليها · الدفع للكريتور جاري'
+                  : 'approved · payout to creator pending'
+                : isAr
+                  ? 'في الضمان'
+                  : 'held in escrow';
+          const moneyKey =
+            status === 'paid'
+              ? isAr
+                ? 'اتدفع للكريتور'
+                : 'Paid to creator'
+              : status === 'approved'
+                ? isAr
+                  ? 'هيتدفع للكريتور'
+                  : 'Payout pending'
+                : isAr
+                  ? 'قيمة التعاون في الضمان'
+                  : 'In escrow';
+          // Review is the main action only while a version waits for the brand (W1).
+          const needsReview = status === 'delivered';
+
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.xl }}>
               {/* Header */}
@@ -276,11 +307,12 @@ export default function BrandCollaborationDetailPage({
                           fontFamily: 'var(--font-mono, monospace)',
                           direction: 'ltr',
                           display: 'inline-block',
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {formatMoney(collaboration.creatorPrice)}
                       </span>{' '}
-                      {locale === 'ar' ? 'في الضمان' : 'held in escrow'}
+                      {moneyStatus}
                     </AppText>
                   </div>
                 </div>
@@ -295,9 +327,9 @@ export default function BrandCollaborationDetailPage({
                     <span>{locale === 'ar' ? 'محادثة الصانع' : 'Chat'}</span>
                   </Button>
 
-                  {latestDeliverable && can('acceptProposal') && (
+                  {latestDeliverable && (needsReview ? can('acceptProposal') : true) && (
                     <Button
-                      variant="primary"
+                      variant={needsReview ? 'primary' : 'secondary'}
                       size="sm"
                       onClick={() =>
                         router.push(
@@ -306,7 +338,15 @@ export default function BrandCollaborationDetailPage({
                       }
                     >
                       <Icon name="video" size={14} />
-                      <span>{locale === 'ar' ? 'مراجعة المخرج' : 'Review deliverable'}</span>
+                      <span>
+                        {needsReview
+                          ? locale === 'ar'
+                            ? 'راجع الفيديو'
+                            : 'Review video'
+                          : locale === 'ar'
+                            ? 'شوف الفيديو'
+                            : 'View video'}
+                      </span>
                     </Button>
                   )}
                 </div>
@@ -423,7 +463,7 @@ export default function BrandCollaborationDetailPage({
                     <KeyValueList
                       items={[
                         {
-                          key: locale === 'ar' ? 'قيمة التعاون في الضمان' : 'In escrow',
+                          key: moneyKey,
                           value: (
                             <span
                               style={{
@@ -431,6 +471,7 @@ export default function BrandCollaborationDetailPage({
                                 fontWeight: 500,
                                 direction: 'ltr',
                                 display: 'inline-block',
+                                whiteSpace: 'nowrap',
                               }}
                             >
                               {formatMoney(collaboration.creatorPrice)}
@@ -517,10 +558,11 @@ export default function BrandCollaborationDetailPage({
                             value: creatorPreview.city || 'Cairo',
                           },
                           {
-                            label: locale === 'ar' ? 'السعر المعتاد' : 'Base rate',
-                            value: formatMoney(
-                              creatorPreview.proposal?.price ?? (creatorPreview as any).basePrice,
-                            ),
+                            // The creator's usual rate, not this job's price (UI audit brand-collaboration/C2).
+                            label: locale === 'ar' ? 'السعر المعتاد' : 'Usual rate',
+                            value: (creatorPreview as any).basePrice
+                              ? formatMoney((creatorPreview as any).basePrice)
+                              : '—',
                           },
                         ]}
                       />

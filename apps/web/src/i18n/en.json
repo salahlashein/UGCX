@@ -505,7 +505,7 @@
     },
     "brand": {
       "brief_published": "Brief \"{{title}}\" is live and accepting proposals",
-      "proposal_received": "{{count}} new proposal on \"{{title}}\"",
+      "proposal_received": "New proposals on \"{{title}}\": {{count}}",
       "escrow_funded": "Escrow of {{currency}} {{total}} funded for collaboration",
       "deliverable_submitted": "{{creatorName}} submitted deliverable v{{version}} for \"{{title}}\"",
       "escrow_released": "{{currency}} {{creatorPrice}} released to {{creatorName}}",

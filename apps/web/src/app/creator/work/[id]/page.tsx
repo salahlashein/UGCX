@@ -208,6 +208,28 @@ export default function CreatorWorkspaceDetailPage({
             (locale === 'ar' ? 'العلامة التجارية' : 'Brand');
           const campaignTitle = campaign?.title || (locale === 'ar' ? 'التعاون' : 'Collaboration');
           const isRevision = collaboration.status === 'revision_requested';
+          const isAr = locale === 'ar';
+          const cStatus = collaboration.status as string;
+          // Upload only while a version is due; after V1 is sent the panel
+          // shows where the job stands instead (UI audit creator-work-detail/C1).
+          const isWaitingForBrand = cStatus === 'delivered';
+          const isDone = cStatus === 'approved' || cStatus === 'paid';
+          const canUpload = !isWaitingForBrand && !isDone && cStatus !== 'cancelled';
+          const paidOn = (collaboration as any).paidAt
+            ? formatDateShort((collaboration as any).paidAt, locale)
+            : '';
+          const moneyLine =
+            cStatus === 'paid'
+              ? isAr
+                ? `اتدفعت لك${paidOn ? ` يوم ${paidOn}` : ''}`
+                : `paid to you${paidOn ? ` on ${paidOn}` : ''}`
+              : cStatus === 'approved'
+                ? isAr
+                  ? 'اتوافق عليها · الدفع جاري'
+                  : 'approved · payout in progress'
+                : isAr
+                  ? 'في الضمان'
+                  : 'in escrow';
 
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.xl }}>
@@ -242,18 +264,18 @@ export default function CreatorWorkspaceDetailPage({
                         {campaignTitle}
                       </AppText>
                       <StatusBadge status={collaboration.status} domain="collaboration" />
-                      {(collaboration as any).dueAt && (
+                      {(collaboration as any).dueAt && canUpload && (
                         <Tag tone="pend">
                           {locale === 'ar'
                             ? `استحقاق: ${formatDueDate((collaboration as any).dueAt, locale)}`
                             : `Due: ${formatDueDate((collaboration as any).dueAt, locale)}`}
                         </Tag>
                       )}
-                      <Tag tone="accent">
+                      <AppText variant="caption" color={colors.textSecondary}>
                         {locale === 'ar'
                           ? `تعديل ${(collaboration as any).revisionsUsed ?? 0} من ${(collaboration as any).revisionLimit ?? 2}`
                           : `Revision ${(collaboration as any).revisionsUsed ?? 0} of ${(collaboration as any).revisionLimit ?? 2}`}
-                      </Tag>
+                      </AppText>
                     </div>
                     <AppText variant="caption" color={colors.textSecondary}>
                       {brandName} ·{' '}
@@ -266,7 +288,7 @@ export default function CreatorWorkspaceDetailPage({
                       >
                         {formatMoney(collaboration.creatorPrice)}
                       </span>{' '}
-                      {locale === 'ar' ? 'في الضمان' : 'in escrow'}
+                      {moneyLine}
                     </AppText>
                   </div>
                 </div>
@@ -503,102 +525,178 @@ export default function CreatorWorkspaceDetailPage({
 
                 {/* Right Column: Upload & Escrow Rules */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
-                  {/* Upload Card */}
-                  <Card elevation="card" style={{ padding: spacing.lg, borderRadius: radius.card }}>
-                    <div style={{ marginBottom: spacing.md }}>
-                      <AppText
-                        variant="subtitle"
-                        style={{ fontWeight: 500, color: colors.textPrimary }}
-                      >
-                        {isRevision
-                          ? locale === 'ar'
-                            ? `رفع النسخة المعدلة (V${(latestDeliverable?.version || 1) + 1})`
-                            : `Upload revision V${(latestDeliverable?.version || 1) + 1}`
-                          : locale === 'ar'
-                            ? 'تسليم الفيديو'
-                            : 'Upload deliverable'}
-                      </AppText>
-                    </div>
-
-                    {isAwaitingShipment ? (
-                      <div
-                        style={{
-                          padding: spacing.lg,
-                          borderRadius: radius.card,
-                          backgroundColor: colors.surfaceSoft,
-                          textAlign: 'center',
-                        }}
-                      >
-                        <AppText variant="bodySmall" color={colors.textSecondary}>
-                          {locale === 'ar'
-                            ? 'في انتظار شحن المنتج من العلامة التجارية. ستتمكن من رفع الفيديو بمجرد تأكيد الشحن.'
-                            : 'Waiting for brand to ship the product. Video upload unlocks once shipment is confirmed.'}
+                  {/* Where the job stands once a version is sent */}
+                  {!canUpload && latestDeliverable && (
+                    <Card
+                      elevation="card"
+                      style={{
+                        padding: spacing.lg,
+                        borderRadius: radius.card,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: spacing.sm,
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: spacing.xs }}>
+                        <Icon name={isDone ? 'check' : 'clock'} size={16} />
+                        <AppText
+                          variant="subtitle"
+                          style={{ fontWeight: 500, color: colors.textPrimary }}
+                        >
+                          {cStatus === 'paid'
+                            ? isAr
+                              ? 'الشغل خلص واتدفعلك'
+                              : 'Job done and paid'
+                            : cStatus === 'approved'
+                              ? isAr
+                                ? 'البراند وافق على الفيديو'
+                                : 'The brand approved your video'
+                              : isAr
+                                ? `V${latestDeliverable.version || 1} وصلت لـ${brandName}`
+                                : `V${latestDeliverable.version || 1} is with ${brandName}`}
                         </AppText>
                       </div>
-                    ) : (
-                      <form
-                        onSubmit={handleSubmit}
-                        style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}
-                      >
-                        {error && (
-                          <div
-                            style={{
-                              padding: `${spacing.sm}px ${spacing.md}px`,
-                              borderRadius: radius.chip,
-                              backgroundColor: '#fef2f2',
-                              border: `1px solid ${colors.danger}`,
-                              color: colors.danger,
-                              fontSize: 13,
-                              fontFamily: 'var(--font-mono, monospace)',
-                            }}
-                          >
-                            {error}
-                          </div>
-                        )}
-
-                        <Dropzone
-                          accept="video/mp4,video/quicktime,video/webm"
-                          maxSizeMB={500}
-                          file={selectedFile}
-                          onFileSelect={setSelectedFile}
-                          progress={uploadProgress ?? undefined}
-                        />
-
-                        <TextInput
-                          label={
-                            locale === 'ar'
-                              ? 'ملاحظات للعلامة التجارية (اختياري)'
-                              : 'Notes for brand (optional)'
-                          }
-                          placeholder={
-                            locale === 'ar'
-                              ? 'وضح أي تفاصيل أو تغييرات قمت بها في هذا التسليم...'
-                              : 'Explain what you created or changed in this version...'
-                          }
-                          value={note}
-                          onChangeText={setNote}
-                          numberOfLines={3}
-                        />
-
-                        <Button
-                          type="submit"
-                          variant="primary"
-                          fullWidth
-                          loading={requestUploadUrl.isPending || registerDeliverable.isPending}
-                          disabled={!selectedFile}
+                      <AppText variant="bodySmall" color={colors.textSecondary}>
+                        {cStatus === 'paid'
+                          ? `${formatMoney(collaboration.creatorPrice)} ${moneyLine}.`
+                          : cStatus === 'approved'
+                            ? isAr
+                              ? `${formatMoney(collaboration.creatorPrice)} في الطريق ليك.`
+                              : `${formatMoney(collaboration.creatorPrice)} is on its way to you.`
+                            : isAr
+                              ? `اتبعتت يوم ${formatDateShort(latestDeliverable.createdAt, locale)}. البراند بيراجعها وهنبلغك أول ما يرد. مش محتاج ترفعها تاني.`
+                              : `Sent ${formatDateShort(latestDeliverable.createdAt, locale)}. The brand is reviewing it; we'll tell you when they reply. No need to upload again.`}
+                      </AppText>
+                      {latestDeliverable.note ? (
+                        <div
+                          style={{
+                            borderInlineStart: `3px solid ${colors.border}`,
+                            paddingInlineStart: spacing.md,
+                          }}
                         >
-                          {locale === 'ar' ? 'إرسال المخرج' : 'Submit deliverable'}
-                        </Button>
-                      </form>
-                    )}
-                  </Card>
+                          <AppText variant="caption" color={colors.textSecondary}>
+                            {isAr ? 'ملاحظتك' : 'Your note'}
+                          </AppText>
+                          <AppText
+                            variant="bodySmall"
+                            color={colors.textPrimary}
+                            style={{ display: 'block', whiteSpace: 'pre-wrap' }}
+                          >
+                            {latestDeliverable.note}
+                          </AppText>
+                        </div>
+                      ) : null}
+                    </Card>
+                  )}
+
+                  {/* Upload Card */}
+                  {canUpload && (
+                    <Card
+                      elevation="card"
+                      style={{ padding: spacing.lg, borderRadius: radius.card }}
+                    >
+                      <div style={{ marginBottom: spacing.md }}>
+                        <AppText
+                          variant="subtitle"
+                          style={{ fontWeight: 500, color: colors.textPrimary }}
+                        >
+                          {isRevision
+                            ? locale === 'ar'
+                              ? `رفع النسخة المعدلة (V${(latestDeliverable?.version || 1) + 1})`
+                              : `Upload revision V${(latestDeliverable?.version || 1) + 1}`
+                            : locale === 'ar'
+                              ? 'تسليم الفيديو'
+                              : 'Upload deliverable'}
+                        </AppText>
+                      </div>
+
+                      {isAwaitingShipment ? (
+                        <div
+                          style={{
+                            padding: spacing.lg,
+                            borderRadius: radius.card,
+                            backgroundColor: colors.surfaceSoft,
+                            textAlign: 'center',
+                          }}
+                        >
+                          <AppText variant="bodySmall" color={colors.textSecondary}>
+                            {locale === 'ar'
+                              ? 'في انتظار شحن المنتج من العلامة التجارية. ستتمكن من رفع الفيديو بمجرد تأكيد الشحن.'
+                              : 'Waiting for brand to ship the product. Video upload unlocks once shipment is confirmed.'}
+                          </AppText>
+                        </div>
+                      ) : (
+                        <form
+                          onSubmit={handleSubmit}
+                          style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}
+                        >
+                          {error && (
+                            <div
+                              style={{
+                                padding: `${spacing.sm}px ${spacing.md}px`,
+                                borderRadius: radius.chip,
+                                backgroundColor: '#fef2f2',
+                                border: `1px solid ${colors.danger}`,
+                                color: colors.danger,
+                                fontSize: 13,
+                                fontFamily: 'var(--font-mono, monospace)',
+                              }}
+                            >
+                              {error}
+                            </div>
+                          )}
+
+                          <Dropzone
+                            accept="video/mp4,video/quicktime,video/webm"
+                            maxSizeMB={500}
+                            file={selectedFile}
+                            onFileSelect={setSelectedFile}
+                            progress={uploadProgress ?? undefined}
+                          />
+
+                          <TextInput
+                            label={
+                              locale === 'ar'
+                                ? 'ملاحظات للعلامة التجارية (اختياري)'
+                                : 'Notes for brand (optional)'
+                            }
+                            placeholder={
+                              locale === 'ar'
+                                ? 'وضح أي تفاصيل أو تغييرات قمت بها في هذا التسليم...'
+                                : 'Explain what you created or changed in this version...'
+                            }
+                            value={note}
+                            onChangeText={setNote}
+                            numberOfLines={3}
+                          />
+
+                          <Button
+                            type="submit"
+                            variant="primary"
+                            fullWidth
+                            loading={requestUploadUrl.isPending || registerDeliverable.isPending}
+                            disabled={!selectedFile}
+                          >
+                            {locale === 'ar' ? 'إرسال المخرج' : 'Submit deliverable'}
+                          </Button>
+                        </form>
+                      )}
+                    </Card>
+                  )}
 
                   {/* Escrow Rule Card */}
                   <Card elevation="card" style={{ padding: spacing.lg, borderRadius: radius.card }}>
                     <KeyValueList
                       items={[
                         {
-                          key: locale === 'ar' ? 'في الضمان' : 'In escrow',
+                          key:
+                            cStatus === 'paid'
+                              ? isAr
+                                ? 'اتدفعلك'
+                                : 'Paid to you'
+                              : isAr
+                                ? 'في الضمان'
+                                : 'In escrow',
                           value: (
                             <span
                               style={{

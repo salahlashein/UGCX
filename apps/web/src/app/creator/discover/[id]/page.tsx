@@ -19,10 +19,12 @@ import {
 import { colors, radius, spacing } from '../../../../theme/tokens';
 import { useCampaign } from '../../../../hooks/api/useCampaigns';
 import { useCreateProposal, useMyProposals } from '../../../../hooks/api/useProposals';
+import { useMyCollaborations } from '../../../../hooks/api/useCollaborations';
+import { languageLabel, videoTypeLabel } from '../../../../utils/labels';
 import { useCreatorProfile, useCreatorStats } from '../../../../hooks/api/useCreator';
 import { useTranslation } from '../../../../i18n';
 import { extractErrorMessage } from '../../../../services/apiHelpers';
-import { formatMoney, getInitials } from '../../../../utils/format';
+import { formatAmount, formatDateShort, formatMoney, getInitials } from '../../../../utils/format';
 import { toCents } from '../../../../utils/money';
 
 export default function CreatorCampaignDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -55,6 +57,12 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
     if (mid > 0) setPrice(String(mid));
     setPriceSeededFor(campaign.id);
   }, [campaign, priceSeededFor]);
+
+  const myCollabsQuery = useMyCollaborations();
+  const myJob = useMemo(
+    () => (myCollabsQuery.data?.data ?? []).find((c) => (c as any).campaignId === campaignId),
+    [myCollabsQuery.data?.data, campaignId],
+  );
 
   // Check if creator already submitted a proposal for this campaign
   const existingProposal = useMemo(() => {
@@ -169,7 +177,7 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                   cells={[
                     {
                       label: locale === 'ar' ? 'نوع الفيديو' : 'Format',
-                      value: brief.videoType || 'Video',
+                      value: videoTypeLabel(brief.videoType, locale),
                     },
                     {
                       label: locale === 'ar' ? 'المدة' : 'Duration',
@@ -177,7 +185,7 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                     },
                     {
                       label: locale === 'ar' ? 'اللغة' : 'Language',
-                      value: brief.language ? brief.language.toUpperCase() : 'AR',
+                      value: languageLabel(brief.language, locale),
                     },
                     {
                       label: locale === 'ar' ? 'الشحن' : 'Shipping',
@@ -191,11 +199,22 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                     },
                     {
                       label: locale === 'ar' ? 'نطاق الميزانية' : 'Budget range',
-                      value: `${formatMoney(brief.budgetMin)} - ${formatMoney(brief.budgetMax)}`,
+                      value: `${formatMoney(brief.budgetMin).replace(/\.00$/, '')} – ${formatAmount(brief.budgetMax).replace(/\.00$/, '')}`,
                     },
                     {
-                      label: locale === 'ar' ? 'المتبقي' : 'Closes in',
-                      value: daysLeft !== null ? `${daysLeft}d` : '-',
+                      label: locale === 'ar' ? 'آخر ميعاد' : 'Closes',
+                      // UI audit creator-discover-detail/C2.
+                      value: !brief.closesAt
+                        ? locale === 'ar'
+                          ? 'مفتوح'
+                          : 'Open'
+                        : daysLeft === 0
+                          ? locale === 'ar'
+                            ? 'اتقفل'
+                            : 'Closed'
+                          : locale === 'ar'
+                            ? `بعد ${daysLeft} يوم (${formatDateShort(brief.closesAt, locale)})`
+                            : `In ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} (${formatDateShort(brief.closesAt, locale)})`,
                     },
                   ]}
                 />
@@ -245,7 +264,7 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                           : 'Your proposal'}
                     </AppText>
                     {existingProposal && (
-                      <StatusBadge status={existingProposal.status} domain="custom" />
+                      <StatusBadge status={existingProposal.status} domain="proposal" />
                     )}
                   </div>
 
@@ -303,6 +322,17 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                           {existingProposal.pitch}
                         </p>
                       </div>
+
+                      {/* A way forward once hired (UI audit creator-discover-detail/W3). */}
+                      {existingProposal.status === 'accepted' && myJob && (
+                        <Button
+                          variant="primary"
+                          fullWidth
+                          onClick={() => router.push(`/creator/work/${myJob.id}`)}
+                        >
+                          {locale === 'ar' ? 'افتح الشغل' : 'Go to your job'} →
+                        </Button>
+                      )}
                     </div>
                   ) : (
                     <form
@@ -499,7 +529,11 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                         >
                           {formatMoney(existingProposal ? existingProposal.price : price)}
                         </div>
-                        <Tag tone="pend">{locale === 'ar' ? 'مقدم' : 'Applied'}</Tag>
+                        {/* Same status as the proposal card (UI audit creator-discover-detail/C1). */}
+                        <StatusBadge
+                          status={existingProposal ? existingProposal.status : 'applied'}
+                          domain="proposal"
+                        />
                       </div>
                     </div>
 
@@ -559,7 +593,12 @@ export default function CreatorCampaignDetailPage({ params }: { params: Promise<
                             marginTop: 2,
                           }}
                         >
-                          {statsQuery.data?.approvalRate ?? 100}%
+                          {/* No rate before the first job (UI audit G10). */}
+                          {(statsQuery.data?.jobsDone ?? 0) > 0
+                            ? `${statsQuery.data?.approvalRate ?? 0}%`
+                            : locale === 'ar'
+                              ? 'كريتور جديد'
+                              : 'New creator'}
                         </div>
                       </div>
                       <div>

@@ -16,6 +16,9 @@ export interface ActingBrand {
   memberRole: BrandMemberRole;
 }
 
+/** Completed payouts a brand needs before its pay speed is shown. */
+export const MIN_PAYOUTS_FOR_PAY_SPEED = 3;
+
 @Injectable()
 export class BrandsService {
   constructor(
@@ -130,7 +133,8 @@ export class BrandsService {
     const creatorsHired = hiredRes[0]?.count ? Number(hiredRes[0].count) : 0;
 
     const approvalRes = await this.dataSource.query(
-      `SELECT AVG(EXTRACT(EPOCH FROM (t.created_at - d.created_at)) / 86400.0) AS avg_days
+      `SELECT AVG(EXTRACT(EPOCH FROM (t.created_at - d.created_at)) / 86400.0) AS avg_days,
+              COUNT(DISTINCT col.id)::int AS payouts
        FROM collaborations col
        INNER JOIN deliverables d ON d.collaboration_id = col.id AND d.status = 'approved'
        INNER JOIN transactions t ON t.collaboration_id = col.id AND t.type = 'release' AND t.status = 'completed'
@@ -139,8 +143,11 @@ export class BrandsService {
     );
 
     const rawAvg = approvalRes[0]?.avg_days;
+    // Pay speed is a promise creators read, so it shows only once there is
+    // enough history behind it (UI audit brand-profile/C1, G10).
+    const payouts = Number(approvalRes[0]?.payouts ?? 0);
     let avgApprovalDays: number | null = null;
-    if (rawAvg != null && !isNaN(Number(rawAvg))) {
+    if (payouts >= MIN_PAYOUTS_FOR_PAY_SPEED && rawAvg != null && !isNaN(Number(rawAvg))) {
       const days = Number(rawAvg);
       avgApprovalDays = Math.round(days * 10) / 10;
     }
