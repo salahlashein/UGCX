@@ -46,10 +46,8 @@ export function Pipeline({ stages, maxItems = 4, onStageClick, className = '' }:
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${Math.max(1, stages.length)}, minmax(0, 1fr))`,
-        border: `1px dashed ${colors.dashLine}`,
-        borderRadius: `${radius.card}px`,
-        backgroundColor: colors.surface,
-        overflow: 'hidden',
+        // Spacing and one surface step instead of a dashed frame (direction A).
+        gap: spacing.xs,
       }}
     >
       {stages.map((stage, idx) => {
@@ -77,7 +75,8 @@ export function Pipeline({ stages, maxItems = 4, onStageClick, className = '' }:
               gap: spacing.xs,
               padding: spacing.md,
               minWidth: 0,
-              borderInlineEnd: isLast ? undefined : `1px dashed ${colors.dashLine}`,
+              backgroundColor: colors.surfaceSoft,
+              borderRadius: `${radius.card}px`,
             }}
           >
             <span
@@ -121,7 +120,7 @@ export function Pipeline({ stages, maxItems = 4, onStageClick, className = '' }:
                     color: colors.body,
                     padding: '5px 7px',
                     borderRadius: `${radius.sm}px`,
-                    backgroundColor: colors.surfaceSoft,
+                    backgroundColor: colors.surface,
                     border: `1px solid ${item.hot || stage.isHot ? colors.signatureCoral : colors.hairline}`,
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -153,7 +152,7 @@ export function Pipeline({ stages, maxItems = 4, onStageClick, className = '' }:
                 style={{
                   position: 'absolute',
                   top: spacing.md,
-                  insetInlineEnd: -9,
+                  insetInlineEnd: -13,
                   width: 18,
                   height: 18,
                   borderRadius: `${radius.pill}px`,

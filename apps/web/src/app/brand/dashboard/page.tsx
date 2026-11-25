@@ -42,6 +42,18 @@ export default function BrandDashboardPage() {
               canCreate={!isViewer && can('createBrief')}
               locale={locale}
             />
+            {/* What needs the brand comes first; the chart last (direction A). */}
+            <QuickActionGrid
+              totalActionItems={data.totalActionItems}
+              proposalsAlert={data.proposalsAlert}
+              deliverablesAlert={data.deliverablesAlert}
+              unfundedDrafts={data.unfundedDrafts}
+              isViewer={isViewer}
+              canCreateBrief={can('createBrief')}
+              canFundEscrow={can('fundEscrow')}
+              canViewBilling={can('viewBilling')}
+              locale={locale}
+            />
             <SpendHeroCard
               dashboard={dashboard}
               monthSpend={data.monthSpend}
@@ -54,19 +66,8 @@ export default function BrandDashboardPage() {
               onNewBrief={() => router.push('/brand/briefs/new')}
               onFundBrief={() => router.push('/brand/briefs')}
             />
-            <BriefsTableSection series={dashboard.series} locale={locale} />
             <PipelineSection stages={data.pipelineStages} locale={locale} />
-            <QuickActionGrid
-              totalActionItems={data.totalActionItems}
-              proposalsAlert={data.proposalsAlert}
-              deliverablesAlert={data.deliverablesAlert}
-              unfundedDrafts={data.unfundedDrafts}
-              isViewer={isViewer}
-              canCreateBrief={can('createBrief')}
-              canFundEscrow={can('fundEscrow')}
-              canViewBilling={can('viewBilling')}
-              locale={locale}
-            />
+            <BriefsTableSection series={dashboard.series} locale={locale} />
           </div>
         )}
       </QueryStateView>

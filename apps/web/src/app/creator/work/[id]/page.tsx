@@ -18,6 +18,7 @@ import {
   Tag,
   TextInput,
   type HStep,
+  DeliverableThumb,
 } from '../../../../components/ui';
 import { colors, radius, spacing } from '../../../../theme/tokens';
 import { useCollaboration } from '../../../../hooks/api/useCollaborations';
@@ -556,6 +557,10 @@ export default function CreatorWorkspaceDetailPage({
                                 : `V${latestDeliverable.version || 1} is with ${brandName}`}
                         </AppText>
                       </div>
+                      <DeliverableThumb
+                        deliverableId={latestDeliverable.id}
+                        label={`V${latestDeliverable.version || 1}`}
+                      />
                       <AppText variant="bodySmall" color={colors.textSecondary}>
                         {cStatus === 'paid'
                           ? `${formatMoney(collaboration.creatorPrice)} ${moneyLine}.`

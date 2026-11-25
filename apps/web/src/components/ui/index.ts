@@ -42,3 +42,4 @@ export * from './OtpInput';
 export * from './Dropzone';
 export * from './VideoPlayer';
 export * from './PageHeader';
+export * from './DeliverableThumb';

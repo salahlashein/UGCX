@@ -16,6 +16,7 @@ import {
   TextInput,
   VerticalTimeline,
   type TimelineStep,
+  DeliverableThumb,
 } from '../../../../components/ui';
 import { colors, radius, spacing } from '../../../../theme/tokens';
 import { useCollaboration, useConfirmShipment } from '../../../../hooks/api/useCollaborations';
@@ -365,6 +366,39 @@ export default function BrandCollaborationDetailPage({
               >
                 {/* Left Column: Vertical Timeline & Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
+                  {/* The videos lead the page (visual direction A). */}
+                  {deliverables.length > 0 && (
+                    <Card
+                      elevation="card"
+                      style={{ padding: spacing.lg, borderRadius: radius.card }}
+                    >
+                      <AppText
+                        variant="subtitle"
+                        style={{
+                          fontWeight: 500,
+                          color: colors.textPrimary,
+                          display: 'block',
+                          marginBottom: spacing.md,
+                        }}
+                      >
+                        {locale === 'ar' ? 'الفيديوهات' : 'Videos'}
+                      </AppText>
+                      <div style={{ display: 'flex', gap: spacing.md, flexWrap: 'wrap' }}>
+                        {deliverables.map((d, idx) => (
+                          <DeliverableThumb
+                            key={d.id}
+                            deliverableId={d.id}
+                            label={`V${d.version || idx + 1}`}
+                            onOpen={() =>
+                              router.push(
+                                `/brand/deliverables/${d.id}/review?collaborationId=${collaborationId}`,
+                              )
+                            }
+                          />
+                        ))}
+                      </div>
+                    </Card>
+                  )}
                   <Card elevation="card" style={{ padding: spacing.xl, borderRadius: radius.card }}>
                     <div style={{ marginBottom: spacing.lg }}>
                       <AppText

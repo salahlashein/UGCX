@@ -7,12 +7,12 @@ import { decodeJwtPayload } from '../store/authStore';
 import { FEATURE_FLAGS } from '../config/features';
 
 describe('ReelPal Web Soft Launch Smoke Suite', () => {
-  it('enforces exact C3 Sage palette tokens and font weights 400/500 only', () => {
-    assert.equal(colors.canvas, '#eff2ed');
+  it('enforces the palette tokens (direction A) and font weights 400/500 only', () => {
+    assert.equal(colors.canvas, '#f7f6f2');
     assert.equal(colors.primary, '#2f5d46');
     assert.equal(colors.surface, '#ffffff');
     assert.equal(colors.surfaceDark, '#17241c');
-    assert.equal(colors.dashLine, '#b9c4bc');
+    assert.equal(colors.dashLine, '#cfcbc0');
     assert.equal(radius.xl, 18);
     assert.equal(radius.card, 14);
     assert.equal(radius.hero, 16);

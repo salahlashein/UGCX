@@ -20,7 +20,7 @@ export interface KpiCellsProps {
 }
 
 /**
- * A dashed grid of labelled numbers.
+ * A grid of labelled numbers on soft tiles (no dashed frame, direction A).
  *
  * The column count follows the number of items, so three items never leave a
  * fourth cell empty.
@@ -30,33 +30,25 @@ export function KpiCells({ items, cells, maxColumns = 4, className = '' }: KpiCe
   if (list.length === 0) return null;
 
   const columns = Math.max(1, Math.min(list.length, maxColumns));
-  const rows = Math.ceil(list.length / columns);
 
   return (
     <div
-      className={`w-full overflow-hidden ugcx-kpi-cells ${className}`}
+      className={`w-full ugcx-kpi-cells ${className}`}
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-        border: `1px dashed ${colors.dashLine}`,
-        borderRadius: `${radius.card}px`,
-        backgroundColor: colors.surface,
+        gap: 8,
       }}
     >
       {list.map((item, idx) => {
-        const column = idx % columns;
-        const row = Math.floor(idx / columns);
-        const isLastColumn = column === columns - 1;
-        const isLastRow = row === rows - 1;
-
         return (
           <div
             key={idx}
             className="flex flex-col gap-1 p-4"
             style={{
               minWidth: 0,
-              borderInlineEnd: isLastColumn ? undefined : `1px dashed ${colors.dashLine}`,
-              borderBottom: isLastRow ? undefined : `1px dashed ${colors.dashLine}`,
+              backgroundColor: colors.surfaceSoft,
+              borderRadius: `${radius.card}px`,
             }}
           >
             <span
