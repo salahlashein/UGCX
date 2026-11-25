@@ -20,6 +20,7 @@ import { colors, radius, spacing } from '../../theme/tokens';
 import { useChats, useMarkChatRead } from '../../hooks/api/useChats';
 import { useMessages, useSendMessage } from '../../hooks/api/useMessages';
 import { useCollaboration } from '../../hooks/api/useCollaborations';
+import { extractErrorMessage } from '../../services/apiHelpers';
 import { useAuthStore } from '../../store/authStore';
 import { useTranslation } from '../../i18n';
 import { formatDateShort, formatMoney, getInitials } from '../../utils/format';
@@ -43,6 +44,9 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
   const [searchQuery, setSearchQuery] = useState('');
   const [filterState, setFilterState] = useState<'active' | 'closed'>('active');
   const [messageText, setMessageText] = useState('');
+  const [sendError, setSendError] = useState<string | null>(null);
+  // Phones show the list or one conversation. A deep link opens the conversation directly.
+  const [isThreadOpen, setIsThreadOpen] = useState(Boolean(initialCollaborationId));
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -104,10 +108,28 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
     e.preventDefault();
     if (!messageText.trim() || !selectedCollabId) return;
     const body = messageText.trim();
+    setSendError(null);
     setMessageText('');
-    await sendMessage.mutateAsync({ body });
-    messagesQuery.refetch();
-    chatsQuery.refetch();
+    try {
+      await sendMessage.mutateAsync({ body });
+      messagesQuery.refetch();
+      chatsQuery.refetch();
+    } catch (err) {
+      // Give the text back so the user does not lose the message.
+      setMessageText(body);
+      setSendError(
+        extractErrorMessage(
+          err,
+          locale === 'ar' ? 'تعذر إرسال الرسالة. حاول مرة أخرى.' : 'Message not sent. Try again.',
+        ),
+      );
+    }
+  };
+
+  const openThread = (collaborationId: string) => {
+    setSelectedCollabId(collaborationId);
+    setIsThreadOpen(true);
+    setSendError(null);
   };
 
   /** Copy for one system event key, in the current language. */
@@ -192,6 +214,9 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
       {/* Main 2-Pane Split Workspace */}
       <SplitPane
         minLeftWidth={300}
+        selectedId={isThreadOpen ? selectedCollabId : null}
+        onClearSelection={() => setIsThreadOpen(false)}
+        backLabel={locale === 'ar' ? 'كل المحادثات' : 'All chats'}
         left={
           <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
             {/* Search Box */}
@@ -223,7 +248,16 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
                   return (
                     <div
                       key={t.collaborationId}
-                      onClick={() => setSelectedCollabId(t.collaborationId)}
+                      role="button"
+                      tabIndex={0}
+                      aria-current={isSelected ? 'true' : undefined}
+                      onClick={() => openThread(t.collaborationId)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          openThread(t.collaborationId);
+                        }
+                      }}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -516,6 +550,20 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
                 })}
                 <div ref={messagesEndRef} />
               </div>
+
+              {sendError ? (
+                <div
+                  role="alert"
+                  style={{
+                    padding: `${spacing.xs}px ${spacing.md}px`,
+                    borderTop: `1px solid ${colors.border}`,
+                    color: colors.danger,
+                    fontSize: 13,
+                  }}
+                >
+                  {sendError}
+                </div>
+              ) : null}
 
               {/* Message Composer */}
               <form
