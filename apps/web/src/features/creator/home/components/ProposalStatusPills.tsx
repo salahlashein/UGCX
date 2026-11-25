@@ -47,7 +47,7 @@ export function ProposalStatusPills({ proposalCounts, locale }: ProposalStatusPi
       <KpiCells
         cells={[
           { label: isAr ? 'مقدم' : 'Applied', value: String(proposalCounts.applied) },
-          { label: isAr ? 'مؤهل' : 'Shortlisted', value: String(proposalCounts.shortlisted) },
+          { label: isAr ? 'مؤهل' : 'Shortlist', value: String(proposalCounts.shortlisted) },
           { label: isAr ? 'فائز' : 'Won', value: String(proposalCounts.won) },
         ]}
       />

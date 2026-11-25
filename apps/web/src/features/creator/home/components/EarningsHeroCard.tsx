@@ -13,12 +13,49 @@ interface EarningsHeroCardProps {
 }
 
 const styles = {
-  header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.md } as const,
-  btn: { background: 'none', border: 'none', color: colors.primary, fontSize: 13, cursor: 'pointer', padding: 0 } as const,
-  box: { padding: spacing.md, backgroundColor: colors.surfaceSoft, borderRadius: radius.card, border: `1px solid ${colors.border}` } as const,
-  amount: { fontSize: 28, fontWeight: 500, fontFamily: 'var(--font-mono, monospace)', color: colors.primary, letterSpacing: -0.5, marginTop: spacing.xs, direction: 'ltr', textAlign: 'start' } as const,
-  escrowRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${spacing.sm}px` } as const,
-  escrowVal: { fontFamily: 'var(--font-mono, monospace)', fontWeight: 500, fontSize: 15, direction: 'ltr', color: colors.textPrimary } as const,
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.md,
+  } as const,
+  btn: {
+    background: 'none',
+    border: 'none',
+    color: colors.primary,
+    fontSize: 13,
+    cursor: 'pointer',
+    padding: 0,
+  } as const,
+  box: {
+    padding: spacing.md,
+    backgroundColor: colors.surfaceSoft,
+    borderRadius: radius.card,
+    border: `1px solid ${colors.border}`,
+  } as const,
+  amount: {
+    fontSize: 28,
+    fontWeight: 500,
+    fontFamily: 'var(--font-mono, monospace)',
+    color: colors.primary,
+    letterSpacing: -0.5,
+    marginTop: spacing.xs,
+    direction: 'ltr',
+    textAlign: 'start',
+  } as const,
+  escrowRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: `0 ${spacing.sm}px`,
+  } as const,
+  escrowVal: {
+    fontFamily: 'var(--font-mono, monospace)',
+    fontWeight: 500,
+    fontSize: 15,
+    direction: 'ltr',
+    color: colors.textPrimary,
+  } as const,
 };
 
 export function EarningsHeroCard({ earnings, locale }: EarningsHeroCardProps) {
@@ -51,9 +88,23 @@ export function EarningsHeroCard({ earnings, locale }: EarningsHeroCardProps) {
           <span style={styles.escrowVal}>{formatMoney(earnings?.escrowBalance ?? '0.00')}</span>
         </div>
 
-        <Button variant="secondary" size="sm" fullWidth onClick={() => router.push('/creator/earnings')}>
-          {isAr ? 'طلب سحب الرصيد' : 'Request payout'}
-        </Button>
+        {/* Same rule as the earnings page: nothing to withdraw, no button (UI audit creator-home/W2). */}
+        {Number(earnings?.pendingBalance ?? 0) > 0 ? (
+          <Button
+            variant="secondary"
+            size="sm"
+            fullWidth
+            onClick={() => router.push('/creator/earnings')}
+          >
+            {isAr ? 'طلب سحب الرصيد' : 'Request payout'}
+          </Button>
+        ) : (
+          <AppText variant="caption" color={colors.textSecondary}>
+            {isAr
+              ? 'هتقدر تسحب أول ما البراند يوافق على الفيديو.'
+              : 'You can withdraw once a brand approves your video.'}
+          </AppText>
+        )}
       </div>
     </Card>
   );

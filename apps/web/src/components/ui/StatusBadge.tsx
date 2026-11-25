@@ -20,7 +20,7 @@ const TONE_COLORS: Record<StatusTone, { bg: string; fg: string }> = {
   pend: { bg: colors.signatureCream, fg: colors.ink },
   info: { bg: colors.infoSurface, fg: colors.info },
   bad: { bg: colors.dangerSurface, fg: colors.danger },
-  neu: { bg: colors.surfaceStrong, fg: colors.muted },
+  neu: { bg: colors.surfaceStrong, fg: colors.body },
 };
 
 export function StatusBadge({ status, domain = 'campaign', label, tone }: StatusBadgeProps) {

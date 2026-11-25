@@ -23,6 +23,8 @@ export interface TextInputProps {
   dir?: 'ltr' | 'rtl' | 'auto';
   className?: string;
   style?: React.CSSProperties;
+  /** Accessible name when there is no visible label, such as a search box (UI audit G6). */
+  ariaLabel?: string;
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
@@ -44,6 +46,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(func
     dir,
     className = '',
     style,
+    ariaLabel,
   }: TextInputProps,
   ref,
 ) {
@@ -90,6 +93,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(func
           onChange={handleChange}
           placeholder={placeholder}
           rows={effectiveRows}
+          aria-label={label ? undefined : (ariaLabel ?? placeholder)}
+          className="ugcx-input"
           disabled={disabled}
           required={required}
           style={sharedStyle}
@@ -103,6 +108,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(func
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
+          aria-label={label ? undefined : (ariaLabel ?? placeholder)}
+          className="ugcx-input"
           disabled={disabled}
           required={required}
           style={sharedStyle}

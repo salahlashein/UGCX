@@ -51,7 +51,8 @@ export const colors = {
   // Aliases for component parity
   textPrimary: '#17241c',
   textSecondary: '#5d6b62',
-  textTertiary: '#93a097',
+  // 4.67:1 on the canvas and 5.27:1 on white (UI audit G4); was #93a097 at 2.7:1.
+  textTertiary: '#626f66',
   border: '#dde3de',
 } as const;
 

@@ -287,6 +287,28 @@ function DeliverableReviewContent({ deliverableId }: { deliverableId: string }) 
               />
             </div>
           )}
+
+          {/* The creator's note on this version (UI audit brand-review/C1). */}
+          {activeDeliverable?.note ? (
+            <Card elevation="card" style={{ padding: spacing.lg, borderRadius: radius.card }}>
+              <AppText
+                variant="dataMonoCaps"
+                color={colors.textSecondary}
+                style={{ display: 'block', marginBottom: spacing.xs }}
+              >
+                {locale === 'ar'
+                  ? `ملاحظة الكريتور على V${activeDeliverable.version || 1}`
+                  : `Creator's note on V${activeDeliverable.version || 1}`}
+              </AppText>
+              <AppText
+                variant="bodySmall"
+                color={colors.textPrimary}
+                style={{ display: 'block', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}
+              >
+                {activeDeliverable.note}
+              </AppText>
+            </Card>
+          ) : null}
         </div>
 
         {/* Right Column: Brief Checklist & Decision Card */}

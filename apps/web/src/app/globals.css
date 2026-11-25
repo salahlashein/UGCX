@@ -140,6 +140,13 @@ html[dir='rtl'] body {
   }
 }
 
+/* A visible focus ring on every text field (UI audit G7). The inputs set
+   outline: none inline, so this needs !important. */
+.ugcx-input:focus-visible {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px;
+}
+
 /* Room under the content for the floating phone tab bar. */
 .ugcx-main {
   padding-bottom: 112px;
@@ -262,7 +269,6 @@ html[dir='rtl'] body {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
-
 
 /* The brief pipeline folds as the screen narrows. */
 @media (max-width: 1080px) {

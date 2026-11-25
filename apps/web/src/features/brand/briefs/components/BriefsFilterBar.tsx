@@ -78,6 +78,7 @@ export function BriefsFilterBar({
           <TextInput
             ref={searchInputRef}
             placeholder={isAr ? 'بحث في البريفات...' : 'Search briefs...'}
+            ariaLabel={isAr ? 'ابحث في البريفات' : 'Search briefs'}
             value={searchQuery}
             onChangeText={onSearchChange}
           />

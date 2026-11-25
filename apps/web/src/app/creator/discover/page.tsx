@@ -151,6 +151,7 @@ function CreatorDiscoverContent() {
               placeholder={
                 locale === 'ar' ? 'بحث عن بريف أو علامة تجارية...' : 'Search briefs or brands...'
               }
+              ariaLabel={locale === 'ar' ? 'ابحث في البريفات' : 'Search briefs'}
               value={searchInput}
               onChangeText={setSearchInput}
             />
@@ -295,6 +296,7 @@ function CreatorDiscoverContent() {
                 </span>
               </div>
               <input
+                aria-label={locale === 'ar' ? 'أقصى ميزانية' : 'Maximum budget'}
                 type="range"
                 min="0"
                 max="25000"

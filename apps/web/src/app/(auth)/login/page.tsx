@@ -498,52 +498,56 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* Method Toggle Link */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              borderTop: `1px dashed ${colors.border}`,
-              paddingTop: spacing.md,
-            }}
-          >
-            {mode === 'otp' ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('password');
-                  setError(null);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: colors.primary,
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                {locale === 'ar' ? 'تسجيل الدخول بكلمة المرور' : 'Use password instead'}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('otp');
-                  setStep(1);
-                  setError(null);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: colors.primary,
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                {locale === 'ar' ? 'تسجيل الدخول برمز البريد (OTP)' : 'Use email code instead'}
-              </button>
-            )}
-          </div>
+          {/* Method Toggle Link. Accounts are made by email code and have no
+              password, so the password form exists only for the seeded demo
+              accounts in development (UI audit login/C1). */}
+          {isDevOrTest && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                borderTop: `1px dashed ${colors.border}`,
+                paddingTop: spacing.md,
+              }}
+            >
+              {mode === 'otp' ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('password');
+                    setError(null);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: colors.primary,
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  {locale === 'ar' ? 'تسجيل الدخول بكلمة المرور' : 'Use password instead'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('otp');
+                    setStep(1);
+                    setError(null);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: colors.primary,
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  {locale === 'ar' ? 'تسجيل الدخول برمز البريد (OTP)' : 'Use email code instead'}
+                </button>
+              )}
+            </div>
+          )}
         </Card>
 
         {/* Development Demo Logins Box */}

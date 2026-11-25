@@ -197,6 +197,7 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
             {/* Search Box */}
             <TextInput
               placeholder={locale === 'ar' ? 'بحث في المحادثات...' : 'Search chats...'}
+              ariaLabel={locale === 'ar' ? 'ابحث في المحادثات' : 'Search chats'}
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
@@ -287,7 +288,7 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
                           <div
                             style={{
                               fontSize: 11,
-                              color: colors.textTertiary,
+                              color: colors.textSecondary,
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
@@ -305,7 +306,7 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
                         <div
                           style={{
                             fontSize: 11,
-                            color: colors.textTertiary,
+                            color: colors.textSecondary,
                             fontFamily: 'var(--font-mono, monospace)',
                           }}
                         >

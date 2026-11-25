@@ -46,6 +46,13 @@ export function RecommendedBriefsGrid({ briefsForYou, locale }: RecommendedBrief
         </button>
       </div>
 
+      {briefsForYou.length === 0 && (
+        <AppText variant="bodySmall" color={colors.textSecondary}>
+          {isAr
+            ? 'قدّمت على كل البريفات المفتوحة. هنبلغك أول ما ينزل بريف جديد.'
+            : "You've applied to every open brief. We'll tell you when a new one goes live."}
+        </AppText>
+      )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.sm }}>
         {briefsForYou.map((brief) => {
           const brandName = (brief as any).brand?.companyName || (isAr ? 'علامة تجارية' : 'Brand');

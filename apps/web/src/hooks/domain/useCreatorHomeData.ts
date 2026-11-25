@@ -55,12 +55,15 @@ export function useCreatorHomeData(): UseCreatorHomeDataResult {
   }, [proposalsList]);
 
   const briefsForYou = useMemo(() => {
-    const list = campaignsQuery.data?.data || [];
+    // Briefs the creator already applied to or won are not recommendations
+    // (UI audit creator-home/W1).
+    const appliedTo = new Set(proposalsList.map((p) => p.campaignId));
+    const list = (campaignsQuery.data?.data || []).filter((c) => !appliedTo.has(c.id));
     const creatorNiches = new Set(creator?.niches || []);
     const matching = list.filter((c) => creatorNiches.has(c.niche as any));
     const items = matching.length > 0 ? matching : list;
     return items.slice(0, 3);
-  }, [campaignsQuery.data?.data, creator?.niches]);
+  }, [campaignsQuery.data?.data, creator?.niches, proposalsList]);
 
   const isEmpty =
     urgentTasks.length === 0 && upcomingTasks.length === 0 && waitingProposals.length === 0;
