@@ -60,7 +60,9 @@ function Tile({
             {badge}
           </span>
         ) : (
-          <Kbd>{kbd}</Kbd>
+          <span title={`Keyboard shortcut: ${kbd}`}>
+            <Kbd>{kbd}</Kbd>
+          </span>
         )}
       </div>
       <AppText variant="bodySmall" style={{ fontWeight: 500, color: colors.textPrimary }}>

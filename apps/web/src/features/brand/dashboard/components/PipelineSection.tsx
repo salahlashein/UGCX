@@ -25,9 +25,6 @@ export function PipelineSection({ stages, locale }: PipelineSectionProps) {
         <AppText variant="subtitle" style={{ fontWeight: 500, color: colors.textPrimary }}>
           {isAr ? 'مسار البريفات' : 'Brief pipeline'}
         </AppText>
-        <AppText variant="caption" color={colors.textTertiary}>
-          {isAr ? 'يعتمد على أحدث تعاون' : 'Based on latest collaboration'}
-        </AppText>
       </div>
       <Pipeline stages={stages} />
     </Card>

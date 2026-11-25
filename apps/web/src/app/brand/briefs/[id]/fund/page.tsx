@@ -30,6 +30,7 @@ import { extractErrorMessage } from '../../../../../services/apiHelpers';
 import { formatMoney } from '../../../../../utils/format';
 import { centsToAmount, toCents } from '../../../../../utils/money';
 import { fundTotalCents } from '../../../../../utils/fundTotal';
+import { paymentMethodLabel, pendingManualPayment } from '../../../../../utils/pendingPayment';
 import {
   availableManualMethods,
   manualPayees,
@@ -70,6 +71,10 @@ export default function FundEscrowPage({
   const [txRef, setTxRef] = useState('');
   const [senderAccount, setSenderAccount] = useState('');
   const [manualSubmitted, setManualSubmitted] = useState(false);
+  // A transfer submitted earlier (in any session) is still being checked:
+  // show its status instead of a fresh payment form (UI audit G8).
+  const pendingPayment = pendingManualPayment(campaignQuery.data);
+  const showPending = manualSubmitted || !!pendingPayment;
 
   const [polling, setPolling] = useState(false);
   const [declinedError, setDeclinedError] = useState<string | null>(null);
@@ -326,7 +331,8 @@ export default function FundEscrowPage({
                       ]
                 }
                 total={
-                  <div className="flex items-center justify-between w-full py-1">
+                  // gap keeps the label and the amount apart (UI audit brand-brief-fund/W1).
+                  <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 w-full py-1">
                     <AppText variant="body" weight={500}>
                       {isTopup
                         ? locale === 'ar'
@@ -357,7 +363,7 @@ export default function FundEscrowPage({
               />
 
               {/* Payment Methods Section (Only interactive for owner) */}
-              {isOwner && !manualSubmitted && (
+              {isOwner && !showPending && (
                 <div className="flex flex-col gap-4">
                   <AppText variant="h3" weight={500}>
                     {locale === 'ar' ? 'طريقة الدفع' : 'Payment Method'}
@@ -535,7 +541,7 @@ export default function FundEscrowPage({
               )}
 
               {/* Manual payment submitted status */}
-              {manualSubmitted && (
+              {showPending && (
                 <Card variant="elevated" padding="lg">
                   <div className="flex flex-col items-center text-center gap-3 py-4">
                     <StatusBadge
@@ -547,10 +553,19 @@ export default function FundEscrowPage({
                     <AppText variant="h3" weight={500}>
                       {locale === 'ar' ? 'تم تسجيل طلب الإيداع' : 'Transfer Details Submitted'}
                     </AppText>
+                    {pendingPayment ? (
+                      <AppText variant="body" weight={500}>
+                        {pendingPayment.amount ? formatMoney(pendingPayment.amount) : ''}
+                        {' · '}
+                        {paymentMethodLabel(pendingPayment.method, locale === 'ar')}
+                        {' · '}
+                        <span className="ltr-num">{pendingPayment.reference}</span>
+                      </AppText>
+                    ) : null}
                     <AppText variant="body" tone="muted" className="max-w-md">
                       {locale === 'ar'
-                        ? 'شكراً لك. يقوم فريق العمل بمراجعة رقم التحويل وسيتم تفعيل ونشر الحملة فور التأكيد.'
-                        : 'Goes live after we check the transfer. Your brief will automatically activate once confirmed.'}
+                        ? 'متبعتش تاني. فريقنا بيراجع التحويل، والبريف هيتنشر لوحده أول ما يتأكد.'
+                        : "No need to send it again. We're checking the transfer; the brief goes live by itself once it's confirmed."}
                     </AppText>
                     <Button
                       variant="secondary"

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { use, useState, useMemo } from 'react';
+import { pendingManualPayment } from '../../../../utils/pendingPayment';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '../../../../components/layout/AppShell';
 import {
@@ -478,7 +479,18 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                           gap: spacing.sm,
                         }}
                       >
-                        {brief.status === 'draft' && can('fundEscrow') && (
+                        {brief.status === 'draft' && pendingManualPayment(brief) ? (
+                          // Transfer submitted, admin checking it (UI audit G8).
+                          <Button
+                            variant="secondary"
+                            fullWidth
+                            onClick={() => router.push(`/brand/briefs/${brief.id}/fund`)}
+                          >
+                            {locale === 'ar'
+                              ? 'الدفع بيتراجع · التفاصيل'
+                              : 'Payment being checked · details'}
+                          </Button>
+                        ) : brief.status === 'draft' && can('fundEscrow') ? (
                           <Button
                             variant="primary"
                             fullWidth
@@ -486,7 +498,7 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                           >
                             {locale === 'ar' ? 'تمويل رصيد الضمان' : 'Fund escrow'}
                           </Button>
-                        )}
+                        ) : null}
 
                         {brief.status === 'live' && can('createBrief') && (
                           <Button

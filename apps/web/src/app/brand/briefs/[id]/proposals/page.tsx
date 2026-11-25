@@ -440,7 +440,11 @@ export default function CampaignProposalsInboxPage({
                     </div>
                   )}
 
-                  <AppText variant="caption" color={colors.textTertiary}>
+                  <AppText
+                    variant="caption"
+                    color={colors.textSecondary}
+                    className="ugcx-pointer-only"
+                  >
                     {locale === 'ar' ? 'استخدم المفتاحين' : 'Use'} <Kbd>J</Kbd>{' '}
                     {locale === 'ar' ? 'و' : 'and'} <Kbd>K</Kbd>{' '}
                     {locale === 'ar' ? 'للتنقل بين العروض' : 'to move between proposals.'}

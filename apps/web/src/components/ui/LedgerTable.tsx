@@ -24,6 +24,8 @@ export interface LedgerRow {
   direction?: 'in' | 'out' | 'hold';
   inAmount?: string;
   outAmount?: string;
+  /** Money moved inside escrow (allocated, or a transfer being checked). */
+  holdAmount?: string;
   balance?: string;
   balanceCents?: number;
 }
@@ -152,7 +154,7 @@ export function LedgerTable({ rows, showBalance = true }: LedgerTableProps) {
         const formatted =
           r.amountCents !== undefined
             ? signedAmount(r.amountCents, dir)
-            : (r.inAmount ?? r.outAmount ?? '');
+            : (r.inAmount ?? r.outAmount ?? r.holdAmount ?? '');
 
         return (
           <span
@@ -161,7 +163,7 @@ export function LedgerTable({ rows, showBalance = true }: LedgerTableProps) {
               fontFamily: 'var(--font-mono)',
               fontSize: '14px',
               fontWeight: 500,
-              color: isIn ? colors.primary : colors.ink,
+              color: isIn ? colors.primary : dir === 'hold' ? colors.textSecondary : colors.ink,
             }}
           >
             {formatted}

@@ -83,8 +83,13 @@ export function ListRow({
           )}
           {subtitle ? (
             typeof subtitle === 'string' ? (
-              <span dir="auto" style={{ minWidth: 0 }}>
-                <AppText variant="caption" color="muted" className="truncate">
+              <span dir="auto" style={{ display: 'block', minWidth: 0 }}>
+                <AppText
+                  variant="caption"
+                  color="muted"
+                  className="line-clamp-2"
+                  style={{ overflowWrap: 'anywhere' }}
+                >
                   {subtitle}
                 </AppText>
               </span>

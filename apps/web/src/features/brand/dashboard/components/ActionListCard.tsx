@@ -5,13 +5,20 @@ import { useRouter } from 'next/navigation';
 import { AppText, Button, Card, ListRow, Tag } from '../../../../components/ui';
 import { colors, radius, spacing } from '../../../../theme/tokens';
 import { plural } from '../../../../utils/labels';
+import { formatMoney } from '../../../../utils/format';
+import { pendingManualPayment, pendingPaymentLine } from '../../../../utils/pendingPayment';
 import type { Locale } from '../../../../i18n';
 
 interface ActionListCardProps {
   totalActionItems: number;
   proposalsAlert: number;
   deliverablesAlert: number;
-  unfundedDrafts: Array<{ id: string; title: string }>;
+  unfundedDrafts: Array<{
+    id: string;
+    title: string;
+    fundingPaymobOrderId?: string | null;
+    fundingRequestedAmount?: string | null;
+  }>;
   isViewer: boolean;
   canFundEscrow: boolean;
   locale: Locale;
@@ -31,12 +38,25 @@ export function ActionListCard({
 
   return (
     <Card elevation="card" style={{ padding: spacing.lg, borderRadius: radius.card }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.md }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: spacing.md,
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
           <AppText variant="subtitle" style={{ fontWeight: 500, color: colors.textPrimary }}>
             {isAr ? 'يحتاج إلى إجراء' : 'Needs your action'}
           </AppText>
-          <span style={{ fontSize: 12, fontFamily: 'var(--font-mono, monospace)', color: colors.textSecondary }}>
+          <span
+            style={{
+              fontSize: 12,
+              fontFamily: 'var(--font-mono, monospace)',
+              color: colors.textSecondary,
+            }}
+          >
             ({totalActionItems})
           </span>
         </div>
@@ -58,9 +78,12 @@ export function ActionListCard({
                   ? `${proposalsAlert} بريف يحتوي على عروض جديدة`
                   : `${plural(proposalsAlert, 'brief has', 'briefs have')} new creator proposals`
               }
-              tag={<Tag tone="danger">{isAr ? 'عاجل' : 'Urgent'}</Tag>}
               action={
-                <Button variant="secondary" size="sm" onClick={() => router.push('/brand/proposals')}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => router.push('/brand/proposals')}
+                >
                   {isAr ? 'عرض العروض' : 'Review'}
                 </Button>
               }
@@ -75,29 +98,48 @@ export function ActionListCard({
                   ? `${deliverablesAlert} فيديو جاهز للمعاينة والموافقة`
                   : `${plural(deliverablesAlert, 'video is', 'videos are')} ready for review`
               }
-              tag={<Tag tone="danger">{isAr ? 'عاجل' : 'Urgent'}</Tag>}
               action={
-                <Button variant="secondary" size="sm" onClick={() => router.push('/brand/briefs')}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => router.push('/brand/proposals')}
+                >
                   {isAr ? 'معاينة' : 'Review'}
                 </Button>
               }
             />
           )}
 
-          {unfundedDrafts.map((draft) => (
-            <ListRow
-              key={draft.id}
-              title={draft.title}
-              subtitle={isAr ? 'مسودة بريف غير ممولة' : 'Draft brief pending escrow funding'}
-              action={
-                !isViewer && canFundEscrow ? (
-                  <Button variant="secondary" size="sm" onClick={() => router.push(`/brand/briefs/${draft.id}`)}>
-                    {isAr ? 'تمويل' : 'Fund'}
-                  </Button>
-                ) : undefined
-              }
-            />
-          ))}
+          {unfundedDrafts.map((draft) => {
+            // A transfer already submitted is being checked: never ask to
+            // fund again (UI audit G8).
+            const pending = pendingManualPayment(draft);
+            return (
+              <ListRow
+                key={draft.id}
+                title={draft.title}
+                subtitle={
+                  pending
+                    ? pendingPaymentLine(pending, formatMoney, isAr)
+                    : isAr
+                      ? 'مسودة بريف غير ممولة'
+                      : 'Draft brief pending escrow funding'
+                }
+                tag={pending ? <Tag tone="info">{isAr ? 'بيتراجع' : 'Checking'}</Tag> : undefined}
+                action={
+                  !pending && !isViewer && canFundEscrow ? (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => router.push(`/brand/briefs/${draft.id}/fund`)}
+                    >
+                      {isAr ? 'تمويل' : 'Fund'}
+                    </Button>
+                  ) : undefined
+                }
+              />
+            );
+          })}
         </div>
       )}
     </Card>

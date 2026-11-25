@@ -22,9 +22,32 @@ interface SpendHeroCardProps {
 }
 
 const styles = {
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: spacing.sm } as const,
-  badge: { fontSize: 12, color: '#bbf7d0', fontFamily: 'var(--font-mono, monospace)', padding: '2px 8px', borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.1)' } as const,
-  amount: { fontSize: 42, fontWeight: 500, fontFamily: 'var(--font-mono, monospace)', color: colors.surface, letterSpacing: -0.5, direction: 'ltr', textAlign: 'start' } as const,
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  } as const,
+  badge: {
+    fontSize: 12,
+    color: '#bbf7d0',
+    fontFamily: 'var(--font-mono, monospace)',
+    padding: '2px 8px',
+    borderRadius: 6,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  } as const,
+  // Scales down on phones so the figure is never cut (UI audit brand-dashboard/C3).
+  amount: {
+    fontSize: 'clamp(28px, 8.5vw, 42px)',
+    fontWeight: 500,
+    overflowWrap: 'anywhere',
+    fontFamily: 'var(--font-mono, monospace)',
+    color: colors.surface,
+    letterSpacing: -0.5,
+    direction: 'ltr',
+    textAlign: 'start',
+  } as const,
   actions: { display: 'flex', gap: spacing.md, marginTop: spacing.md } as const,
 };
 
@@ -42,6 +65,9 @@ export function SpendHeroCard({
 }: SpendHeroCardProps) {
   const isAr = locale === 'ar';
   const availableEscrow = dashboard.totals?.available ?? centsToAmount(stillInEscrowCents);
+  // Same terms as Billing: "unallocated" is free to hire with; "held" is
+  // reserved for hired creators (UI audit brand-dashboard/C2).
+  const heldEscrow = dashboard.totals?.allocated ?? null;
 
   return (
     <SignatureCard variant="hero" elevation="card">
@@ -53,7 +79,9 @@ export function SpendHeroCard({
           {dashboard.month?.released && (
             <span style={styles.badge}>
               {isAr ? 'مصروف هذا الشهر: ' : 'Released this month: '}
-              <span style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>{formatMoney(dashboard.month.released)}</span>
+              <span style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>
+                {formatMoney(dashboard.month.released)}
+              </span>
             </span>
           )}
         </div>
@@ -61,11 +89,34 @@ export function SpendHeroCard({
         <div style={styles.amount}>{formatMoney(monthSpend)}</div>
 
         <AppText variant="bodySmall" color="rgba(255,255,255,0.85)">
-          {monthDeliverables} {isAr ? 'مخرجات معتمدة' : 'approved deliverables'} ·{' '}
-          <span style={{ fontFamily: 'var(--font-mono, monospace)', direction: 'ltr', display: 'inline-block' }}>
+          {monthDeliverables}{' '}
+          {isAr ? 'فيديو معتمد' : monthDeliverables === 1 ? 'approved video' : 'approved videos'} ·{' '}
+          <span
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              direction: 'ltr',
+              display: 'inline-block',
+            }}
+          >
             {formatMoney(availableEscrow)}
           </span>{' '}
-          {isAr ? 'ما زالت في الضمان' : 'still in escrow'}
+          {isAr ? 'متاح للتعيين' : 'unallocated'}
+          {heldEscrow && Number(heldEscrow) > 0 ? (
+            <>
+              {' '}
+              ·{' '}
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono, monospace)',
+                  direction: 'ltr',
+                  display: 'inline-block',
+                }}
+              >
+                {formatMoney(heldEscrow)}
+              </span>{' '}
+              {isAr ? 'محجوز لكريتورز' : 'held for hired creators'}
+            </>
+          ) : null}
         </AppText>
 
         {!isViewer && (

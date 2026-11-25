@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import { pendingManualPayment } from '../../../utils/pendingPayment';
 import { useRouter } from 'next/navigation';
 import { AppShell } from '../../../components/layout/AppShell';
 import {
@@ -214,6 +215,11 @@ export default function BrandProposalsOverviewPage() {
                             >
                               <span>{locale === 'ar' ? 'صندوق العروض' : 'Open inbox'}</span> →
                             </Button>
+                          ) : isDraft && pendingManualPayment(b) ? (
+                            // Transfer submitted, admin checking it (UI audit G8).
+                            <Tag tone="info">
+                              {locale === 'ar' ? 'الدفع بيتراجع' : 'Payment being checked'}
+                            </Tag>
                           ) : isDraft && !isViewer && can('fundEscrow') ? (
                             <Button
                               variant="secondary"

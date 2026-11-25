@@ -56,6 +56,18 @@
   text-transform: none !important;
 }
 
+/* Many labels set letter spacing inline without the mono-caps marker; on an
+   Arabic page that still split letters apart ("بـدون شحن", UI audit G11).
+   Arabic text in those labels also needs an Arabic face, not the mono one. */
+:lang(ar) [style*='letter-spacing'] {
+  letter-spacing: 0 !important;
+}
+
+:lang(ar) .mono-caps,
+:lang(ar) [data-mono-caps] {
+  font-family: var(--font-arabic), var(--font-mono) !important;
+}
+
 /* A money value keeps its own order inside a right to left line. */
 .ltr-num {
   direction: ltr;
@@ -117,6 +129,13 @@ html[dir='rtl'] body {
 
   .ugcx-mobile-tabbar,
   .ugcx-mobile-only {
+    display: none !important;
+  }
+}
+
+/* Keyboard hints only where there is a keyboard and a mouse (UI audit G17). */
+@media (hover: none), (pointer: coarse) {
+  .ugcx-pointer-only {
     display: none !important;
   }
 }

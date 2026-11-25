@@ -50,12 +50,13 @@ export function Tag({ children, label, tone = 'primary', className = '', style }
         color: toneStyle.color,
         paddingInline: '6px',
         paddingBlock: '2px',
-        fontSize: '9.5px',
-        lineHeight: '13px',
+        // 12px floor for readable status text (UI audit G5).
+        fontSize: '12px',
+        lineHeight: '16px',
         fontFamily: 'var(--font-mono)',
         fontWeight: 500,
         textTransform: 'uppercase',
-        letterSpacing: '0.5px',
+        letterSpacing: '0.3px',
         ...style,
       }}
     >

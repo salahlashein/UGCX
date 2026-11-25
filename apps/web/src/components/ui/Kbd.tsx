@@ -12,7 +12,8 @@ export interface KbdProps {
 export function Kbd({ children, className = '', style }: KbdProps) {
   return (
     <kbd
-      className={`inline-flex items-center justify-center font-mono ${className}`}
+      // Hidden on touch screens, where there is no keyboard (UI audit G17).
+      className={`ugcx-pointer-only inline-flex items-center justify-center font-mono ${className}`}
       style={{
         fontFamily: 'var(--font-mono)',
         fontSize: '11px',

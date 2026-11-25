@@ -19,6 +19,8 @@ import {
 } from '../../../components/ui';
 import { colors, radius, spacing } from '../../../theme/tokens';
 import { useBilling } from '../../../hooks/api/useBilling';
+import { useMyBriefs } from '../../../hooks/api/useCampaigns';
+import { paymentMethodLabel, pendingManualPayment } from '../../../utils/pendingPayment';
 import { useBrandProfile } from '../../../hooks/api/useBrand';
 import { useBrandRole } from '../../../hooks/useBrandRole';
 import { useTranslation } from '../../../i18n';
@@ -39,6 +41,27 @@ export default function BrandBillingPage() {
     perPage: 50,
     type: selectedType,
   });
+
+  // Transfers the brand sent that the admin has not confirmed yet. They are
+  // not in the ledger, so the brand would otherwise have no record of them
+  // (UI audit brand-billing/C2, G8).
+  const briefsQuery = useMyBriefs({ perPage: 100 });
+  const pendingRows = (briefsQuery.data?.data ?? [])
+    .map((b) => ({ brief: b, payment: pendingManualPayment(b) }))
+    .filter((x) => x.payment !== null)
+    .map(({ brief, payment }) => ({
+      id: `pending-${brief.id}`,
+      date: formatDateShort(brief.updatedAt, locale),
+      description:
+        locale === 'ar'
+          ? `تحويل بيتراجع · ${paymentMethodLabel(payment!.method, true)}`
+          : `Transfer being checked · ${paymentMethodLabel(payment!.method, false)}`,
+      subtitle: brief.title,
+      reference: payment!.reference,
+      statusLabel: locale === 'ar' ? 'بيتراجع' : 'PENDING',
+      direction: 'hold' as const,
+      holdAmount: payment!.amount ? formatMoney(payment!.amount) : undefined,
+    }));
 
   const isOwner = memberRole === 'owner';
   const isViewer = memberRole === 'viewer';
@@ -189,7 +212,7 @@ export default function BrandBillingPage() {
               </div>
 
               {/* Ledger Table */}
-              {billingData.data.length === 0 ? (
+              {billingData.data.length === 0 && pendingRows.length === 0 ? (
                 <EmptyState
                   title={locale === 'ar' ? 'لا توجد معاملات مسجلة' : 'No transactions found'}
                   message={
@@ -201,29 +224,34 @@ export default function BrandBillingPage() {
               ) : (
                 <div className="flex flex-col gap-3">
                   <LedgerTable
-                    rows={billingData.data.map((entry) => {
-                      const dir =
-                        entry.direction ||
-                        (entry.type === 'charge' ? 'in' : entry.type === 'hold' ? 'hold' : 'out');
+                    rows={[
+                      ...(selectedType === undefined ? pendingRows : []),
+                      ...billingData.data.map((entry) => {
+                        const dir =
+                          entry.direction ||
+                          (entry.type === 'charge' ? 'in' : entry.type === 'hold' ? 'hold' : 'out');
 
-                      const formattedAmt = formatMoney(
-                        entry.escrowAmount || entry.amount.replace(/^[+-]/, ''),
-                      );
+                        const formattedAmt = formatMoney(
+                          entry.escrowAmount || entry.amount.replace(/^[+-]/, ''),
+                        );
 
-                      return {
-                        id: entry.id,
-                        date: formatDateShort(entry.createdAt, locale),
-                        description: entry.label,
-                        subtitle: entry.campaignTitle || undefined,
-                        reference:
-                          entry.reference ||
-                          `TX-${entry.id.replace(/-/g, '').slice(0, 8).toUpperCase()}`,
-                        statusLabel: entry.type.toUpperCase(),
-                        direction: dir,
-                        inAmount: dir === 'in' ? formattedAmt : undefined,
-                        outAmount: dir === 'out' ? formattedAmt : undefined,
-                      };
-                    })}
+                        return {
+                          id: entry.id,
+                          date: formatDateShort(entry.createdAt, locale),
+                          description: entry.label,
+                          subtitle: entry.campaignTitle || undefined,
+                          reference:
+                            entry.reference ||
+                            `TX-${entry.id.replace(/-/g, '').slice(0, 8).toUpperCase()}`,
+                          statusLabel: entry.type.toUpperCase(),
+                          direction: dir,
+                          inAmount: dir === 'in' ? formattedAmt : undefined,
+                          outAmount: dir === 'out' ? formattedAmt : undefined,
+                          // Allocation rows showed no amount (UI audit brand-billing/C1).
+                          holdAmount: dir === 'hold' ? formattedAmt : undefined,
+                        };
+                      }),
+                    ]}
                   />
                 </div>
               )}

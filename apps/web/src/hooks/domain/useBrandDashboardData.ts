@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import type { BrandDashboard, BriefListItem } from '@ugcx/shared-types';
 import { useBrandDashboard } from '../api/useDashboard';
 import { useMyBriefs } from '../api/useCampaigns';
+import { useMyCollaborations } from '../api/useCollaborations';
 import { combineQueries, type CombinedQueryResult } from '../../utils/queryAggregator';
 import {
   calculateStillInEscrowCents,
@@ -33,6 +34,7 @@ export interface UseBrandDashboardDataResult {
 export function useBrandDashboardData(locale: Locale = 'en'): UseBrandDashboardDataResult {
   const dashboardQuery = useBrandDashboard();
   const myBriefsQuery = useMyBriefs({ perPage: 100 });
+  const collaborationsQuery = useMyCollaborations();
 
   const briefs = myBriefsQuery.data?.data || [];
   const dashboard = dashboardQuery.data;
@@ -41,9 +43,19 @@ export function useBrandDashboardData(locale: Locale = 'en'): UseBrandDashboardD
     return calculateStillInEscrowCents(briefs);
   }, [briefs]);
 
+  const collaborations = collaborationsQuery.data?.data;
   const pipelineStages = useMemo(() => {
-    return groupBriefsByPipelineStage(briefs, locale);
-  }, [briefs, locale]);
+    return groupBriefsByPipelineStage(
+      briefs,
+      locale,
+      collaborations?.map((c) => ({
+        campaignId: c.campaignId,
+        status: c.status,
+        creatorName:
+          (c as { creator?: { displayName?: string | null } }).creator?.displayName ?? null,
+      })),
+    );
+  }, [briefs, locale, collaborations]);
 
   const unfundedDrafts = useMemo(() => {
     return briefs.filter((b) => b.status === 'draft' && toCents(b.escrowFundedAmount) === 0);
