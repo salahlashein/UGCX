@@ -26,4 +26,4 @@
 ## Fix checklist
 - [ ] C1 allocation amounts
 - [ ] C2 pending row
-- [ ] W1 fee split
+- [x] W1 fee split

@@ -27,6 +27,6 @@
 Good: the brief reads like a document, and "Close and refund" has a confirmation modal. The brand coming back to check hiring sees conflicting counts and a stepper that claims "Delivered".
 
 ## Fix checklist
-- [ ] C1 consistent proposal counts
+- [x] C1 consistent proposal counts
 - [ ] C2 phone header layout
 - [ ] W1–W4

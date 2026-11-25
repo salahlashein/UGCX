@@ -18,5 +18,5 @@
 **W3. Unread is a 6px dot only.** Bold the unread rows' text or tint the row; announce the count to screen readers.
 
 ## Fix checklist
-- [ ] C1 one amount per row
+- [x] C1 one amount per row
 - [ ] W1–W3

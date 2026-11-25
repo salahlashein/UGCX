@@ -34,24 +34,24 @@ Score = 100 − points. Verdicts: 90+ ship · 70–89 ship after top fixes · 40
 
 | ID | Sev | Finding | Screens | Status |
 |---|---|---|---|---|
-| [G1](#g1) | **B** | Two-column layouts never collapse on phones; columns overlap or overflow | 12 screens | open |
-| [G2](#g2) | C | Tablet (768px): desktop sidebar squeezes content; 6 screens scroll sideways | 6 screens | open |
-| [G3](#g3) | C | Phone navigation hides Billing, Notifications, Settings, Proposals, Log out, language | all (phone) | open |
-| [G4](#g4) | C | `textTertiary` grey `#93a097` is 2.72:1 on white, used for real data | ~all | open |
-| [G5](#g5) | W | 10px uppercase mono chips for status and labels | ~all | open |
-| [G6](#g6) | C | Search inputs have only a placeholder, no label or accessible name | briefs, discover, chats | open |
-| [G7](#g7) | W | Some inputs show no visible focus ring | briefs, discover, chats, profile | open |
-| [G8](#g8) | C | A submitted (pending) manual payment is invisible everywhere; brand is asked to pay again | dashboard, briefs, fund, proposals, billing | open |
-| [G9](#g9) | C | Status vocabulary drifts and raw enum values leak into the UI | 10+ screens | open |
-| [G10](#g10) | C | "Approval 100%" shown for creators with 0 jobs | creator profile, proposal cards | open |
-| [G11](#g11) | C | Arabic/RTL is broken in several ways (letter joining, raw English, truncation, arrows) and not Egyptian | all (Arabic) | open |
+| [G1](#g1) | **B** | Two-column layouts never collapse on phones; columns overlap or overflow | 12 screens | fixed `0a449d1` |
+| [G2](#g2) | C | Tablet (768px): desktop sidebar squeezes content; 6 screens scroll sideways | 6 screens | fixed `0a449d1` |
+| [G3](#g3) | C | Phone navigation hides Billing, Notifications, Settings, Proposals, Log out, language | all (phone) | fixed `4b753b6` |
+| [G4](#g4) | C | `textTertiary` grey `#93a097` is 2.72:1 on white, used for real data | ~all | fixed `0653925` |
+| [G5](#g5) | W | 10px uppercase mono chips for status and labels | ~all | fixed `0653925` |
+| [G6](#g6) | C | Search inputs have only a placeholder, no label or accessible name | briefs, discover, chats | fixed `0653925` |
+| [G7](#g7) | W | Some inputs show no visible focus ring | briefs, discover, chats, profile | fixed `0653925` |
+| [G8](#g8) | C | A submitted (pending) manual payment is invisible everywhere; brand is asked to pay again | dashboard, briefs, fund, proposals, billing | fixed `4b753b6` |
+| [G9](#g9) | C | Status vocabulary drifts and raw enum values leak into the UI | 10+ screens | partial (proposals, collab, discover) |
+| [G10](#g10) | C | "Approval 100%" shown for creators with 0 jobs | creator profile, proposal cards | fixed `a3a743a` |
+| [G11](#g11) | C | Arabic/RTL is broken in several ways (letter joining, raw English, truncation, arrows) and not Egyptian | all (Arabic) | partial (joining, arrows fixed; Egyptian copy left) |
 | [G12](#g12) | W | Layout system drift: page widths, 8 radii, 13 font sizes, two label styles | all | open |
-| [G13](#g13) | W | Desktop sidebar background stops at viewport height | all (desktop) | open |
-| [G14](#g14) | P | Placeholder circle icon used for Search, Edit, Unboxing, Try-On, Other | brief form, discover, brief detail | open |
-| [G15](#g15) | W | Duplicated chrome: language toggle ×2, notification entry ×2, Log out ×2 | all | open |
+| [G13](#g13) | W | Desktop sidebar background stops at viewport height | all (desktop) | fixed `4b753b6` |
+| [G14](#g14) | P | Placeholder circle icon used for Search, Edit, Unboxing, Try-On, Other | brief form, discover, brief detail | fixed `0a449d1` |
+| [G15](#g15) | W | Duplicated chrome: language toggle ×2, notification entry ×2, Log out ×2 | all | fixed `4b753b6` |
 | [G16](#g16) | W | Logo is still the "U" from UGCX | all | open |
-| [G17](#g17) | P | Keyboard hints ("J/K", "/") shown on touch devices | briefs, inbox | open |
-| [G18](#g18) | W | Pages call the other role's API (`/brands/me` as creator, `/creators/me` as brand): 30 × 403 per session | shared pages | open |
+| [G17](#g17) | P | Keyboard hints ("J/K", "/") shown on touch devices | briefs, inbox | fixed `0a449d1` |
+| [G18](#g18) | W | Pages call the other role's API (`/brands/me` as creator, `/creators/me` as brand): 30 × 403 per session | shared pages | fixed `ba866ce` |
 | [G19](#g19) | W | Generic error state "Something went wrong. Please try again." with no cause or next step | all detail pages | open |
 
 **G score:** 1 B + 8 C + 8 W + 2 P → `100 − 12 − (8×8) − (8×4) − 2 = −10` → floored **0/100**. **Verdict: do not ship to real users until G1, G3 and G8 are fixed.**

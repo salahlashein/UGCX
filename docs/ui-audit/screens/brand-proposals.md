@@ -21,6 +21,6 @@
 **W1. Every row has the same "Track →" button** and no status, deadline or creator avatar. Make the row the link and show status + due date.
 
 ## Fix checklist
-- [ ] C1 status labels
-- [ ] C2 lowest price label
+- [x] C1 status labels
+- [x] C2 lowest price label
 - [ ] W1 row design

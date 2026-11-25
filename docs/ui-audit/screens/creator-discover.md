@@ -22,5 +22,5 @@
 - Brief cards are a single line of text. Creators choose by *brand + money + effort*: show brand logo, budget, video type icon, duration, deadline and "Ships product" in a card; on phones a full-width card list (filters in a bottom sheet).
 
 ## Fix checklist
-- [ ] C1 per-brief application state
+- [x] C1 per-brief application state
 - [ ] W1–W3

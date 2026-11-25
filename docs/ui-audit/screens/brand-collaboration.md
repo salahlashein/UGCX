@@ -26,8 +26,8 @@
 **W2. Creator stats are thin.** Jobs / City / Base rate, no portfolio, no link to the creator's profile or their other work.
 
 ## Fix checklist
-- [ ] C1 money state by status
-- [ ] C2 base rate source
-- [ ] C3 nowrap money, stats list
-- [ ] W1 primary action by status
+- [x] C1 money state by status
+- [x] C2 base rate source
+- [x] C3 nowrap money, stats list
+- [x] W1 primary action by status
 - [ ] W2 creator profile link

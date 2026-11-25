@@ -31,7 +31,7 @@
 - Approve now asks for confirmation and shows the exact amount (fixed in `03ba8f9`).
 
 ## Fix checklist
-- [ ] B1 phone layout, video first
-- [ ] C1 creator note + version history
+- [x] B1 phone layout, video first
+- [x] C1 creator note + version history
 - [ ] W1 do-not-say in checklist
 - [ ] W2 decline placement

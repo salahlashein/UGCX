@@ -19,5 +19,5 @@
 **W3. Three chip styles in one header row** (solid "DELIVERED", dashed orange "DUE", dashed green "REVISION 0 OF 2"). One chip style; revisions as plain text.
 
 ## Fix checklist
-- [ ] C1 state-driven delivery panel
+- [x] C1 state-driven delivery panel
 - [ ] W1–W3

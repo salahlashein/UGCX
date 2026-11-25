@@ -22,5 +22,5 @@
 - Save no longer drops the owner role (fixed in `03ba8f9`); the current logo is shown.
 
 ## Fix checklist
-- [ ] C1 hide/qualify pay speed
+- [x] C1 hide/qualify pay speed
 - [ ] W1–W3

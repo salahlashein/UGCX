@@ -22,7 +22,7 @@ A creator with one delivered video waiting for review opens the app on a phone: 
 - Lead with the creator's current job status (in review / revision requested / paid), then new matching briefs.
 
 ## Fix checklist
-- [ ] W1 exclude applied briefs
-- [ ] W2 disabled payout with reason
-- [ ] W3 tile labels
+- [x] W1 exclude applied briefs
+- [x] W2 disabled payout with reason
+- [x] W3 tile labels
 - [ ] W4 header meta
