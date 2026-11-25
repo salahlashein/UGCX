@@ -786,7 +786,6 @@ export default function CampaignProposalsInboxPage({
                           <>
                             <Button
                               variant="ghost"
-                              size="sm"
                               onClick={() => handleUpdateStatus(selectedProposal.id, 'declined')}
                               loading={updateStatus.isPending}
                             >
@@ -794,7 +793,6 @@ export default function CampaignProposalsInboxPage({
                             </Button>
                             <Button
                               variant="secondary"
-                              size="sm"
                               onClick={() => handleUpdateStatus(selectedProposal.id, 'shortlisted')}
                               loading={updateStatus.isPending}
                             >
@@ -806,7 +804,6 @@ export default function CampaignProposalsInboxPage({
                         {selectedProposal.status === 'shortlisted' && can('acceptProposal') && (
                           <Button
                             variant="ghost"
-                            size="sm"
                             onClick={() => handleUpdateStatus(selectedProposal.id, 'declined')}
                             loading={updateStatus.isPending}
                           >

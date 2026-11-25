@@ -175,7 +175,6 @@ export default function BriefDetailPage({ params }: { params: Promise<{ id: stri
                   {can('editBrief') && (
                     <Button
                       variant="secondary"
-                      size="sm"
                       onClick={() => router.push(`/brand/briefs/${brief.id}/edit`)}
                     >
                       <Icon name="edit" size={14} />

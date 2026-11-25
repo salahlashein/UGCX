@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Creator } from '@ugcx/shared-types';
 import { AppText, Button, Icon, StatusBadge } from '../../../../components/ui';
-import { colors, radius, spacing } from '../../../../theme/tokens';
+import { colors, radius, sizes, spacing } from '../../../../theme/tokens';
 import { formatDateShort, getInitials } from '../../../../utils/format';
 import type { Locale } from '../../../../i18n';
 
@@ -67,8 +67,9 @@ export function CreatorHomeHeader({ creator, unreadCount, locale }: CreatorHomeH
           onClick={() => router.push('/notifications')}
           style={{
             position: 'relative',
-            width: 40,
-            height: 40,
+            // Same height as the button next to it.
+            width: sizes.buttonHeight,
+            height: sizes.buttonHeight,
             borderRadius: radius.button,
             border: `1px solid ${colors.border}`,
             backgroundColor: colors.surface,

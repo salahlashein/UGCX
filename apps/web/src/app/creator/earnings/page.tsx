@@ -248,7 +248,7 @@ export default function CreatorEarningsPage() {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
-                <Button variant="secondary" size="sm" onClick={() => setShowMethodModal(true)}>
+                <Button variant="secondary" onClick={() => setShowMethodModal(true)}>
                   <Icon name="credit-card" size={14} />
                   <span>{locale === 'ar' ? 'طريقة الاستلام' : 'Payout method'}</span>
                 </Button>

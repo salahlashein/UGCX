@@ -147,6 +147,8 @@ Score = 100 − points. Verdicts: 90+ ship · 70–89 ship after top fixes · 40
 
 ## Screens
 
+Button heights and the side-by-side rule: [button-sizes.md](button-sizes.md).
+
 Scores count each screen's own findings (G-findings excluded). "Do not ship" when a G-Blocker hits the screen.
 
 ### Brand

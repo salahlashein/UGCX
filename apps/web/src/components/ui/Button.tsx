@@ -12,6 +12,11 @@ export interface ButtonProps {
   onPress?: () => void;
   type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'mint' | 'danger-outline';
+  /**
+   * sm 38px, md 48px (default), lg 52px. Every variant has the same height
+   * for a size. Buttons that sit side by side use the SAME size: never a
+   * `sm` light button next to an `md` dark-green one (docs/ui-audit/button-sizes.md).
+   */
   size?: 'sm' | 'md' | 'lg';
   icon?: IconName;
   count?: number | string;
