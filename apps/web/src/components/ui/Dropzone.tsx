@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useId, useState } from 'react';
 import { colors, radius, spacing } from '../../theme/tokens';
 import { validateFile } from '../../utils/inputHelpers';
 import { AppText } from './AppText';
@@ -26,7 +26,7 @@ export function Dropzone({
   accept = ['video/mp4', 'video/quicktime', 'video/webm'],
   maxBytes,
   maxSizeMB,
-  file: _file,
+  file,
   onFile,
   onFileSelect,
   progress,
@@ -37,7 +37,7 @@ export function Dropzone({
 }: DropzoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
 
   const error = propError ?? localError;
   const isUploading = typeof progress === 'number' && progress >= 0 && progress < 100;
@@ -65,6 +65,12 @@ export function Dropzone({
       : `${Math.round(effectiveMaxBytes / 1024)} KB`;
   const hintText = `${uniqueExtensions.join(', ')} up to ${sizeLabel}`;
   const deliverFile = onFileSelect ?? onFile;
+  // Extensions help iPhone Safari offer videos that report an unusual MIME type.
+  const isVideo = normalizedAccept.some((t) => t.startsWith('video/'));
+  const acceptAttribute = [
+    ...normalizedAccept,
+    ...(isVideo ? ['.mp4', '.mov', '.m4v', '.webm'] : []),
+  ].join(',');
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -91,11 +97,13 @@ export function Dropzone({
     if (selected) {
       processFile(selected);
     }
+    // Clear the value so choosing the same video again still fires a change.
+    e.target.value = '';
   };
 
   const processFile = (file: File) => {
     const validation = validateFile(
-      { size: file.size, type: file.type },
+      { size: file.size, type: file.type, name: file.name },
       { maxBytes: effectiveMaxBytes, accept: normalizedAccept },
     );
 
@@ -108,12 +116,14 @@ export function Dropzone({
     deliverFile?.(file);
   };
 
+  // A <label> opens the picker natively. iPhone Safari can ignore a script click
+  // on a hidden input, so the input is visually hidden but not display:none.
   return (
-    <div
+    <label
+      htmlFor={inputId}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={() => !isUploading && fileInputRef.current?.click()}
       className={`flex flex-col items-center justify-center p-6 text-center transition-all ${
         isUploading ? 'cursor-default' : 'cursor-pointer hover:bg-black/[0.01]'
       } ${className}`}
@@ -126,11 +136,12 @@ export function Dropzone({
       }}
     >
       <input
-        ref={fileInputRef}
+        id={inputId}
         type="file"
-        accept={normalizedAccept.join(',')}
+        accept={acceptAttribute}
         onChange={handleFileSelect}
-        className="hidden"
+        disabled={isUploading}
+        className="sr-only"
       />
 
       {isUploading ? (
@@ -161,6 +172,36 @@ export function Dropzone({
             <Button title="Cancel" variant="ghost" size="sm" onClick={() => onCancel()} />
           ) : null}
         </div>
+      ) : file && !isDone ? (
+        <div className="flex flex-col items-center gap-2">
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: `${radius.full}px`,
+              backgroundColor: colors.accentSoft,
+            }}
+          >
+            <Icon name="check" size={20} color="primary" />
+          </div>
+          <AppText
+            variant="body"
+            color="ink"
+            style={{ fontWeight: 500 }}
+            className="truncate max-w-xs"
+          >
+            {fileName ?? file.name}
+          </AppText>
+          <AppText variant="caption" color="muted">
+            {formatFileSize(file.size)} · Tap to choose a different file
+          </AppText>
+          {error ? (
+            <span role="alert" style={{ fontSize: '12px', color: colors.danger }}>
+              {error}
+            </span>
+          ) : null}
+        </div>
       ) : isDone ? (
         <div className="flex flex-col items-center gap-2">
           <div
@@ -178,7 +219,7 @@ export function Dropzone({
             {fileName ?? 'File uploaded successfully'}
           </AppText>
           <AppText variant="caption" color="muted">
-            Click or drag another file to replace
+            Tap or drag another file to replace it
           </AppText>
         </div>
       ) : (
@@ -216,6 +257,11 @@ export function Dropzone({
           ) : null}
         </div>
       )}
-    </div>
+    </label>
   );
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }

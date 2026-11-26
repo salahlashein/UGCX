@@ -147,6 +147,14 @@ html[dir='rtl'] body {
   .ugcx-pointer-only {
     display: none !important;
   }
+
+  /* iPhone Safari zooms into any text field under 16px when it gets focus.
+     The fields set a smaller size inline, so this needs !important. */
+  input:not([type='checkbox']):not([type='radio']):not([type='file']),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 /* A visible focus ring on every text field (UI audit G7). The inputs set

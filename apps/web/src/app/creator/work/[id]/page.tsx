@@ -29,6 +29,7 @@ import {
 } from '../../../../hooks/api/useDeliverables';
 import { useCampaign } from '../../../../hooks/api/useCampaigns';
 import { uploadBrowserFileToPresignedUrl } from '../../../../hooks/api/useStorage';
+import { resolveVideoContentType } from '../../../../utils/inputHelpers';
 import { extractErrorMessage } from '../../../../services/apiHelpers';
 import { useTranslation } from '../../../../i18n';
 import { formatDate, formatDateShort, formatDueDate, formatMoney } from '../../../../utils/format';
@@ -164,14 +165,30 @@ export default function CreatorWorkspaceDetailPage({
       return;
     }
 
+    // The same type goes to the API and into the upload, because the API signs it into the link.
+    const contentType = resolveVideoContentType(selectedFile);
+    if (!contentType) {
+      setError(
+        locale === 'ar'
+          ? 'هذا النوع من الملفات غير مدعوم. استخدم MP4 أو MOV أو WEBM.'
+          : 'This file type is not supported. Use MP4, MOV or WEBM.',
+      );
+      return;
+    }
+
     try {
-      setUploadProgress(10);
+      setUploadProgress(1);
       const presigned = await requestUploadUrl.mutateAsync({
-        contentType: selectedFile.type || 'video/mp4',
+        contentType,
         fileSize: selectedFile.size,
       });
 
-      await uploadBrowserFileToPresignedUrl(selectedFile, presigned.uploadUrl, setUploadProgress);
+      await uploadBrowserFileToPresignedUrl(
+        selectedFile,
+        presigned.uploadUrl,
+        setUploadProgress,
+        contentType,
+      );
 
       await registerDeliverable.mutateAsync({
         type: 'ready_ad',
@@ -679,7 +696,11 @@ export default function CreatorWorkspaceDetailPage({
                             type="submit"
                             variant="primary"
                             fullWidth
-                            loading={requestUploadUrl.isPending || registerDeliverable.isPending}
+                            loading={
+                              uploadProgress !== null ||
+                              requestUploadUrl.isPending ||
+                              registerDeliverable.isPending
+                            }
                             disabled={!selectedFile}
                           >
                             {locale === 'ar' ? 'إرسال المخرج' : 'Submit deliverable'}

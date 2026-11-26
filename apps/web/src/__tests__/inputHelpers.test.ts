@@ -1,6 +1,39 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitPaste, clampRange, validateFile } from '../utils/inputHelpers';
+import {
+  splitPaste,
+  clampRange,
+  validateFile,
+  resolveVideoContentType,
+} from '../utils/inputHelpers';
+
+describe('iPhone video files', () => {
+  const videoOptions = {
+    maxBytes: 500 * 1024 * 1024,
+    accept: ['video/mp4', 'video/quicktime', 'video/webm'],
+  };
+
+  it('resolveVideoContentType keeps the three supported types', () => {
+    assert.equal(resolveVideoContentType({ type: 'video/quicktime', name: 'IMG_0412.MOV' }), 'video/quicktime');
+    assert.equal(resolveVideoContentType({ type: 'video/mp4', name: 'clip.mp4' }), 'video/mp4');
+  });
+
+  it('resolveVideoContentType uses the extension when Safari reports no type or x-m4v', () => {
+    assert.equal(resolveVideoContentType({ type: '', name: 'IMG_0412.MOV' }), 'video/quicktime');
+    assert.equal(resolveVideoContentType({ type: 'video/x-m4v', name: 'trim.m4v' }), 'video/mp4');
+    assert.equal(resolveVideoContentType({ type: '', name: 'clip.webm' }), 'video/webm');
+  });
+
+  it('resolveVideoContentType rejects files the API cannot sign', () => {
+    assert.equal(resolveVideoContentType({ type: 'image/heic', name: 'IMG_0001.HEIC' }), null);
+    assert.equal(resolveVideoContentType({ type: '', name: 'notes' }), null);
+  });
+
+  it('validateFile accepts an iPhone .MOV that has an empty type', () => {
+    const result = validateFile({ size: 80 * 1024 * 1024, type: '', name: 'IMG_0412.MOV' }, videoOptions);
+    assert.equal(result.valid, true);
+  });
+});
 
 describe('Input Helpers Suite', () => {
   it('splitPaste parses raw pasted strings into pure digits up to length', () => {
