@@ -10,6 +10,7 @@ import { Icon, type IconName } from '../ui/Icon';
 import { LoadingState } from '../ui/AsyncStates';
 import { useAuthStore } from '../../store/authStore';
 import { useOnboardingStatus } from '../../hooks/api/useOnboarding';
+import { useMe } from '../../hooks/api/useMe';
 import { useTranslation } from '../../i18n';
 import { useBrandRole } from '../../hooks/useBrandRole';
 import { useUnreadCount } from '../../hooks/api/useNotifications';
@@ -120,6 +121,7 @@ export function AppShell({ children, requiredRole, activeNav }: AppShellProps) {
   const unreadCountQuery = useUnreadCount();
   const unreadCount = unreadCountQuery.data?.unread ?? 0;
   const [moreOpen, setMoreOpen] = useState(false);
+  const meQuery = useMe();
   // A new brand or creator finishes onboarding before using the app. If the
   // status cannot load, the user is let through rather than locked out.
   const needsOnboardingCheck = Boolean(isAuthenticated && user && user.role !== 'admin');
@@ -207,17 +209,17 @@ export function AppShell({ children, requiredRole, activeNav }: AppShellProps) {
     approver: ['Approver', 'معتمد'],
     viewer: ['Viewer', 'مشاهد'],
   };
+  // The person's own name when it is saved. The role word is only a fallback.
+  const personName = meQuery.data?.displayName?.trim() || null;
   const roleLabel =
     user.role === 'brand'
       ? [
-          locale === 'ar' ? 'براند' : 'Brand',
+          personName ?? (locale === 'ar' ? 'براند' : 'Brand'),
           brandRole ? (brandRoleLabels[brandRole]?.[locale === 'ar' ? 1 : 0] ?? brandRole) : null,
         ]
           .filter(Boolean)
           .join(' · ')
-      : locale === 'ar'
-        ? 'كريتور'
-        : 'Creator';
+      : (personName ?? (locale === 'ar' ? 'كريتور' : 'Creator'));
 
   const isActive = (item: NavItem) => {
     return pathname === item.href || pathname.startsWith(item.matchPrefix);

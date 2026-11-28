@@ -14,7 +14,7 @@ import type {
 import { Notification } from './entities/notification.entity';
 import { ExpoPushClient } from './expo-push.client';
 import { EVENT_AUDIENCE } from './notification-events';
-import { PUSH_COPY } from './push-copy';
+import { pushCopyFor } from './push-copy';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import {
@@ -125,10 +125,7 @@ export class NotificationsService {
       for (const notif of notifications) {
         const user = userMap.get(notif.userId);
         if (user?.expoPushToken) {
-          const copy = PUSH_COPY[notif.event] ?? {
-            title: 'Notification',
-            body: 'You have a new update',
-          };
+          const copy = pushCopyFor(notif.event, notif.params);
 
           messages.push({
             to: user.expoPushToken,

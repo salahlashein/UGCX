@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AppText, Button, Icon } from '../../../../components/ui';
 import { colors, radius, spacing } from '../../../../theme/tokens';
 import type { Locale } from '../../../../i18n';
+import { useMe } from '../../../../hooks/api/useMe';
 
 interface DashboardHeaderProps {
   brandName: string;
@@ -16,6 +17,15 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ brandName, initials, canCreate, locale }: DashboardHeaderProps) {
   const router = useRouter();
   const isAr = locale === 'ar';
+  // Greet the person by first name. Without a saved name, keep the old label.
+  const firstName = useMe().data?.displayName?.trim().split(/\s+/)[0] || null;
+  const eyebrow = firstName
+    ? isAr
+      ? `أهلاً بعودتك يا ${firstName}`
+      : `Welcome back, ${firstName}`
+    : isAr
+      ? 'لوحة تحكم العلامة التجارية'
+      : 'Brand Workspace';
 
   return (
     <div
@@ -46,7 +56,7 @@ export function DashboardHeader({ brandName, initials, canCreate, locale }: Dash
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
           <AppText variant="caption" color={colors.textSecondary}>
-            {isAr ? 'لوحة تحكم العلامة التجارية' : 'Brand Workspace'}
+            {eyebrow}
           </AppText>
           <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>
             {brandName}

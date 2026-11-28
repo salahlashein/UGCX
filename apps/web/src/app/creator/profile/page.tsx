@@ -162,7 +162,8 @@ export default function CreatorProfilePage() {
                 </AppText>
                 <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
                   <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>
-                    {locale === 'ar' ? 'الملف الشخصي' : 'Creator profile'}
+                    {creator.displayName?.trim() ||
+                      (locale === 'ar' ? 'الملف الشخصي' : 'Creator profile')}
                   </AppText>
                   {creator.vettingStatus && (
                     <StatusBadge status={creator.vettingStatus} domain="custom" />

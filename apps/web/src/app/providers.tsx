@@ -24,6 +24,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
     hydrate();
   }, [hydrate]);
 
+  // Cached data belongs to one account. On logout or an account switch, drop
+  // it, so the next account never sees the last account's names or data.
+  useEffect(() => {
+    let lastUserId = useAuthStore.getState().user?.id ?? null;
+    return useAuthStore.subscribe((state) => {
+      const userId = state.user?.id ?? null;
+      if (lastUserId && userId !== lastUserId) queryClient.clear();
+      lastUserId = userId;
+    });
+  }, [queryClient]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>{children}</I18nProvider>

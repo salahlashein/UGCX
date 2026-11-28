@@ -19,12 +19,14 @@ import { colors, radius, spacing } from '../../../theme/tokens';
 import { useMyBriefs } from '../../../hooks/api/useCampaigns';
 import { useMyCollaborations } from '../../../hooks/api/useCollaborations';
 import { useBrandRole } from '../../../hooks/useBrandRole';
+import { useBrandProfile } from '../../../hooks/api/useBrand';
 import { useTranslation } from '../../../i18n';
 import { formatMoney, getInitials } from '../../../utils/format';
 
 export default function BrandProposalsOverviewPage() {
   const router = useRouter();
   const { t, locale } = useTranslation();
+  const brandName = useBrandProfile().data?.companyName?.trim() || null;
   const { can, role: memberRole } = useBrandRole();
 
   const briefsQuery = useMyBriefs('all');
@@ -59,7 +61,13 @@ export default function BrandProposalsOverviewPage() {
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                 <AppText variant="caption" color={colors.textSecondary}>
-                  {locale === 'ar' ? 'استقبال وإدارة عروض الصناع' : 'Creator proposals by brief'}
+                  {brandName
+                    ? locale === 'ar'
+                      ? `عروض ${brandName}`
+                      : `Proposals for ${brandName}`
+                    : locale === 'ar'
+                      ? 'استقبال وإدارة عروض الصناع'
+                      : 'Creator proposals by brief'}
                 </AppText>
                 <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>
                   {locale === 'ar' ? 'العروض المقدمة' : 'Proposals'}
