@@ -45,6 +45,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // The landing page links here with ?role=creator or ?role=brand.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('role');
+    if (requested === 'creator' || requested === 'brand') setRole(requested);
+  }, []);
+
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerActive && secondsLeft > 0) {
