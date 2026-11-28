@@ -23,6 +23,7 @@ import { DeliverablesModule } from './modules/deliverables/deliverables.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { OnboardingModule } from './modules/onboarding/onboarding.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     MessagesModule,
     StorageModule,
     NotificationsModule,
+    OnboardingModule,
   ],
   controllers: [],
   providers: [],

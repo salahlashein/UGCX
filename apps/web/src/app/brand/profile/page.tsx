@@ -154,6 +154,14 @@ export default function BrandProfilePage() {
   const briefsTotal = briefsQuery.data?.meta?.total ?? briefsQuery.data?.data?.length ?? 0;
   const hiredTotal = collabsQuery.data?.meta?.total ?? collabsQuery.data?.data?.length ?? 0;
 
+  // Titles use the saved brand name, not the text still being edited.
+  const savedBrandName = profileQuery.data?.companyName?.trim() || null;
+  const logoLabel = savedBrandName
+    ? locale === 'ar'
+      ? `شعار ${savedBrandName}`
+      : `${savedBrandName} logo`
+    : t('brand.profile.logo', 'Brand Logo');
+
   return (
     <AppShell requiredRole="brand">
       <div className="flex flex-col gap-6 max-w-6xl mx-auto w-full">
@@ -161,7 +169,7 @@ export default function BrandProfilePage() {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <AppText variant="displayMd" color="ink" as="h1">
-              {t('brand.profile.title', 'Brand profile')}
+              {savedBrandName ?? t('brand.profile.title', 'Brand profile')}
             </AppText>
             <AppText variant="caption" color="muted">
               {isOwner
@@ -263,14 +271,14 @@ export default function BrandProfilePage() {
                     {/* Logo Section */}
                     <div className="flex flex-col gap-2">
                       <AppText variant="label" color="ink">
-                        {t('brand.profile.logo', 'Brand Logo')}
+                        {logoLabel}
                       </AppText>
                       {logoUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={logoUrl}
-                            alt={t('brand.profile.logo', 'Brand Logo')}
+                            alt={logoLabel}
                             width={48}
                             height={48}
                             style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8 }}

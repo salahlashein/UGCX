@@ -72,6 +72,10 @@ export class User {
   @Column({ name: 'email_verified_at', type: 'timestamptz', nullable: true })
   emailVerifiedAt: Date | null;
 
+  /** NULL until the user finishes first sign-up onboarding. Existing accounts were backfilled. */
+  @Column({ name: 'onboarding_completed_at', type: 'timestamptz', nullable: true })
+  onboardingCompletedAt: Date | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

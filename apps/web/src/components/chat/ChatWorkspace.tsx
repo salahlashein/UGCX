@@ -20,6 +20,8 @@ import { colors, radius, spacing } from '../../theme/tokens';
 import { useChats, useMarkChatRead } from '../../hooks/api/useChats';
 import { useMessages, useSendMessage } from '../../hooks/api/useMessages';
 import { useCollaboration } from '../../hooks/api/useCollaborations';
+import { useMe } from '../../hooks/api/useMe';
+import { useBrandProfile } from '../../hooks/api/useBrand';
 import { extractErrorMessage } from '../../services/apiHelpers';
 import { useAuthStore } from '../../store/authStore';
 import { useTranslation } from '../../i18n';
@@ -34,6 +36,9 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
   const router = useRouter();
   const { t, locale } = useTranslation();
   const user = useAuthStore((s) => s.user);
+  // Names for the page title: the brand name for a brand, the first name for a creator.
+  const brandName = useBrandProfile().data?.companyName?.trim() || null;
+  const firstName = useMe().data?.displayName?.trim().split(/\s+/)[0] || null;
 
   const chatsQuery = useChats();
   const markRead = useMarkChatRead();
@@ -132,8 +137,12 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
     setSendError(null);
   };
 
-  /** Copy for one system event key, in the current language. */
-  const systemEventLabel = (eventKey: string): string | null => {
+  /**
+   * Copy for one system event key, in the current language. The counterpart
+   * is the other side of the chat, so events can name the real person.
+   */
+  const systemEventLabel = (eventKey: string, counterpart?: string | null): string | null => {
+    const other = counterpart?.trim() || null;
     if (eventKey === 'shipment_confirmed') {
       return locale === 'ar' ? 'تم تأكيد شحن عينة المنتج' : 'Product shipment marked sent';
     }
@@ -146,18 +155,25 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
         : 'Deliverable approved & escrow released';
     }
     if (eventKey === 'deliverable_submitted') {
+      // The creator submits. For the creator that is "you", for the brand it is the other side.
+      if (role === 'creator')
+        return locale === 'ar' ? 'أرسلت فيديو جديداً' : 'You submitted a video';
+      if (other) return locale === 'ar' ? `فيديو جديد من ${other}` : `${other} submitted a video`;
       return locale === 'ar'
         ? 'قام صانع المحتوى برفع نسخة مخرج جديدة'
         : 'Creator submitted deliverable';
     }
     if (eventKey === 'revision_requested') {
+      // The brand asks. For the brand that is "you", for the creator it is the other side.
+      if (role === 'brand') return locale === 'ar' ? 'طلبت تعديلاً' : 'You requested a revision';
+      if (other) return locale === 'ar' ? `طلب تعديل من ${other}` : `${other} requested a revision`;
       return locale === 'ar' ? 'تم طلب تعديل على المخرج' : 'Revision requested by brand';
     }
     return null;
   };
 
   const renderSystemLabel = (msg: Message) => {
-    const label = systemEventLabel(msg.event || '');
+    const label = systemEventLabel(msg.event || '', activeThread?.counterpartName);
     if (label) return label;
     return msg.body || (msg.event || '').replace(/_/g, ' ');
   };
@@ -166,12 +182,12 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
    * The API returns a system preview as a raw key in brackets, such as
    * "[escrow_funded]". Translate it, so no key reaches the screen.
    */
-  const previewText = (raw: string | null | undefined): string => {
+  const previewText = (raw: string | null | undefined, counterpart?: string | null): string => {
     const fallback = locale === 'ar' ? 'بدء المحادثة' : 'Conversation started';
     if (!raw) return fallback;
     const bracketed = raw.match(/^\[(\w+)\]$/);
     if (bracketed) {
-      return systemEventLabel(bracketed[1]) ?? bracketed[1].replace(/_/g, ' ');
+      return systemEventLabel(bracketed[1], counterpart) ?? bracketed[1].replace(/_/g, ' ');
     }
     return raw;
   };
@@ -185,12 +201,20 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
           <AppText variant="caption" color={colors.textSecondary}>
             {role === 'brand'
-              ? locale === 'ar'
-                ? 'محادثات العلامة التجارية'
-                : 'Brand messages'
-              : locale === 'ar'
-                ? 'محادثات صانع المحتوى'
-                : 'Creator messages'}
+              ? brandName
+                ? locale === 'ar'
+                  ? `محادثات ${brandName}`
+                  : `${brandName} messages`
+                : locale === 'ar'
+                  ? 'محادثات العلامة التجارية'
+                  : 'Brand messages'
+              : firstName
+                ? locale === 'ar'
+                  ? `محادثات ${firstName}`
+                  : `${firstName}'s messages`
+                : locale === 'ar'
+                  ? 'محادثات صانع المحتوى'
+                  : 'Creator messages'}
           </AppText>
           <AppText variant="h2" style={{ fontWeight: 500, color: colors.textPrimary }}>
             {locale === 'ar' ? 'المحادثات والرسائل' : 'Chats'}
@@ -329,7 +353,7 @@ export function ChatWorkspace({ initialCollaborationId, role }: ChatWorkspacePro
                               marginTop: 2,
                             }}
                           >
-                            {previewText(t.lastMessagePreview)}
+                            {previewText(t.lastMessagePreview, t.counterpartName)}
                           </div>
                         </div>
                       </div>
