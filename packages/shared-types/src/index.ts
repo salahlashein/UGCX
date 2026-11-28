@@ -23,3 +23,4 @@ export * from './billing';
 export * from './dashboard';
 export * from './notifications';
 export * from './feature-flags';
+export * from './onboarding';

@@ -9,6 +9,7 @@ import { AppText } from '../ui/AppText';
 import { Icon, type IconName } from '../ui/Icon';
 import { LoadingState } from '../ui/AsyncStates';
 import { useAuthStore } from '../../store/authStore';
+import { useOnboardingStatus } from '../../hooks/api/useOnboarding';
 import { useTranslation } from '../../i18n';
 import { useBrandRole } from '../../hooks/useBrandRole';
 import { useUnreadCount } from '../../hooks/api/useNotifications';
@@ -119,6 +120,12 @@ export function AppShell({ children, requiredRole, activeNav }: AppShellProps) {
   const unreadCountQuery = useUnreadCount();
   const unreadCount = unreadCountQuery.data?.unread ?? 0;
   const [moreOpen, setMoreOpen] = useState(false);
+  // A new brand or creator finishes onboarding before using the app. If the
+  // status cannot load, the user is let through rather than locked out.
+  const needsOnboardingCheck = Boolean(isAuthenticated && user && user.role !== 'admin');
+  const onboardingQuery = useOnboardingStatus(needsOnboardingCheck);
+  const mustOnboard = needsOnboardingCheck && onboardingQuery.data?.completed === false;
+  const checkingOnboarding = needsOnboardingCheck && onboardingQuery.isLoading;
 
   useEffect(() => {
     setMoreOpen(false);
@@ -139,12 +146,16 @@ export function AppShell({ children, requiredRole, activeNav }: AppShellProps) {
       router.replace('/login');
       return;
     }
+    if (mustOnboard) {
+      router.replace('/onboarding');
+      return;
+    }
     if (requiredRole && user.role !== requiredRole) {
       router.replace(user.role === 'brand' ? '/brand/dashboard' : '/creator/home');
     }
-  }, [isLoading, isAuthenticated, user, requiredRole, router]);
+  }, [isLoading, isAuthenticated, user, requiredRole, router, mustOnboard]);
 
-  if (isLoading || !isAuthenticated || !user) {
+  if (isLoading || !isAuthenticated || !user || checkingOnboarding || mustOnboard) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingState />

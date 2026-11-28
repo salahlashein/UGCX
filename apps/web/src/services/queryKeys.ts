@@ -91,4 +91,9 @@ export const queryKeys = {
     all: ['users'] as const,
     me: () => ['users', 'me'] as const,
   },
+
+  onboarding: {
+    status: (userId: string | undefined) => ['onboarding', 'status', userId ?? ''] as const,
+    insights: (city?: string) => ['onboarding', 'insights', city ?? ''] as const,
+  },
 } as const;
